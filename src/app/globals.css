@@ -9,3 +9,35 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Ukrycie w Chrome, Safari, Edge */
 }
+
+.rounded-button {
+  border-radius: 5px;
+}
+.border-light {
+  border-width: 0.5px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #393939;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2b2b2b;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

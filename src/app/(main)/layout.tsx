@@ -14,12 +14,14 @@ function layout({ children }: { children: React.ReactNode }) {
         <div className="">
           <HomeSidebar />
         </div>
-        <div className="max-h-screen w-[600px] mx-4 overflow-y-auto no-scrollbar">
-          {children}
+        <div className="flex flex-col">
+          <div className="min-h-screen w-[600px] mx-4  bg-[#0e0e0e] rounded-xl">
+            {children}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-        
+
 export default layout;

@@ -21,11 +21,11 @@ export default function Page() {
         <div className="mt-10 space-x-4 ">
           <Button
             variant="secondary"
-            className="px-4 rounded-lg bg-white text-black"
+            className="px-4 rounded-button bg-white text-black "
           >
             Get Started
           </Button>
-          <Button className="px-6 rounded-lg bg-[#171717]">Log in</Button>
+          <Button className="px-6 rounded-button bg-[#171717] ">Log in</Button>
         </div>
         <div className="-z-10 absolute bottom-0 md:bottom-0">
           <LandingBackground />
