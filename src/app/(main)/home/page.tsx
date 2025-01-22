@@ -1,11 +1,9 @@
-import TextAreaComponent from "@/components/text-area";
 import React from "react";
 
 // overflow-y-auto no-scrollbar
 function Page() {
   return (
-    <div className="flex flex-col overflow-y-auto no-scrollbar h-screen">
-      {/* <TextAreaComponent /> */}
+    <div className="flex flex-col overflow-y-auto no-scrollbar">
       <p className="">
         {" "}
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam

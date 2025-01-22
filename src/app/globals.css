@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 .no-scrollbar {
-  scrollbar-width: none; /* Ukrycie w Firefox */
-  -ms-overflow-style: none; /* Ukrycie w Internet Explorer */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .no-scrollbar::-webkit-scrollbar {
-  display: none; /* Ukrycie w Chrome, Safari, Edge */
+  display: none;
 }
 
 .rounded-button {
@@ -17,22 +17,18 @@
   border-width: 0.5px;
 }
 
-/* width */
 ::-webkit-scrollbar {
   width: 2px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #393939;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #2b2b2b;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
