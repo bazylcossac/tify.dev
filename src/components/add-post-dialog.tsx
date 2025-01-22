@@ -34,14 +34,14 @@ function AddPostDialog() {
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
-    console.log(file);
+
     setFile(file);
     setFileType(file?.type);
     if (file && fileUrl) {
       URL.revokeObjectURL(fileUrl);
     }
     const url = URL.createObjectURL(file);
-    console.log(url);
+
     setFileUrl(url);
   }
 
@@ -92,7 +92,7 @@ function AddPostDialog() {
             className="bg-transparent flex-1 border-none outline-none hidden "
           />
 
-          {fileUrl && fileType.includes("vide") ? (
+          {fileUrl && fileUrl && fileType.includes("vide") ? (
             <video
               src={fileUrl}
               className="h-[300px] rounded-xl"
@@ -103,7 +103,7 @@ function AddPostDialog() {
           ) : (
             ""
           )}
-          {fileUrl && fileType.includes("image") ? (
+          {fileUrl && fileUrl && fileType.includes("image") ? (
             <Image
               src={fileUrl}
               alt="file"
