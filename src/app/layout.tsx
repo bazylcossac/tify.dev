@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -8,7 +9,7 @@ const geistSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "TIFY",
+  title: "TIFY.dev",
   description: "Social app",
 };
 
@@ -22,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} min-h-screen bg-black text-white antialiased `}
       >
-        {children}
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
