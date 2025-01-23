@@ -30,22 +30,34 @@ function AddPostDialog() {
     return <p>Loading..</p>;
   }
 
+  const computeSHA265 = async (file: File) => {
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  };
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (file) {
-      console.log(file);
-      console.log(postText);
+    try {
+      if (file) {
+        console.log(file);
+        console.log(postText);
+        const checksum = await computeSHA265(file);
+        const { url } = await getSignedURL(file.type, file.size, checksum);
 
-      const { url } = await getSignedURL();
-      console.log(url);
-
-      await fetch(url, {
-        method: "PUT",
-        body: file,
-        headers: {
-          "Content-Type": file?.type,
-        },
-      });
+        await fetch(url!, {
+          method: "PUT",
+          body: file,
+          headers: {
+            "Content-Type": file?.type,
+          },
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
 
     setFile(undefined);
