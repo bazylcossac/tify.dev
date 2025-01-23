@@ -9,7 +9,7 @@ function NotFound() {
         <Logo />
       </div>
       <div className="flex items-center justify-center flex-col h-full pt-24">
-        <p className="text-6xl font-bold">Page not found</p>
+        <p className="text-6xl font-bold">Page not found | 404</p>
         <Link href="/home" className="font-semibold pt-4">
           Go to home page
         </Link>

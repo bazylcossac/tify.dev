@@ -26,7 +26,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return false;
     },
     async redirect({ url, baseUrl }) {
-      const currentUrl = new URL(url);
       if (url.pathname === "/") {
         return `${baseUrl}/home`;
       }

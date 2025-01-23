@@ -6,7 +6,6 @@ import Link from "next/link";
 
 export default async function Page() {
   const session = await auth();
-
   return (
     <div className="relative min-h-screen ">
       <div className="p-4">
