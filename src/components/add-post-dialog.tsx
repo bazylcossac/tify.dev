@@ -1,3 +1,4 @@
+"use state";
 import React, { useRef, useState } from "react";
 import {
   Dialog,
@@ -14,6 +15,7 @@ import { Link2Icon } from "@radix-ui/react-icons";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -21,6 +23,11 @@ function AddPostDialog() {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
   const [fileType, setFileType] = useState("");
+  const session = useSession();
+  const user: UserType = session?.data?.user;
+  if (!session) {
+    return <p>Loading..</p>;
+  }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -60,20 +67,20 @@ function AddPostDialog() {
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-2">
             <Image
-              src="/images/noImage.jpg"
+              src={user?.image}
               alt="user-image"
               width={30}
               height={30}
               className="rounded-full "
             />
-            <p className="font-bold">@dzekson</p>
+            <p className="font-bold text-sm">@{user?.name}</p>
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>
-          <div className="grid gap-4 pt-4">
+          <div className="grid gap-4 ">
             <Textarea
-              className="transition font-semibold resize-none h-[70px] placeholder:text-white/50 mb-2"
+              className="transition font-semibold resize-none h-[70px] placeholder:text-white/50 mb-2 "
               placeholder="What's happening?"
               name="textarea"
               onChange={(e) => setPostText(e.target.value)}
@@ -131,7 +138,7 @@ function AddPostDialog() {
               <Button
                 type="submit"
                 className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 "
-                disabled={postText.trim().length === 0}
+                disabled={postText.trim().length === 0 && !file}
               >
                 Post
               </Button>

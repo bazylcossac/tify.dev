@@ -9,6 +9,7 @@ import Logo from "./logo";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 import { UserType } from "@/types/types";
+import { Skeleton } from "./ui/skeleton";
 
 const routes = [
   {
@@ -36,7 +37,7 @@ function HomeSidebar() {
   if (!session) {
     return <p>Loading...</p>;
   }
-  console.log(user?.image);
+
   return (
     <div className="sticky top-4 flex flex-col ">
       <div className="h-[800px] rounded-lg flex flex-col justify-between bg-[#0D0D0D]">
@@ -65,19 +66,27 @@ function HomeSidebar() {
           <AddPostDialog />
         </div>
       </div>
-      <div className="flex items-center gap-1 mt-4">
-        <Image
-          src={user?.image}
-          width={30}
-          height={30}
-          alt="user image"
-          className="rounded-full w-8 h-8"
-        />
-        <div>
-          <p className="mt-auto font-semibold">@{user?.name}</p>
-          <p className="text-xs text-white/60">{user?.email}</p>
+      {user ? (
+        <div className="flex items-center gap-2 mt-4">
+          <Image
+            src={user?.image}
+            width={30}
+            height={30}
+            alt="user image"
+            className="rounded-full w-8 h-8"
+          />
+          <div>
+            <p className="mt-auto text-sm font-semibold">@{user?.name}</p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center space-x-4 mt-4">
+          <Skeleton className="h-8 w-8 rounded-full bg-[#141414] animate-pulse" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
