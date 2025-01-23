@@ -10,6 +10,7 @@ import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
+import { useUserContext } from "@/contexts/userContextProvider";
 
 const routes = [
   {
@@ -33,6 +34,7 @@ const routes = [
 function HomeSidebar() {
   const activePath = usePathname();
   const session = useSession();
+
   const user: UserType = session?.data?.user;
   if (!session) {
     return <p>Loading...</p>;

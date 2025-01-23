@@ -16,6 +16,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { getSignedURL } from "@/actions/actions";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -29,10 +30,24 @@ function AddPostDialog() {
     return <p>Loading..</p>;
   }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(fileUrl);
-    console.log(postText);
+    if (file) {
+      console.log(file);
+      console.log(postText);
+
+      const { url } = await getSignedURL();
+      console.log(url);
+
+      await fetch(url, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file?.type,
+        },
+      });
+    }
+
     setFile(undefined);
     setFileUrl(undefined);
     setFileType("");
@@ -102,7 +117,7 @@ function AddPostDialog() {
           {fileUrl && fileUrl && fileType.includes("vide") ? (
             <video
               src={fileUrl}
-              className="h-[300px] rounded-xl"
+              className="max-h-[300px] w-auto rounded-xl"
               autoPlay
               loop
               muted
@@ -114,7 +129,7 @@ function AddPostDialog() {
             <Image
               src={fileUrl}
               alt="file"
-              className="h-[300px] rounded-xl"
+              className="max-h-[400px] w-auto  rounded-xl"
               height={300}
               width={300}
             />

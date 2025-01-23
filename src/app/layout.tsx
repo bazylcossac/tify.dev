@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import UserContextProvider from "@/contexts/userContextProvider";
 
 const geistSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -21,26 +22,27 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  if (session) {
-    console.log(session.user);
-    ///055d02c-9854-4a31-96b3-92b4854caa1a
-    const { name, email, image, id } = session?.user;
-    await prisma.user.upsert({
-      where: {
-        email,
-      },
-      create: {
-        name: name,
-        email: email,
-        image: image,
-        username: "",
-      },
-      update: {
-        name: name,
-        image: image,
-      },
-    });
-  }
+
+  const currentUser = session?.user;
+
+  ///055d02c-9854-4a31-96b3-92b4854caa1a
+  const { name, email, image, id } = currentUser;
+  await prisma.user.upsert({
+    where: {
+      email,
+    },
+    create: {
+      name: name,
+      email: email,
+      image: image,
+      username: "",
+    },
+    update: {
+      name: name,
+      image: image,
+    },
+  });
+
   return (
     <html lang="en">
       <body
