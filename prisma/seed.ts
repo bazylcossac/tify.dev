@@ -11,8 +11,14 @@ const userData: Prisma.UserCreateInput = {
     create: [
       {
         postText: "Test",
-        postImage:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQHStJewkkY66Yb4j4H4OTaNlzscE2kqwnMA&s",
+        media: {
+          create: [
+            {
+              url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQHStJewkkY66Yb4j4H4OTaNlzscE2kqwnMA&s",
+              type: "image",
+            },
+          ],
+        },
       },
     ],
   },

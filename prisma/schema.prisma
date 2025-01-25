@@ -22,9 +22,18 @@ model User {
 model Post {
   postId    String   @id @default(uuid())
   postText  String
-  postImage String?
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+  media     Media[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  type      String
+  url       String
+  post      Post     @relation(fields: [postId], references: [postId])
+  postId    String
+  createdAt DateTime @default(now())
 }
