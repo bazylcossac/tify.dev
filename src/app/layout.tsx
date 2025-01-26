@@ -24,9 +24,8 @@ export default async function RootLayout({
 
   const currentUser = session?.user;
 
-  ///055d02c-9854-4a31-96b3-92b4854caa1a
   if (currentUser) {
-    const { name, email, image, id } = currentUser;
+    const { name, email, image } = currentUser;
     await prisma.user.upsert({
       where: {
         email,

@@ -61,7 +61,25 @@ export async function getSignedURL(
   const signedUrl = await getSignedUrl(s3, putObjectCommand, {
     expiresIn: 60,
   });
+
   return { url: signedUrl };
+}
+
+export async function createPost(mediaUrl, postText, type) {
+  await prisma.post.create({
+    data: {
+      userId: "6632ac60-7ccb-49bd-8a6b-43bc94175eda", /// zastapic to normalnym userem. Zastanowic sie nad zmiana na email zeby byl unikatowy
+      postText: postText,
+      media: {
+        create: [
+          {
+            type: type,
+            url: mediaUrl,
+          },
+        ],
+      },
+    },
+  });
 }
 
 export async function getUserByEmail(email: string) {

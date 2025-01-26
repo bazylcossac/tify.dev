@@ -1,4 +1,4 @@
-"use state";
+"use client";
 import React, { useRef, useState } from "react";
 import {
   Dialog,
@@ -16,38 +16,32 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { getSignedURL } from "@/actions/actions";
+import { createPost, getSignedURL } from "@/actions/actions";
+import { computeSHA265 } from "@/lib/utils";
+import { prisma } from "@/lib/db";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
-  const [fileType, setFileType] = useState("");
+
   const session = useSession();
   const user: UserType = session?.data?.user;
   if (!session) {
     return <p>Loading..</p>;
   }
 
-  const computeSHA265 = async (file: File) => {
-    const buffer = await file.arrayBuffer();
-    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-    return hashHex;
-  };
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
       if (file) {
         console.log(file);
-        console.log(postText);
+
         const checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
-
+        const mediaUrl = url?.split("$")[0];
+        /// wsztystko przd ? to link do zdjecia na serwerach amazon
         await fetch(url!, {
           method: "PUT",
           body: file,
@@ -55,6 +49,7 @@ function AddPostDialog() {
             "Content-Type": file?.type,
           },
         });
+        await createPost(mediaUrl, postText, file.type);
       }
     } catch (err) {
       console.error(err);
@@ -62,7 +57,7 @@ function AddPostDialog() {
 
     setFile(undefined);
     setFileUrl(undefined);
-    setFileType("");
+
     setPostText("");
   }
 
@@ -70,7 +65,7 @@ function AddPostDialog() {
     const file = e.target.files![0];
 
     setFile(file);
-    setFileType(file?.type);
+
     if (file && fileUrl) {
       URL.revokeObjectURL(fileUrl);
     }
@@ -126,7 +121,7 @@ function AddPostDialog() {
             className="bg-transparent flex-1 border-none outline-none hidden "
           />
 
-          {fileUrl && fileUrl && fileType.includes("vide") ? (
+          {fileUrl && file?.type.includes("vide") ? (
             <video
               src={fileUrl}
               className="max-h-[300px] w-auto rounded-xl"
@@ -137,7 +132,7 @@ function AddPostDialog() {
           ) : (
             ""
           )}
-          {fileUrl && fileUrl && fileType.includes("image") ? (
+          {fileUrl && file?.type.includes("image") ? (
             <Image
               src={fileUrl}
               alt="file"
@@ -153,7 +148,6 @@ function AddPostDialog() {
               onClick={() => {
                 setFile(undefined);
                 setFileUrl(undefined);
-                setFileType("");
               }}
               className="bg-red-500 mt-2 text-xs font-semibold "
             >
