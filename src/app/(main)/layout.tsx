@@ -10,7 +10,7 @@ function layout({ children }: { children: React.ReactNode }) {
           <HomeSidebar />
         </div>
         <div className="flex flex-col">
-          <div className="min-h-screen w-[600px] mx-4 p-2 bg-[#0e0e0e] rounded-xl overflow-y-auto no-scrollbar ">
+          <div className="min-h-screen w-[600px] mx-4 p-2  rounded-xl overflow-y-auto no-scrollbar ">
             {children}
           </div>
         </div>

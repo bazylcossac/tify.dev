@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
+import { prisma } from "./lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -32,10 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       /// If user has callback url in url it's redirecting to /home page
       return `${baseUrl}/home`;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.id;
-      }
+    async jwt({ token }) {
       return token;
     },
     async session({ session, token }) {

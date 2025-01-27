@@ -10,7 +10,6 @@ import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
-import { useUserContext } from "@/contexts/userContextProvider";
 
 const routes = [
   {
@@ -41,8 +40,8 @@ function HomeSidebar() {
   }
 
   return (
-    <div className="sticky top-4 flex flex-col ">
-      <div className="h-[800px] rounded-lg flex flex-col justify-between bg-[#0D0D0D]">
+    <div className="sticky top-4 flex flex-col min-h-screen">
+      <div className="max-h-[800px] rounded-lg flex flex-col justify-between ">
         <div>
           <ul className="p-4 space-y-4">
             <div className="p-2">
@@ -69,21 +68,21 @@ function HomeSidebar() {
         </div>
       </div>
       {user ? (
-        <div className="flex items-center gap-2 mt-4">
+        <div className="flex items-center justify-center gap-2 my-4">
           <Image
             src={user?.image}
             width={30}
             height={30}
             alt="user image"
-            className="rounded-full w-8 h-8"
+            className="rounded-full w-6 h-6"
           />
           <div>
-            <p className="mt-auto text-sm font-semibold">@{user?.name}</p>
+            <p className="mt-auto text-xs font-bold">@{user?.name}</p>
           </div>
         </div>
       ) : (
-        <div className="flex items-center space-x-4 mt-4">
-          <Skeleton className="h-8 w-8 rounded-full bg-[#141414] animate-pulse" />
+        <div className="flex items-center space-x-4 my-4">
+          <Skeleton className="h-6 w-6 rounded-full bg-[#141414] animate-pulse" />
           <div className="space-y-2">
             <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
           </div>

@@ -1,14 +1,14 @@
 "use server";
 
 import { auth, signIn } from "@/auth";
-
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { redirect } from "next/navigation";
 import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
-
 import { prisma } from "@/lib/db";
+import { revalidatePath } from "next/cache";
+import { sleep } from "@/lib/utils";
 
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
@@ -31,7 +31,7 @@ export async function getSignedURL(
   checksum: string
 ) {
   const session = await auth();
-  if (!session?.user) {
+  if (!session?.user?.email) {
     redirect("/");
   }
   const user = await getUserByEmail(session.user.email);
@@ -65,11 +65,28 @@ export async function getSignedURL(
   return { url: signedUrl };
 }
 
-export async function createPost(mediaUrl, postText, type) {
+export async function createPost(
+  mediaUrl: string,
+  postText: string,
+  type: string
+) {
+  const session = await auth();
+  if (!session) {
+    redirect("/");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+    select: {
+      id: true,
+    },
+  });
   await prisma.post.create({
     data: {
-      userId: "6632ac60-7ccb-49bd-8a6b-43bc94175eda", /// zastapic to normalnym userem. Zastanowic sie nad zmiana na email zeby byl unikatowy
-      postText: postText,
+      userId: user.id,
+      postText: String(postText),
       media: {
         create: [
           {
@@ -80,6 +97,7 @@ export async function createPost(mediaUrl, postText, type) {
       },
     },
   });
+  revalidatePath("/home", "page");
 }
 
 export async function getUserByEmail(email: string) {

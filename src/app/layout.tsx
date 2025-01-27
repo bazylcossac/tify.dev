@@ -26,6 +26,8 @@ export default async function RootLayout({
 
   if (currentUser) {
     const { name, email, image } = currentUser;
+    // console.log(id);
+    ///cb76056c-6dc7-4cd9-82eb-6b70aa7a5fdc
     await prisma.user.upsert({
       where: {
         email,

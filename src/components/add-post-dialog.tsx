@@ -18,7 +18,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { createPost, getSignedURL } from "@/actions/actions";
 import { computeSHA265 } from "@/lib/utils";
-import { prisma } from "@/lib/db";
+import { UserType } from "@/types/types";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -40,7 +40,7 @@ function AddPostDialog() {
 
         const checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
-        const mediaUrl = url?.split("$")[0];
+        const mediaUrl = url?.split("?")[0];
         /// wsztystko przd ? to link do zdjecia na serwerach amazon
         await fetch(url!, {
           method: "PUT",

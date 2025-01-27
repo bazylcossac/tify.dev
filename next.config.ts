@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "tify-bucket.s3.eu-central-1.amazonaws.com",
+      },
     ],
   },
 };

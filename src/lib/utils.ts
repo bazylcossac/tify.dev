@@ -14,3 +14,15 @@ export const computeSHA265 = async (file: File) => {
     .join("");
   return hashHex;
 };
+
+export async function sleep(ms: number = 1000) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function calculatePostTime(createdAt: Date) {
+  const postTime = new Date(createdAt);
+  const now = new Date();
+  const diffInMs = now.getTime() - postTime.getTime();
+  const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+  return diffInMinutes;
+}
