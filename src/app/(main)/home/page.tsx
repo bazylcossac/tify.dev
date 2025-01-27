@@ -20,7 +20,7 @@ async function Page() {
         {posts.map((post) => (
           <div
             key={post.postId}
-            className="flexf flex-col mx-4 border-b border-white/30 py-4"
+            className="flexf flex-col mx-4 border-b border-white/30 py-4 "
           >
             {post ? (
               <div className="flex flex-row items-center justify-between">
@@ -32,9 +32,12 @@ async function Page() {
                     alt="user image"
                     className="rounded-full w-6 h-6"
                   />
-                  <div>
-                    <p className="mt-auto text-sm font-semibold">
+                  <div className="flex flex-row items-center">
+                    <p className="mt-auto text-sm font-semibold ">
                       @{post.user.name}
+                    </p>
+                    <p className="text-[11px] text-white/30 mx-2">
+                      {new Date(post.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -57,14 +60,24 @@ async function Page() {
               <p className="text-sm font-semibold my-2">{post.postText}</p>
             )}
             <div className="justify-center flex">
-              <Image
-                src={post.media[0].url}
-                width={99999}
-                height={99999}
-                quality={100}
-                alt="post image"
-                className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
-              />
+              {post.media[0].type.startsWith("image") ? (
+                <Image
+                  src={post.media[0].url}
+                  width={800} // Optymalna szerokość dla Twojego designu
+                  height={600}
+                  quality={100}
+                  alt="post image"
+                  className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                />
+              ) : (
+                <video
+                  src={post.media[0].url}
+                  width={800} // Optymalna szerokość dla Twojego designu
+                  height={600}
+                  controls
+                  className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                />
+              )}
             </div>
           </div>
 
