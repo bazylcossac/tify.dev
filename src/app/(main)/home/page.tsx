@@ -44,6 +44,7 @@ async function Page() {
 
                 <div>
                   <p className="text-xs text-white/60 font-semibold">
+                    {/* jezeli powyzej dnia to zmienic na date */}
                     {calculatePostTime(post.createdAt)} minutes ago
                   </p>
                 </div>
@@ -63,16 +64,19 @@ async function Page() {
               {post.media[0].type.startsWith("image") ? (
                 <Image
                   src={post.media[0].url}
-                  width={800} // Optymalna szerokość dla Twojego designu
+                  width={800}
                   height={600}
                   quality={100}
                   alt="post image"
                   className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL="/images/loaderImage.png"
                 />
               ) : (
                 <video
                   src={post.media[0].url}
-                  width={800} // Optymalna szerokość dla Twojego designu
+                  width={800}
                   height={600}
                   controls
                   className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
@@ -80,152 +84,8 @@ async function Page() {
               )}
             </div>
           </div>
-
-          /// obsluzyc generowanie video jezeli typ to video
         ))}
       </ul>
-      {/* <p className="">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      v
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      v
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>{" "}
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p>
-      <p className="my-4">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed aperiam
-        exercitationem a dolore illo reprehenderit eligendi magnam. Voluptatibus
-        amet fuga laborum sequi sit vero quibusdam placeat maiores nihil? Autem,
-        animi!
-      </p> */}
     </div>
   );
 }

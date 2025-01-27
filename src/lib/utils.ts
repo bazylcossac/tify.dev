@@ -24,5 +24,6 @@ export function calculatePostTime(createdAt: Date) {
   const now = new Date();
   const diffInMs = now.getTime() - postTime.getTime();
   const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
   return diffInMinutes;
 }

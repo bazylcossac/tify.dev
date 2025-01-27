@@ -8,8 +8,8 @@ import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { sleep } from "@/lib/utils";
 
+import { postSchema } from "@/lib/zod-schemas";
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
 };
@@ -71,27 +71,40 @@ export async function createPost(
   type: string
 ) {
   const session = await auth();
-  if (!session) {
+  if (!session?.user?.email) {
     redirect("/");
   }
 
   const user = await prisma.user.findUnique({
     where: {
-      email: session.user.email,
+      email: session?.user?.email,
     },
     select: {
       id: true,
     },
   });
+  if (!user) {
+    return {
+      message: "Failed to find a user",
+    };
+  }
+
+  const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
+  console.log(validatedData.success);
+  if (!validatedData.success) {
+    return {
+      message: "Failed to validate post data",
+    };
+  }
   await prisma.post.create({
     data: {
       userId: user.id,
-      postText: String(postText),
+      postText: String(validatedData.data.postText),
       media: {
         create: [
           {
-            type: type,
-            url: mediaUrl,
+            type: validatedData.data.type,
+            url: validatedData.data.mediaUrl,
           },
         ],
       },

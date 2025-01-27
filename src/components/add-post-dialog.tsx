@@ -27,8 +27,8 @@ function AddPostDialog() {
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
   const session = useSession();
-  const user: UserType = session?.data?.user;
-  if (!session) {
+  const user = session?.data?.user as UserType;
+  if (!user) {
     return <p>Loading..</p>;
   }
 
@@ -41,7 +41,9 @@ function AddPostDialog() {
         const checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
         const mediaUrl = url?.split("?")[0];
-        /// wsztystko przd ? to link do zdjecia na serwerach amazon
+        if (!mediaUrl) {
+          throw new Error("Failed to get media url");
+        }
         await fetch(url!, {
           method: "PUT",
           body: file,
