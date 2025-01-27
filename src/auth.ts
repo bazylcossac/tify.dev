@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
-import { prisma } from "./lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -27,7 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return false;
     },
     async redirect({ url, baseUrl }) {
-      if (url.pathname === "/") {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.pathname === "/") {
         return `${baseUrl}/home`;
       }
       /// If user has callback url in url it's redirecting to /home page

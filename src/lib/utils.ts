@@ -19,11 +19,19 @@ export async function sleep(ms: number = 1000) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function calculatePostTime(createdAt: Date) {
+export function timeMessage(createdAt: Date) {
+  let diff;
+  let diffMessage;
   const postTime = new Date(createdAt);
   const now = new Date();
   const diffInMs = now.getTime() - postTime.getTime();
-  const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+  diff = Math.floor(diffInMs / (1000 * 60)); /// minutes
+  if (diff < 60) {
+    diffMessage = diff === 0 || diff === 1 ? "now" : `${diff} minutes ago`;
+  } else {
+    diff = Math.floor(diffInMs / (1000 * 60) / 60);
+    diffMessage = diff === 1 ? `${diff} hour ago` : `${diff} hours ago`;
+  }
 
-  return diffInMinutes;
+  return diffMessage;
 }

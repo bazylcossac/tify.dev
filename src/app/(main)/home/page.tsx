@@ -1,11 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { prisma } from "@/lib/db";
-import { calculatePostTime } from "@/lib/utils";
+import { timeMessage } from "@/lib/utils";
 
 import Image from "next/image";
 import React from "react";
 
-// overflow-y-auto no-scrollbar
 async function Page() {
   const posts = await prisma.post.findMany({
     include: {
@@ -44,8 +43,7 @@ async function Page() {
 
                 <div>
                   <p className="text-xs text-white/60 font-semibold">
-                    {/* jezeli powyzej dnia to zmienic na date */}
-                    {calculatePostTime(post.createdAt)} minutes ago
+                    {timeMessage(post.createdAt)}
                   </p>
                 </div>
               </div>
@@ -69,9 +67,6 @@ async function Page() {
                   quality={100}
                   alt="post image"
                   className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
-                  loading="lazy"
-                  placeholder="blur"
-                  blurDataURL="/images/loaderImage.png"
                 />
               ) : (
                 <video

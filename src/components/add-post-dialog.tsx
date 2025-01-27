@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { createPost, getSignedURL } from "@/actions/actions";
 import { computeSHA265 } from "@/lib/utils";
 import { UserType } from "@/types/types";
+import { Skeleton } from "./ui/skeleton";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -29,7 +30,9 @@ function AddPostDialog() {
   const session = useSession();
   const user = session?.data?.user as UserType;
   if (!user) {
-    return <p>Loading..</p>;
+    return (
+      <Skeleton className="w-[80px] h-[40px] bg-[#141414] animate-pulse rounded-lg" />
+    );
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { redirect } from "next/navigation";
@@ -23,6 +23,9 @@ const s3 = new S3Client({
 
 export async function LogInWithProvider(provider: "google" | "github") {
   await signIn(provider);
+}
+export async function logOut() {
+  await signOut();
 }
 
 export async function getSignedURL(

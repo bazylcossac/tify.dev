@@ -5,11 +5,18 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import Logo from "./logo";
-
+import { DotsHorizontalIcon, ExitIcon } from "@radix-ui/react-icons";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { logOut } from "@/actions/actions";
 
 const routes = [
   {
@@ -35,8 +42,8 @@ function HomeSidebar() {
   const session = useSession();
 
   const user: UserType = session?.data?.user;
-  if (!session) {
-    return <p>Loading...</p>;
+  if (!user) {
+    return "";
   }
 
   return (
@@ -79,6 +86,22 @@ function HomeSidebar() {
           <div>
             <p className="mt-auto text-xs font-bold">@{user?.name}</p>
           </div>
+          <p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <DotsHorizontalIcon className="cursor-pointer text-white/50 hover:text-white" />
+              </PopoverTrigger>
+              <PopoverContent className="w-[110px] h-auto">
+                <div className="flex flex-row items-center justify-center gap-2 text-sm">
+                  <Button onClick={logOut}>
+                    {" "}
+                    log out <ExitIcon scale={10} />
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+            {/* <DotsHorizontalIcon /> */}
+          </p>
         </div>
       ) : (
         <div className="flex items-center space-x-4 my-4">
