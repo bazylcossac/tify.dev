@@ -22,6 +22,8 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
 
+  // Create a QueryClient instance
+
   const currentUser = session?.user;
 
   if (currentUser) {
@@ -49,6 +51,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} min-h-screen bg-black text-white antialiased `}
       >
+        {" "}
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

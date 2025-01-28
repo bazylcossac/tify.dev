@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { prisma } from "./db";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,4 +35,27 @@ export function timeMessage(createdAt: Date) {
   }
 
   return diffMessage;
+}
+
+export async function getPosts({ pageParam }) {
+  console.log("fetching posts!!!!");
+  const pageSize = 10;
+  const posts = await prisma.post.findMany({
+    take: pageSize,
+    skip: pageParam * pageSize, //
+    include: {
+      media: true,
+      user: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  const totalPosts = await prisma.post.count();
+  const hasMore = (pageParam + 1) * pageSize < totalPosts;
+
+  return {
+    posts,
+    nextCursor: hasMore ? pageParam + 1 : null,
+  };
 }

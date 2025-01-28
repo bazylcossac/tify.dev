@@ -86,7 +86,7 @@ function AddPostDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="font-bold rounded-xl bg-blue-600 text-xs px-6 mb-2 ">
+        <Button className="font-bold rounded-xl bg-blue-600 text-xs px-10 mb-2 ">
           POST
         </Button>
       </DialogTrigger>
@@ -115,7 +115,10 @@ function AddPostDialog() {
             />
           </div>
           {!file && (
-            <Link2Icon onClick={openFileInput} className="cursor-pointer " />
+            <>
+              <Link2Icon onClick={openFileInput} className="cursor-pointer " />
+              <p className="text-[8px] text-white/50 mt-1">MAX 10MB</p>
+            </>
           )}
           <Input
             type="file"

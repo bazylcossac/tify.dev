@@ -5,16 +5,18 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import Logo from "./logo";
-import { DotsHorizontalIcon, ExitIcon } from "@radix-ui/react-icons";
+import {
+  ExitIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+  BellIcon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { Button } from "@/components/ui/button";
 import { logOut } from "@/actions/actions";
 
@@ -22,18 +24,22 @@ const routes = [
   {
     name: "Home",
     path: "/home",
+    icon: <HomeIcon />,
   },
   {
     name: "Explore",
     path: "/explore",
+    icon: <MagnifyingGlassIcon />,
   },
   {
     name: "Notifications",
     path: "/notifications",
+    icon: <BellIcon />,
   },
   {
     name: "Profile",
     path: "/profile",
+    icon: <PersonIcon />,
   },
 ];
 
@@ -42,7 +48,7 @@ function HomeSidebar() {
   const session = useSession();
 
   const user: UserType = session?.data?.user;
-  if (!user) {
+  if (!session) {
     return "";
   }
 
@@ -58,12 +64,13 @@ function HomeSidebar() {
               <Link href={route.path} key={route.path}>
                 <li
                   className={cn(
-                    "p-2 text-white/60 rounded-lg font-bold  transition",
+                    "p-2 text-white/60 rounded-lg font-bold transition flex items-center gap-2",
                     {
                       "text-bold text-white": activePath === route.path,
                     }
                   )}
                 >
+                  {route.icon}
                   {route.name}
                 </li>
               </Link>
@@ -75,7 +82,7 @@ function HomeSidebar() {
         </div>
       </div>
       {user ? (
-        <div className="flex items-center justify-center gap-2 my-4">
+        <div className="flex items-center justify-center gap-2 my-4 ">
           <Image
             src={user?.image}
             width={30}
@@ -87,20 +94,14 @@ function HomeSidebar() {
             <p className="mt-auto text-xs font-bold">@{user?.name}</p>
           </div>
           <p>
-            <Popover>
-              <PopoverTrigger asChild>
-                <DotsHorizontalIcon className="cursor-pointer text-white/50 hover:text-white" />
-              </PopoverTrigger>
-              <PopoverContent className="w-[110px] h-auto">
-                <div className="flex flex-row items-center justify-center gap-2 text-sm">
-                  <Button onClick={logOut}>
-                    {" "}
-                    log out <ExitIcon scale={10} />
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-            {/* <DotsHorizontalIcon /> */}
+            {" "}
+            <Button
+              onClick={logOut}
+              className="text-white/30 hover:text-white  p-0"
+            >
+              {" "}
+              <ExitIcon />
+            </Button>
           </p>
         </div>
       ) : (
