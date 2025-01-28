@@ -25,7 +25,7 @@ export async function LogInWithProvider(provider: "google" | "github") {
   await signIn(provider);
 }
 export async function logOut() {
-  await signOut();
+  await signOut({ redirectTo: "/", redirect: true });
 }
 
 export async function getSignedURL(

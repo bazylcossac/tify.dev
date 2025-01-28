@@ -11,13 +11,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isLoggedIn = !!auth?.user;
       const isTryinToAccess = request.url !== "/";
       const isTryinToAccessLadningPage = request.url === "/";
+      console.log(isLoggedIn);
       // User is logged in and trying to access a protected route
       if (isLoggedIn && isTryinToAccess) {
         return true;
       }
       // User is not logged in and trying to access a protected route
       if (!isLoggedIn && isTryinToAccess) {
-        return false;
+        return Response.redirect(new URL("/home", request.nextUrl));
       }
       if (isLoggedIn && isTryinToAccessLadningPage) {
         return false;
@@ -26,10 +27,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return false;
     },
     async redirect({ url, baseUrl }) {
-      const parsedUrl = new URL(url);
-      if (parsedUrl.pathname === "/") {
+      if (url === "/") {
         return `${baseUrl}/home`;
       }
+
       /// If user has callback url in url it's redirecting to /home page
       return `${baseUrl}/home`;
     },
@@ -38,7 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.userId;
+        session.user.id = token.userId as string;
       }
       return session;
     },

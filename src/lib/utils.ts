@@ -27,22 +27,33 @@ export function timeMessage(createdAt: Date) {
   const now = new Date();
   const diffInMs = now.getTime() - postTime.getTime();
   diff = Math.floor(diffInMs / (1000 * 60)); /// minutes
+
+  /// minutes
   if (diff < 60) {
     diffMessage = diff === 0 || diff === 1 ? "now" : `${diff} minutes ago`;
-  } else {
+  } else if (diff > 60 && diff < 60 * 24) {
+    /// hours
     diff = Math.floor(diffInMs / (1000 * 60) / 60);
     diffMessage = diff === 1 ? `${diff} hour ago` : `${diff} hours ago`;
+  } else if (diff > 60 * 24) {
+    /// days
+    diff = Math.floor(diffInMs / (1000 * 60) / 60 / 24);
+    diffMessage = diff === 1 ? `${diff} day ago` : `${diff} days ago`;
+  } else if (diff > 60 * 24 * 30) {
+    /// months
+    diff = Math.floor(diffInMs / (1000 * 60) / 60 / 24 / 30);
+    diffMessage = diff === 1 ? `${diff} month ago` : `${diff} months ago`;
   }
 
   return diffMessage;
 }
 
-export async function getPosts({ pageParam }) {
+export async function getPosts({ pageParam }: { pageParam: number }) {
   console.log("fetching posts!!!!");
   const pageSize = 10;
   const posts = await prisma.post.findMany({
     take: pageSize,
-    skip: pageParam * pageSize, //
+    skip: pageParam * pageSize,
     include: {
       media: true,
       user: true,

@@ -47,6 +47,7 @@ function AddPostDialog() {
         if (!mediaUrl) {
           throw new Error("Failed to get media url");
         }
+        
         await fetch(url!, {
           method: "PUT",
           body: file,

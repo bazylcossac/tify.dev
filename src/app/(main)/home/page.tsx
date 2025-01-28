@@ -2,18 +2,20 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { timeMessage } from "@/lib/utils";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import HomePageLoader from "@/components/home-page-loader";
+import { PostType } from "@/types/types";
 
 function Page() {
-  const fetchPosts = async (pageParam) => {
+  const fetchPosts = async (pageParam: number) => {
     const response = await fetch(`/api/posts?pageParam=${pageParam}`);
 
     const data = await response.json();
     return data;
   };
-  const { data, status, error, fetchNextPage } = useInfiniteQuery({
+  const { data, error, fetchNextPage } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
     initialPageParam: 0,
@@ -27,56 +29,17 @@ function Page() {
     }
   }, [inView, fetchNextPage]);
   if (!data) {
-    return (
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col justify-center">
-          <div className="flex flex-row  justify-between mb-8">
-            <div className="flex flex-row items-center gap-2">
-              <Skeleton className="h-6 w-6 rounded-full bg-[#141414] animate-pulse" />
-              <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-            </div>
-            <div>
-              <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-            </div>
-          </div>
-          <Skeleton className=" w-full h-[600px] bg-[#141414] animate-pulse" />
-        </div>
-
-        <div className="flex flex-col justify-center">
-          <div className="flex flex-row  justify-between mb-8">
-            <div className="flex flex-row items-center gap-2">
-              <Skeleton className="h-6 w-6 rounded-full bg-[#141414] animate-pulse" />
-              <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-            </div>
-            <div>
-              <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-            </div>
-          </div>
-          <Skeleton className=" w-full h-[600px] bg-[#141414] animate-pulse" />
-        </div>
-
-        <div className="flex flex-col justify-center">
-          <div className="flex flex-row  justify-between mb-8">
-            <div className="flex flex-row items-center gap-2">
-              <Skeleton className="h-6 w-6 rounded-full bg-[#141414] animate-pulse" />
-              <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-            </div>
-            <div>
-              <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-            </div>
-          </div>
-          <Skeleton className=" w-full h-[600px] bg-[#141414] animate-pulse" />
-        </div>
-      </div>
-    );
+    return <HomePageLoader />;
+  }
+  if (error) {
+    return <p>Error, please refresh page</p>;
   }
 
-  console.log(data.pages);
   return (
-    <div className="flex flex-col overflow-y-auto no-scrollbar">
+    <div className="flex flex-col overflow-y-auto no-scrollbar ">
       <ul>
         {data.pages.map((posts) =>
-          posts.posts.map((post) => (
+          posts.posts.map((post: PostType) => (
             <div
               key={post.postId}
               className="flexf flex-col mx-4 border-b border-white/30 py-4 "
@@ -122,8 +85,8 @@ function Page() {
                 {post.media[0].type.startsWith("image") ? (
                   <Image
                     src={post.media[0].url}
-                    width={800}
-                    height={600}
+                    width={1000}
+                    height={800}
                     quality={100}
                     alt="post image"
                     className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
@@ -131,8 +94,8 @@ function Page() {
                 ) : (
                   <video
                     src={post.media[0].url}
-                    width={800}
-                    height={600}
+                    width={1000}
+                    height={800}
                     controls
                     className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
                   />

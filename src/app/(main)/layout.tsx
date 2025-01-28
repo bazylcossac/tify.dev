@@ -1,20 +1,28 @@
 "use client";
 import HomeSidebar from "@/components/home-sidebar";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 import React from "react";
 
-function layout({ children }: { children: React.ReactNode }) {
+function Layout({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
+  const session = useSession();
+  if (!session.data?.user) {
+    redirect("/");
+  }
+
   return (
     <>
-      <div className="flex justify-center mt-4 ">
-        <div className="sticky top-4 self-start mr-4">
+      <div className="flex justify-center mt-4">
+        <div className="sticky top-4 self-start">
           <HomeSidebar />
         </div>
 
         <div>
-          <div className="min-h-screen w-[600px] p-4 rounded-xl overflow-y-auto no-scrollbar">
+          <div className="min-h-screen w-[700px]  rounded-xl overflow-y-auto no-scrollbar">
             <QueryClientProvider client={queryClient}>
               {children}
             </QueryClientProvider>
@@ -25,4 +33,4 @@ function layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default layout;
+export default Layout;

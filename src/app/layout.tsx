@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 const geistSans = DM_Sans({
   variable: "--font-dm-sans",

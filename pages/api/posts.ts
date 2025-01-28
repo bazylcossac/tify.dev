@@ -1,6 +1,10 @@
 import { getPosts } from "@/lib/utils"; // Funkcja z Prisma
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { pageParam } = req.query;
 
   try {

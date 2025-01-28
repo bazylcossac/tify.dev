@@ -53,7 +53,7 @@ function HomeSidebar() {
   }
 
   return (
-    <div className="sticky top-4 flex flex-col min-h-screen">
+    <div className="sticky top-4 flex flex-col min-h-screen pl-2 ">
       <div className="max-h-[800px] rounded-lg flex flex-col justify-between ">
         <div>
           <ul className="p-4 space-y-4">
@@ -64,7 +64,7 @@ function HomeSidebar() {
               <Link href={route.path} key={route.path}>
                 <li
                   className={cn(
-                    "p-2 text-white/60 rounded-lg font-bold transition flex items-center gap-2",
+                    "p-2 text-white/60 text-md rounded-lg font-bold transition flex items-center gap-2",
                     {
                       "text-bold text-white": activePath === route.path,
                     }
