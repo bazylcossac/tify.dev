@@ -38,6 +38,7 @@ export function timeMessage(createdAt: Date) {
   } else if (diff > 60 * 24) {
     /// days
     diff = Math.floor(diffInMs / (1000 * 60) / 60 / 24);
+
     diffMessage = diff === 1 ? `${diff} day ago` : `${diff} days ago`;
   } else if (diff > 60 * 24 * 30) {
     /// months
@@ -49,7 +50,6 @@ export function timeMessage(createdAt: Date) {
 }
 
 export async function getPosts({ pageParam }: { pageParam: number }) {
-  console.log("fetching posts!!!!");
   const pageSize = 10;
   const posts = await prisma.post.findMany({
     take: pageSize,

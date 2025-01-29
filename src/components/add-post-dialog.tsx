@@ -38,11 +38,13 @@ function AddPostDialog() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    let checksum;
+    let mediaUrl;
     try {
       if (file) {
-        const checksum = await computeSHA265(file);
+        checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
-        const mediaUrl = url?.split("?")[0];
+        mediaUrl = url?.split("?")[0];
         if (!mediaUrl) {
           toast("Failed to get media url");
           throw new Error("Failed to get media url");
@@ -55,10 +57,10 @@ function AddPostDialog() {
             "Content-Type": file?.type,
           },
         });
-        const error = await createPost(mediaUrl, postText, file.type);
-        if (error) {
-          toast(<p className=" font-semibold">{error.message}</p>);
-        }
+      }
+      const error = await createPost(postText, file?.type, mediaUrl);
+      if (error) {
+        toast(<p className=" font-semibold">{error.message}</p>);
       }
     } catch (err) {
       console.error(err);

@@ -72,9 +72,9 @@ export async function getSignedURL(
 }
 
 export async function createPost(
-  mediaUrl: string,
   postText: string,
-  type: string
+  type?: string,
+  mediaUrl?: string
 ) {
   const session = await auth();
   if (!session?.user?.email) {
@@ -96,7 +96,7 @@ export async function createPost(
   }
 
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
-
+  console.log(validatedData.success);
   if (!validatedData.success) {
     return {
       message: "Failed to validate post data",
@@ -109,8 +109,8 @@ export async function createPost(
       media: {
         create: [
           {
-            type: validatedData.data.type,
-            url: validatedData.data.mediaUrl,
+            type: validatedData.data.type || "",
+            url: validatedData.data.mediaUrl || "",
           },
         ],
       },

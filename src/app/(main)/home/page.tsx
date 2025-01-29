@@ -83,7 +83,7 @@ function Page() {
                 <p className="text-sm font-semibold my-2">{post?.postText}</p>
               )}
               <div className="justify-center flex">
-                {post.media[0].type.startsWith("image") ? (
+                {post.media[0].type.startsWith("image") && (
                   <Image
                     src={post.media[0].url}
                     width={1000}
@@ -92,7 +92,8 @@ function Page() {
                     alt="post image"
                     className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
                   />
-                ) : (
+                )}
+                {post.media[0].type.startsWith("video") && (
                   <video
                     src={post.media[0].url}
                     width={1000}

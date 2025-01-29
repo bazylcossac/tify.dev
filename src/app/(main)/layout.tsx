@@ -18,7 +18,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex justify-center mt-4">
-        <div className="sticky top-4 self-start">
+        <div className="sticky top-0 self-start ">
           <HomeSidebar />
         </div>
 
