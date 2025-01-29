@@ -36,6 +36,11 @@ function AddPostDialog() {
     );
   }
 
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    if (e.target.value.startsWith("#")) {
+    }
+    setPostText(e.target.value);
+  }
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let checksum;
@@ -116,7 +121,7 @@ function AddPostDialog() {
               className="transition font-semibold resize-none h-[70px] placeholder:text-white/50 mb-2 "
               placeholder="What's happening?"
               name="textarea"
-              onChange={(e) => setPostText(e.target.value)}
+              onChange={(e) => handleTextChange(e)}
               value={postText}
             />
           </div>

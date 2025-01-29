@@ -7,6 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
+import Link from "next/link";
 
 function Page() {
   const fetchPosts = async (pageParam: number) => {
@@ -35,6 +36,18 @@ function Page() {
   if (error) {
     return <p>Error, please refresh page</p>;
   }
+
+  const formatText = (text: string) => {
+    return text.split(/(#\S+)/g).map((part, index) =>
+      part.startsWith("#") ? (
+        <Link href={`explore/${part.slice(1)}`} key={index}>
+          <span className="text-blue-500 font-bold">{part}</span>
+        </Link>
+      ) : (
+        part
+      )
+    );
+  };
 
   return (
     <div className="flex flex-col overflow-y-auto no-scrollbar ">
@@ -80,7 +93,15 @@ function Page() {
                 </div>
               )}
               {post.postText && (
-                <p className="text-sm font-semibold my-2">{post?.postText}</p>
+                // <p className="text-sm font-semibold my-2">{post?.postText}</p>
+                <p className="text-sm font-semibold my-2">
+                  {formatText(post?.postText)}
+                </p>
+                // <div
+                //   dangerouslySetInnerHTML={{
+                //     __html: formatText(post?.postText),
+                //   }}
+                // />
               )}
               <div className="justify-center flex">
                 {post.media[0].type.startsWith("image") && (

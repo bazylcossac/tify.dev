@@ -1,7 +1,7 @@
 import React from "react";
 
 function Page() {
-  return <div className="text-white">explore page</div>;
+  return <div>Page explore</div>;
 }
 
 export default Page;

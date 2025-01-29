@@ -66,7 +66,9 @@ function HomeSidebar() {
                   className={cn(
                     "p-2 text-white/60 text-md rounded-lg font-bold transition flex items-center gap-2",
                     {
-                      "text-bold text-white": activePath === route.path,
+                      "text-bold text-white":
+                        `/${activePath?.slice(1).split("/")[0]}` ===
+                        `/${route.path?.slice(1).split("/")[0]}`,
                     }
                   )}
                 >
