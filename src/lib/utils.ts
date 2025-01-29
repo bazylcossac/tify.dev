@@ -70,3 +70,27 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
     nextCursor: hasMore ? pageParam + 1 : null,
   };
 }
+
+/// FUNCTION TO TAKE ONLY #
+// const posts = await prisma.post.findMany({
+//   take: pageSize,
+//   skip: pageParam * pageSize,
+//   where: {
+//     postText: {
+//       contains: "#react",
+//     },
+//   },
+//   include: {
+//     media: true,
+//     user: true,
+//   },
+//   orderBy: {
+//     createdAt: "desc",
+//   },
+// });
+
+export const fetchPosts = async (pageParam: number) => {
+  const response = await fetch(`/api/posts?pageParam=${pageParam}`);
+  const data = await response.json();
+  return data;
+};

@@ -3,26 +3,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { timeMessage } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
 import Link from "next/link";
+import { useInfinityScrollFetch } from "@/lib/hooks";
 
 function Page() {
-  const fetchPosts = async (pageParam: number) => {
-    const response = await fetch(`/api/posts?pageParam=${pageParam}`);
-
-    const data = await response.json();
-    return data;
-  };
-  const { data, error, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["posts"],
-    queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
-    // refetchInterval: 1000,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+  const { data, error, fetchNextPage } = useInfinityScrollFetch();
 
   const { ref, inView } = useInView();
   useEffect(() => {
@@ -30,6 +19,7 @@ function Page() {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
+
   if (!data) {
     return <HomePageLoader />;
   }
@@ -93,18 +83,12 @@ function Page() {
                 </div>
               )}
               {post.postText && (
-                // <p className="text-sm font-semibold my-2">{post?.postText}</p>
                 <p className="text-sm font-semibold my-2">
                   {formatText(post?.postText)}
                 </p>
-                // <div
-                //   dangerouslySetInnerHTML={{
-                //     __html: formatText(post?.postText),
-                //   }}
-                // />
               )}
               <div className="justify-center flex">
-                {post.media[0].type.startsWith("image") && (
+                {post?.media && post.media[0].type.startsWith("image") && (
                   <Image
                     src={post.media[0].url}
                     width={1000}
@@ -114,7 +98,7 @@ function Page() {
                     className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
                   />
                 )}
-                {post.media[0].type.startsWith("video") && (
+                {post?.media && post.media[0].type.startsWith("video") && (
                   <video
                     src={post.media[0].url}
                     width={1000}

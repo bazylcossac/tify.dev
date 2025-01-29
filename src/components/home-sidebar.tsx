@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import Image from "next/image";
 import Logo from "./logo";
+
 import {
   ExitIcon,
   HomeIcon,
@@ -14,7 +15,7 @@ import {
 } from "@radix-ui/react-icons";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
-import { UserType } from "@/types/types";
+
 import { Skeleton } from "./ui/skeleton";
 
 import { Button } from "@/components/ui/button";
@@ -47,8 +48,8 @@ function HomeSidebar() {
   const activePath = usePathname();
   const session = useSession();
 
-  const user: UserType = session?.data?.user;
-  if (!session) {
+  const user = session?.data?.user;
+  if (!user) {
     return "";
   }
 
@@ -83,14 +84,15 @@ function HomeSidebar() {
           <AddPostDialog />
         </div>
       </div>
-      {user ? (
+      {user && user.image ? (
         <div className="flex items-center justify-center gap-2 my-4 ">
           <Image
-            src={user?.image}
+            src={user.image}
             width={30}
             height={30}
             alt="user image"
             className="rounded-full w-6 h-6"
+            priority={true}
           />
           <div>
             <p className="mt-auto text-xs font-bold">@{user?.name}</p>
