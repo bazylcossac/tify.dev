@@ -10,6 +10,7 @@ import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 import { postSchema } from "@/lib/zod-schemas";
+
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
 };
@@ -22,7 +23,7 @@ const s3 = new S3Client({
 });
 
 export async function LogInWithProvider(provider: "google" | "github") {
-  await signIn(provider);
+  await signIn(provider, { redirectTo: "/home", redirect: true });
 }
 export async function logOut() {
   await signOut({ redirectTo: "/", redirect: true });
@@ -113,6 +114,7 @@ export async function createPost(
       },
     },
   });
+
   revalidatePath("/home", "page");
 }
 

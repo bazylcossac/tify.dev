@@ -9,6 +9,7 @@ function LandingBackground() {
       width={1920}
       height={1920}
       quality={100}
+      priority={true}
     />
   );
 }

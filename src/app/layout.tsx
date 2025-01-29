@@ -4,7 +4,6 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { redirect } from "next/navigation";
 
 const geistSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -22,8 +21,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-
-  // Create a QueryClient instance
 
   const currentUser = session?.user;
 

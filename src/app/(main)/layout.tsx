@@ -10,7 +10,8 @@ import React from "react";
 function Layout({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
   const session = useSession();
-  if (!session.data?.user) {
+
+  if (session.status === "unauthenticated") {
     redirect("/");
   }
 
@@ -28,6 +29,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             </QueryClientProvider>
           </div>
         </div>
+        <div className=" w-[200px]"></div>
       </div>
     </>
   );
