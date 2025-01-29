@@ -5,6 +5,8 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 
+import { userSchema } from "@/lib/zod-schemas";
+import { Toaster } from "@/components/ui/sonner";
 const geistSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
@@ -21,11 +23,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-
   const currentUser = session?.user;
 
   if (currentUser) {
-    const { name, email, image } = currentUser;
+    const userValidate = userSchema.safeParse(currentUser);
+
+    if (!userValidate.success) {
+      throw new Error("Failed to validate user");
+    }
+    const { name, email, image } = userValidate.data;
 
     await prisma.user.upsert({
       where: {
@@ -51,6 +57,7 @@ export default async function RootLayout({
       >
         {" "}
         <SessionProvider>{children}</SessionProvider>
+        <Toaster />
       </body>
     </html>
   );

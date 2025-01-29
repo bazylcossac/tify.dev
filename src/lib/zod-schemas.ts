@@ -5,3 +5,9 @@ export const postSchema = z.object({
   postText: z.string().optional(),
   type: z.string(),
 });
+
+export const userSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  image: z.string().url(),
+});

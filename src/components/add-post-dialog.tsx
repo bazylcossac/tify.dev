@@ -20,6 +20,7 @@ import { createPost, getSignedURL } from "@/actions/actions";
 import { computeSHA265 } from "@/lib/utils";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
+import { toast } from "sonner";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -39,15 +40,14 @@ function AddPostDialog() {
     e.preventDefault();
     try {
       if (file) {
-        console.log(file);
-
         const checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
         const mediaUrl = url?.split("?")[0];
         if (!mediaUrl) {
+          toast("Failed to get media url");
           throw new Error("Failed to get media url");
         }
-        
+
         await fetch(url!, {
           method: "PUT",
           body: file,
@@ -55,7 +55,10 @@ function AddPostDialog() {
             "Content-Type": file?.type,
           },
         });
-        await createPost(mediaUrl, postText, file.type);
+        const error = await createPost(mediaUrl, postText, file.type);
+        if (error) {
+          toast(<p className=" font-semibold">{error.message}</p>);
+        }
       }
     } catch (err) {
       console.error(err);

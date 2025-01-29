@@ -8,12 +8,14 @@ import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-
 import { postSchema } from "@/lib/zod-schemas";
 
+/// generate random 32bit file name
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
 };
+
+/// create s3 client
 const s3 = new S3Client({
   region: process.env.AWS_BUCKET_REGION!,
   credentials: {
@@ -94,7 +96,7 @@ export async function createPost(
   }
 
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
-  console.log(validatedData.success);
+
   if (!validatedData.success) {
     return {
       message: "Failed to validate post data",

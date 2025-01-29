@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { LogInWithProvider } from "@/actions/actions";
+import { toast } from "sonner";
 
 function LoginButtons() {
   return (
@@ -9,7 +10,13 @@ function LoginButtons() {
       {/* GITHUB BUTTON */}
       <Button
         className="px-6 rounded-button bg-white text-black hover:bg-white/60"
-        onClick={() => LogInWithProvider("github")}
+        onClick={async () => {
+          try {
+            await LogInWithProvider("github");
+          } catch {
+            toast("Failed to log in");
+          }
+        }}
       >
         <svg
           viewBox="0 0 20 20"
@@ -58,7 +65,13 @@ function LoginButtons() {
       {/* GOOGLE BUTTON */}
       <Button
         className="px-6 rounded-button bg-[#171717] hover:bg-[#0c0c0c]"
-        onClick={() => LogInWithProvider("google")}
+        onClick={async () => {
+          try {
+            await LogInWithProvider("google");
+          } catch {
+            toast("Failed to log in");
+          }
+        }}
       >
         <svg
           viewBox="-3 0 262 262"
