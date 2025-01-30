@@ -8,11 +8,13 @@ import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
 import Link from "next/link";
-import { useInfinityScrollFetch } from "@/lib/hooks";
+
+import { useUserContext } from "@/contexts/userContextProvider";
 
 function Page() {
-  const { data, error, fetchNextPage } = useInfinityScrollFetch();
-
+  console.log("home page render");
+  const { data, error, fetchNextPage } = useUserContext();
+  console.log(data);
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -50,23 +52,26 @@ function Page() {
             >
               {post ? (
                 <div className="flex flex-row items-center justify-between">
-                  <div className=" flex items-center gap-2 my-4">
-                    <Image
-                      src={post?.user?.image}
-                      width={30}
-                      height={30}
-                      alt="user image"
-                      className="rounded-full w-6 h-6"
-                    />
-                    <div className="flex flex-row items-center">
-                      <p className="mt-auto text-sm font-semibold ">
-                        @{post?.user?.name}
-                      </p>
-                      <p className="text-[11px] text-white/30 mx-2">
-                        {new Date(post?.createdAt).toLocaleDateString()}
-                      </p>
+                  {post?.user && (
+                    <div className=" flex items-center gap-2 my-4">
+                      <Image
+                        src={post?.user?.image}
+                        width={30}
+                        height={30}
+                        alt="user image"
+                        className="rounded-full w-6 h-6"
+                      />
+
+                      <div className="flex flex-row items-center">
+                        <p className="mt-auto text-sm font-semibold ">
+                          @{post?.user?.name}
+                        </p>
+                        <p className="text-[11px] text-white/30 mx-2">
+                          {new Date(post?.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div>
                     <p className="text-xs text-white/60 font-semibold">

@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 
 import { userSchema } from "@/lib/zod-schemas";
 import { Toaster } from "@/components/ui/sonner";
+import Provider from "@/components/providers";
 const geistSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
@@ -56,7 +57,9 @@ export default async function RootLayout({
         className={`${geistSans.variable} min-h-screen bg-black text-white antialiased `}
       >
         {" "}
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <Provider>{children}</Provider>
+        </SessionProvider>
         <Toaster />
       </body>
     </html>

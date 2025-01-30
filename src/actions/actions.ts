@@ -116,8 +116,7 @@ export async function createPost(
       },
     },
   });
-
-  revalidatePath("/home", "page");
+  revalidatePath("/home", "layout");
 }
 
 export async function getUserByEmail(email: string) {
@@ -126,4 +125,8 @@ export async function getUserByEmail(email: string) {
       email: email,
     },
   });
+}
+
+export async function revalidateHomePage() {
+  revalidatePath("/home", "layout");
 }

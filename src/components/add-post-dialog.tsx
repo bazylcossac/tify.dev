@@ -21,13 +21,14 @@ import { computeSHA265 } from "@/lib/utils";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
+import { useUserContext } from "@/contexts/userContextProvider";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
-
+  const { addPostOptimistic } = useUserContext();
   const session = useSession();
   const user = session?.data?.user as UserType;
   if (!user) {
@@ -42,6 +43,7 @@ function AddPostDialog() {
     setPostText(e.target.value);
   }
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    console.log("----ADD POST---");
     e.preventDefault();
     let checksum;
     let mediaUrl;
@@ -63,10 +65,11 @@ function AddPostDialog() {
           },
         });
       }
-      const error = await createPost(postText, file?.type, mediaUrl);
-      if (error) {
-        toast(<p className=" font-semibold">{error.message}</p>);
-      }
+      await addPostOptimistic(postText, file?.type, mediaUrl);
+      // const error = await createPost(postText, file?.type, mediaUrl);
+      // if (error) {
+      //   toast(<p className=" font-semibold">{error.message}</p>);
+      // }
     } catch (err) {
       console.error(err);
     }
