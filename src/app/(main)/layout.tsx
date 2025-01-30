@@ -18,18 +18,18 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex justify-center mt-4">
-        <div className="sticky top-0 self-start ">
-          <HomeSidebar />
-        </div>
-
-        <div>
-          <div className="min-h-screen w-[700px]  rounded-xl overflow-y-auto no-scrollbar">
-            <QueryClientProvider client={queryClient}>
-              {children}
-            </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <div className="sticky top-0 self-start ">
+            <HomeSidebar />
           </div>
-        </div>
-        <div className=" w-[200px]"></div>
+
+          <div>
+            <div className="min-h-screen w-[700px]  rounded-xl overflow-y-auto no-scrollbar">
+              {children}
+            </div>
+          </div>
+          <div className=" w-[200px]"></div>
+        </QueryClientProvider>
       </div>
     </>
   );

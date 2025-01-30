@@ -9,6 +9,8 @@ import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { postSchema } from "@/lib/zod-schemas";
+import { useQueryClient } from "@tanstack/react-query";
+import { sleep } from "@/lib/utils";
 
 /// generate random 32bit file name
 const generateFileName = (bytes = 32) => {
@@ -116,7 +118,6 @@ export async function createPost(
       },
     },
   });
-
   revalidatePath("/home", "page");
 }
 

@@ -7,6 +7,7 @@ export function useInfinityScrollFetch() {
     queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
     // refetchInterval: 1000,
     initialPageParam: 0,
+    staleTime: 0,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 

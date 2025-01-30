@@ -21,11 +21,13 @@ import { computeSHA265 } from "@/lib/utils";
 import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
+import { MAX_FILE_SIZE } from "@/lib/constants";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | undefined>(undefined);
+  const [errMessage, setErrMessage] = useState("");
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
   const session = useSession();
@@ -49,6 +51,7 @@ function AddPostDialog() {
       if (file) {
         checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
+
         mediaUrl = url?.split("?")[0];
         if (!mediaUrl) {
           toast("Failed to get media url");
@@ -63,9 +66,11 @@ function AddPostDialog() {
           },
         });
       }
+
       const error = await createPost(postText, file?.type, mediaUrl);
       if (error) {
-        toast(<p className=" font-semibold">{error.message}</p>);
+        toast(<p className="font-semibold">{error.message}</p>);
+        return;
       }
     } catch (err) {
       console.error(err);
@@ -79,7 +84,12 @@ function AddPostDialog() {
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
-
+    console.log(file);
+    if (file.size > MAX_FILE_SIZE) {
+      toast("File is too big!");
+      setFile(undefined);
+      return;
+    }
     setFile(file);
 
     if (file && fileUrl) {
@@ -131,6 +141,7 @@ function AddPostDialog() {
               <p className="text-[8px] text-white/50 mt-1">MAX 10MB</p>
             </>
           )}
+          {<p>{errMessage}</p>}
           <Input
             type="file"
             name="fileInput"
