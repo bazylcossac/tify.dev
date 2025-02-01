@@ -2,13 +2,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, timeMessage } from "@/lib/utils";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
 import Link from "next/link";
 import { useInfinityScrollFetch } from "@/lib/hooks";
-import { useQueryClient } from "@tanstack/react-query";
+
 import {
   Dialog,
   DialogContent,
@@ -17,14 +17,14 @@ import {
   DialogTrigger,
 } from "@radix-ui/react-dialog";
 
-import { FaHeart, FaStar } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { IoChatbox } from "react-icons/io5";
 import { likePost } from "@/actions/actions";
 import { useSession } from "next-auth/react";
 
 function Page() {
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfinityScrollFetch();
+  const { data, error, fetchNextPage } = useInfinityScrollFetch();
+
   const session = useSession();
   console.log(session);
   const { ref, inView } = useInView();
@@ -113,7 +113,7 @@ function Page() {
                         height={800}
                         quality={100}
                         alt="post image"
-                        className="rounded-lg border border-white/30 w-full max-h-[1000px] hover:opacity-75 object-contain transition hover:cursor-pointer"
+                        className="rounded-xl border border-white/30 w-full max-h-[1000px] hover:opacity-75 object-contain transition hover:cursor-pointer"
                       />
                     </DialogTrigger>
                     <DialogTitle></DialogTitle>
@@ -124,7 +124,7 @@ function Page() {
                         height={1000}
                         quality={100}
                         alt="post image"
-                        className="rounded-lg border border-white/30 w-full max-h-[1200px] object-contain transition hover:cursor-pointer z-10"
+                        className="rounded-xl border border-white/30 w-full max-h-[1200px] object-contain transition hover:cursor-pointer z-10"
                       />
                     </DialogContent>
                   </Dialog>
@@ -137,7 +137,7 @@ function Page() {
                         width={1000}
                         height={800}
                         controls
-                        className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                        className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain"
                         onClick={(e) => {
                           console.log(e.currentTarget);
                         }}
@@ -151,7 +151,7 @@ function Page() {
                         width={1000}
                         height={800}
                         controls
-                        className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                        className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain"
                       />
                     </DialogContent>
                   </Dialog>
@@ -180,11 +180,11 @@ function Page() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  {/* Stars */}
+                {/* <div className="flex items-center gap-1">
+                
                   <FaStar className="text-neutral-600 text-sm cursor-pointer" />
                   <p className="text-xs font-light">{post.stars}</p>
-                </div>
+                </div> */}
               </div>
             </div>
           ))

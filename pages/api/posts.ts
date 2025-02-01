@@ -1,5 +1,6 @@
 import { getPosts } from "@/lib/utils"; // Funkcja z Prisma
 import { NextApiRequest, NextApiResponse } from "next";
+export const dynamic = "force-dynamic";
 
 export default async function handler(
   req: NextApiRequest,

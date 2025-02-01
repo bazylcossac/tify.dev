@@ -13,6 +13,10 @@ import {
   BellIcon,
   PersonIcon,
 } from "@radix-ui/react-icons";
+import { IoMdHome } from "react-icons/io";
+import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
+
+import { FaBell } from "react-icons/fa";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 
@@ -25,22 +29,22 @@ const routes = [
   {
     name: "Home",
     path: "/home",
-    icon: <HomeIcon />,
+    icon: <IoMdHome />,
   },
   {
     name: "Explore",
     path: "/explore",
-    icon: <MagnifyingGlassIcon />,
+    icon: <IoSearchSharp />,
   },
   {
     name: "Notifications",
     path: "/notifications",
-    icon: <BellIcon />,
+    icon: <FaBell />,
   },
   {
     name: "Profile",
     path: "/profile",
-    icon: <PersonIcon />,
+    icon: <IoPersonSharp />,
   },
 ];
 
@@ -57,15 +61,15 @@ function HomeSidebar() {
     <div className="sticky top-4 flex flex-col min-h-screen pl-2 ">
       <div className="max-h-[800px] rounded-lg flex flex-col justify-between ">
         <div>
-          <ul className="p-4 space-y-4">
-            <div className="p-2">
+          <ul className="p-4 space-y-4 ">
+            <div className="p-4">
               <Logo />
             </div>
             {routes.map((route) => (
               <Link href={route.path} key={route.path}>
                 <li
                   className={cn(
-                    "p-2 text-white/60 text-md rounded-lg font-bold transition flex items-center gap-2",
+                    "p-4 text-white/60 text-md rounded-lg font-bold transition flex items-center gap-2",
                     {
                       "text-bold text-white":
                         `/${activePath?.slice(1).split("/")[0]}` ===
@@ -73,14 +77,14 @@ function HomeSidebar() {
                     }
                   )}
                 >
-                  {route.icon}
+                  <p className="text-2xl">{route.icon}</p>
                   {route.name}
                 </li>
               </Link>
             ))}
           </ul>
         </div>
-        <div className="mx-auto">
+        <div className="mx-auto  w-full flex items-center justify-center">
           <AddPostDialog />
         </div>
       </div>

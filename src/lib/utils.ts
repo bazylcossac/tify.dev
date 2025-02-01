@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { prisma } from "./db";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,11 +53,28 @@ export const fetchPosts = async (pageParam: number) => {
   console.log("fetching data");
   const response = await fetch(`/api/posts?pageParam=${pageParam}`, {
     cache: "no-store",
+    next: { tags: ["posts"] },
   });
   const data = await response.json();
 
   return data;
 };
+
+// export const fetchPosts = async (pageParam: number) => {
+//   console.log("fetching data...");
+
+//   const response = await fetch(`/api/posts?pageParam=${pageParam}`, {
+//     cache: "no-store",
+//     next: { tags: ["posts"] }, // Dodanie tagu dla rewalidacji
+//   });
+
+//   if (!response.ok) {
+//     throw new Error("Failed to fetch posts");
+//   }
+
+//   const data = await response.json();
+//   return data;
+// };
 
 export async function getPosts({ pageParam }: { pageParam: number }) {
   const pageSize = 10;
@@ -76,7 +94,8 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
   const totalPosts = await prisma.post.count();
 
   const hasMore = (pageParam + 1) * pageSize < totalPosts;
-
+  // revalidateTag("posts");
+  // revalidatePath("/home", "page");
   return {
     posts,
     nextCursor: hasMore ? pageParam + 1 : null,

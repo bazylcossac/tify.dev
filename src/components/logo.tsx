@@ -2,7 +2,7 @@ import React from "react";
 
 function Logo() {
   return (
-    <p className="font-bold text-xl">
+    <p className="font-bold text-2xl">
       TIFY.<span className="text-xs">dev</span>
     </p>
   );

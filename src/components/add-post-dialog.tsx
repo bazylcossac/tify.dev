@@ -75,6 +75,7 @@ function AddPostDialog() {
       console.log("POST ADDED");
 
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+
       if (error) {
         toast(<p className="font-semibold">{error.message}</p>);
         return;
@@ -114,7 +115,7 @@ function AddPostDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="font-bold rounded-xl bg-blue-600 text-xs px-10 mb-2 ">
+        <Button className="font-bold rounded-xl bg-blue-600 text-xs px-10 mb-2 w-3/4">
           POST
         </Button>
       </DialogTrigger>

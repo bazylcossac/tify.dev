@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { postSchema } from "@/lib/zod-schemas";
 
 /// generate random 32bit file name
@@ -118,6 +118,7 @@ export async function createPost(
       },
     },
   });
+  revalidateTag("posts");
   revalidatePath("/home", "page"); // Odświeżenie strony na serwerze
 }
 
@@ -192,6 +193,7 @@ export async function likePost(postId: string) {
       },
     });
   }
+  revalidateTag("posts");
   revalidatePath("/home", "page");
   /// add user to likes list for a post
 }
