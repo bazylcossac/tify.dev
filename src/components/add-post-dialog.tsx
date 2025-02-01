@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useTransition } from "react";
 import {
   Dialog,
   DialogClose,
@@ -23,6 +23,7 @@ import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUserContext } from "@/contexts/userContextProvider";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -30,6 +31,7 @@ function AddPostDialog() {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
+  const { addPostToDB, error, isPending } = useUserContext();
   const queryClient = useQueryClient();
 
   const session = useSession();
@@ -71,7 +73,9 @@ function AddPostDialog() {
         });
       }
       console.log(mediaUrl);
-      const error = await createPost(postText, file?.type, mediaUrl);
+      // const error = await createPost(postText, file?.type, mediaUrl);
+
+      addPostToDB(postText, file?.type, mediaUrl);
       console.log("POST ADDED");
 
       queryClient.invalidateQueries({ queryKey: ["posts"] });

@@ -1,5 +1,6 @@
 "use client";
 import HomeSidebar from "@/components/home-sidebar";
+import UserContextProvider from "@/contexts/userContextProvider";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -19,16 +20,18 @@ function Layout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex justify-center mt-4">
         <QueryClientProvider client={queryClient}>
-          <div className="sticky top-0 self-start ">
-            <HomeSidebar />
-          </div>
-
-          <div>
-            <div className="min-h-screen w-[700px]  rounded-xl overflow-y-auto no-scrollbar">
-              {children}
+          <UserContextProvider>
+            <div className="sticky top-0 self-start ">
+              <HomeSidebar />
             </div>
-          </div>
-          <div className=" w-[200px]"></div>
+
+            <div>
+              <div className="min-h-screen w-[700px]  rounded-xl overflow-y-auto no-scrollbar">
+                {children}
+              </div>
+            </div>
+            <div className=" w-[200px]"></div>
+          </UserContextProvider>
         </QueryClientProvider>
       </div>
     </>

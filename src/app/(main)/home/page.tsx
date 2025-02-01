@@ -21,9 +21,11 @@ import { FaHeart } from "react-icons/fa";
 import { IoChatbox } from "react-icons/io5";
 import { likePost } from "@/actions/actions";
 import { useSession } from "next-auth/react";
+import { useUserContext } from "@/contexts/userContextProvider";
 
 function Page() {
-  const { data, error, fetchNextPage } = useInfinityScrollFetch();
+  // const { data, error, fetchNextPage } = useInfinityScrollFetch();
+  const { data, fetchNextPage, error, refetch } = useUserContext();
 
   const session = useSession();
   console.log(session);
@@ -168,7 +170,10 @@ function Page() {
                             user.likedPostUserId === session.data?.userId
                         ),
                       })}
-                      onClick={async () => await likePost(post.postId)}
+                      onClick={async () => {
+                        await likePost(post.postId);
+                        refetch();
+                      }}
                     />
                     <p className="text-xs font-light">{post.likes}</p>
                   </div>
