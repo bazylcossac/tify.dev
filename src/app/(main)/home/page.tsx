@@ -3,24 +3,38 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { timeMessage } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect } from "react";
-
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
 import Link from "next/link";
 import { useInfinityScrollFetch } from "@/lib/hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@radix-ui/react-dialog";
+
+import { FaHeart, FaStar } from "react-icons/fa";
+import { IoChatbox } from "react-icons/io5";
+import { likePost } from "@/actions/actions";
+import { useSession } from "next-auth/react";
 
 function Page() {
-  const { data, error, fetchNextPage } = useInfinityScrollFetch();
-
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfinityScrollFetch();
+  const session = useSession();
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
+      console.log("in view");
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
 
-  if (!data) {
+  if (!data || !session) {
     return <HomePageLoader />;
   }
   if (error) {
@@ -83,36 +97,94 @@ function Page() {
                 </div>
               )}
               {post.postText && (
-                <p className="text-sm font-semibold my-2">
+                <p className="text-sm font-semibold mb-2">
                   {formatText(post?.postText)}
                 </p>
               )}
               <div className="justify-center flex">
                 {post?.media && post.media[0].type.startsWith("image") && (
-                  <Image
-                    src={post.media[0].url}
-                    width={1000}
-                    height={800}
-                    quality={100}
-                    alt="post image"
-                    className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
-                  />
+                  <Dialog modal>
+                    <DialogTrigger asChild>
+                      <Image
+                        src={post.media[0].url}
+                        width={1200}
+                        height={800}
+                        quality={100}
+                        alt="post image"
+                        className="rounded-lg border border-white/30 w-full max-h-[1000px] hover:opacity-75 object-contain transition hover:cursor-pointer"
+                      />
+                    </DialogTrigger>
+                    <DialogTitle></DialogTitle>
+                    <DialogContent className="absolute outline-none z-10">
+                      <Image
+                        src={post.media[0].url}
+                        width={1200}
+                        height={1000}
+                        quality={100}
+                        alt="post image"
+                        className="rounded-lg border border-white/30 w-full max-h-[1200px] object-contain transition hover:cursor-pointer z-10"
+                      />
+                    </DialogContent>
+                  </Dialog>
                 )}
                 {post?.media && post.media[0].type.startsWith("video") && (
-                  <video
-                    src={post.media[0].url}
-                    width={1000}
-                    height={800}
-                    controls
-                    className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
-                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <video
+                        src={post.media[0].url}
+                        width={1000}
+                        height={800}
+                        controls
+                        className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                        onClick={(e) => {
+                          console.log(e.currentTarget);
+                        }}
+                      />
+                    </DialogTrigger>
+                    <DialogTitle></DialogTitle>
+                    <DialogContent className="absolute">
+                      <DialogDescription></DialogDescription>
+                      <video
+                        src={post.media[0].url}
+                        width={1000}
+                        height={800}
+                        controls
+                        className="rounded-lg border border-white/30 w-full max-h-[600px] object-contain"
+                      />
+                    </DialogContent>
+                  </Dialog>
                 )}
+              </div>
+              <div className="flex flex-row justify-between items-center mt-4">
+                <div className="flex flex-row gap-8 ">
+                  <div className="flex items-center gap-1">
+                    {/* Likes */}
+                    <FaHeart
+                      className="text-sm text-neutral-600 cursor-pointer"
+                      onClick={async () => await likePost(post.postId)}
+                    />
+                    <p className="text-xs font-light">{post.likes}</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {/* Comments */}
+                    <IoChatbox className="text-neutral-600 text-sm cursor-pointer" />
+                    <p className="text-xs font-light">
+                      {post?.comments?.length || 0}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  {/* Stars */}
+                  <FaStar className="text-neutral-600 text-sm cursor-pointer" />
+                  <p className="text-xs font-light">{post.stars}</p>
+                </div>
               </div>
             </div>
           ))
         )}
       </ul>
-      <div ref={ref}></div>
+
+      <div className="h-[1px]" ref={ref}></div>
     </div>
   );
 }

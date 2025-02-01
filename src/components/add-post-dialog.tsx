@@ -22,15 +22,18 @@ import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | undefined>(undefined);
-  const [errMessage, setErrMessage] = useState("");
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
+  const queryClient = useQueryClient();
+
   const session = useSession();
+
   const user = session?.data?.user as UserType;
   if (!user) {
     return (
@@ -45,6 +48,7 @@ function AddPostDialog() {
   }
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     let checksum;
     let mediaUrl;
     try {
@@ -66,8 +70,11 @@ function AddPostDialog() {
           },
         });
       }
-
+      console.log(mediaUrl);
       const error = await createPost(postText, file?.type, mediaUrl);
+      console.log("POST ADDED");
+
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       if (error) {
         toast(<p className="font-semibold">{error.message}</p>);
         return;
@@ -141,7 +148,7 @@ function AddPostDialog() {
               <p className="text-[8px] text-white/50 mt-1">MAX 10MB</p>
             </>
           )}
-          {<p>{errMessage}</p>}
+
           <Input
             type="file"
             name="fileInput"

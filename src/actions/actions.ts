@@ -9,8 +9,6 @@ import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { postSchema } from "@/lib/zod-schemas";
-import { useQueryClient } from "@tanstack/react-query";
-import { sleep } from "@/lib/utils";
 
 /// generate random 32bit file name
 const generateFileName = (bytes = 32) => {
@@ -108,6 +106,8 @@ export async function createPost(
     data: {
       userId: user.id,
       postText: String(validatedData.data.postText),
+      likes: 0,
+      stars: 0,
       media: {
         create: [
           {
@@ -118,7 +118,7 @@ export async function createPost(
       },
     },
   });
-  revalidatePath("/home", "page");
+  revalidatePath("/home", "page"); // Odświeżenie strony na serwerze
 }
 
 export async function getUserByEmail(email: string) {
@@ -127,4 +127,19 @@ export async function getUserByEmail(email: string) {
       email: email,
     },
   });
+}
+
+export async function likePost(postId: string) {
+  await prisma.post.update({
+    where: {
+      postId: postId,
+    },
+    data: {
+      likes: {
+        increment: 1,
+      },
+    },
+  });
+
+  revalidatePath("/home", "page");
 }

@@ -48,8 +48,19 @@ export function timeMessage(createdAt: Date) {
 
   return diffMessage;
 }
+export const fetchPosts = async (pageParam: number) => {
+  console.log("fetching data");
+  const response = await fetch(`/api/posts?pageParam=${pageParam}`, {
+    cache: "no-store",
+  });
+  const data = await response.json();
+
+  return data;
+};
 
 export async function getPosts({ pageParam }: { pageParam: number }) {
+  console.log("IM WORKING");
+
   const pageSize = 10;
   const posts = await prisma.post.findMany({
     take: pageSize,
@@ -62,7 +73,10 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
       createdAt: "desc",
     },
   });
+  console.log(posts);
+
   const totalPosts = await prisma.post.count();
+
   const hasMore = (pageParam + 1) * pageSize < totalPosts;
 
   return {
@@ -88,9 +102,3 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
 //     createdAt: "desc",
 //   },
 // });
-
-export const fetchPosts = async (pageParam: number) => {
-  const response = await fetch(`/api/posts?pageParam=${pageParam}`);
-  const data = await response.json();
-  return data;
-};

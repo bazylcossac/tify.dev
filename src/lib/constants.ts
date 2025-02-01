@@ -3,6 +3,7 @@ export const ACCEPTED_FILES = [
   "image/png",
   "image/jpg",
   "image/gif",
+  "image/webp",
   "video/mp4",
   "video/webm",
   "video/quicktime",
