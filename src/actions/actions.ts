@@ -131,7 +131,7 @@ export async function getUserByEmail(email: string) {
 
 export async function likePost(postId: string) {
   const session = await auth();
-
+  console.log(session);
   if (!session?.user?.email) {
     redirect("/");
   }
@@ -144,16 +144,17 @@ export async function likePost(postId: string) {
       id: true,
     },
   });
-
+  console.log(user?.id);
   if (!user) {
     return {
       message: "Failed to find a user",
     };
   }
 
-  const isUserLiked = await prisma.likeUsers.findUnique({
+  const isUserLiked = await prisma.likeUsers.findFirst({
     where: {
       likedPostUserId: user.id,
+      likedPostId: postId,
     },
   });
 
@@ -168,27 +169,12 @@ export async function likePost(postId: string) {
         },
       },
     });
-    await prisma.likeUsers.delete({
-      where: { likedPostUserId: user.id },
+    await prisma.likeUsers.deleteMany({
+      where: { likedPostUserId: user.id, likedPostId: postId },
     });
 
     return;
   } else {
-    await prisma.likeUsers.upsert({
-      where: {
-        likedPostId: postId,
-        likedPostUserId: user.id,
-      },
-      update: {
-        likedPostUserId: user.id,
-        likedPostId: postId,
-      },
-      create: {
-        likedPostUserId: user.id,
-        likedPostId: postId,
-      },
-    });
-
     await prisma.post.update({
       where: {
         postId: postId,
@@ -197,6 +183,12 @@ export async function likePost(postId: string) {
         likes: {
           increment: 1,
         },
+      },
+    });
+    await prisma.likeUsers.create({
+      data: {
+        likedPostUserId: user.id,
+        likedPostId: postId,
       },
     });
   }

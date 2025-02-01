@@ -22,11 +22,12 @@ model User {
 }
 
 model LikeUsers {
+  id String @id @default(uuid())
+
   likedPostUser   User    @relation(fields: [likedPostUserId], references: [id])
-  likedPostUserId String  @unique
-  email           String
-  Post            Post?   @relation(fields: [postPostId], references: [postId])
-  postPostId      String?
+  likedPostUserId String
+  Post            Post?   @relation(fields: [likedPostId], references: [postId])
+  likedPostId     String?
 }
 
 model Post {
