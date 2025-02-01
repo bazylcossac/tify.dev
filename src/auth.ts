@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
+import { prisma } from "./lib/db";
+import { userSchema } from "./lib/zod-schemas";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -11,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isLoggedIn = !!auth?.user;
       const isTryinToAccess = request.url !== "/";
       const isTryinToAccessLadningPage = request.url === "/";
-      console.log(isLoggedIn);
+
       // User is logged in and trying to access a protected route
       if (isLoggedIn && isTryinToAccess) {
         return true;
@@ -28,11 +30,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async jwt({ token }) {
+      //
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.userId as string;
+      const currentUser = session?.user;
+
+      if (currentUser) {
+        const userValidate = userSchema.safeParse(currentUser);
+
+        if (!userValidate.success) {
+          throw new Error("Failed to validate user");
+        }
+        const { name, email, image } = userValidate.data;
+
+        const user = await prisma.user.upsert({
+          where: {
+            email,
+          },
+          create: {
+            name: name,
+            email: email,
+            image: image,
+            username: "",
+          },
+          update: {
+            name: name,
+            image: image,
+          },
+        });
+        session.userId = user.id;
+
+        return session;
       }
       return session;
     },

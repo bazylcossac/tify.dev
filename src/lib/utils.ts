@@ -59,21 +59,19 @@ export const fetchPosts = async (pageParam: number) => {
 };
 
 export async function getPosts({ pageParam }: { pageParam: number }) {
-  console.log("IM WORKING");
-
   const pageSize = 10;
   const posts = await prisma.post.findMany({
     take: pageSize,
     skip: pageParam * pageSize,
     include: {
       media: true,
-      user: true,
+      User: true,
+      LikeUsers: true,
     },
     orderBy: {
       createdAt: "desc",
     },
   });
-  console.log(posts);
 
   const totalPosts = await prisma.post.count();
 

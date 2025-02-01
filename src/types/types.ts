@@ -1,4 +1,4 @@
-import type { User, Post } from "@prisma/client";
+import type { User } from "@prisma/client";
 export type UserType = User;
 
 export type MediaType = {
@@ -21,7 +21,8 @@ export type PostType = {
   likes: number;
   stars: number;
   userId: string;
-  user: UserType;
+  User: UserType;
   media: MediaType[];
+  LikeUsers: string[];
   comments: CommentsType[];
 };

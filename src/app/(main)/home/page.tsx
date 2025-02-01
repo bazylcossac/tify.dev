@@ -1,6 +1,6 @@
 "use client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { timeMessage } from "@/lib/utils";
+import { cn, timeMessage } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
@@ -26,6 +26,7 @@ function Page() {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfinityScrollFetch();
   const session = useSession();
+  console.log(session);
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -33,7 +34,7 @@ function Page() {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
-
+  console.log(data);
   if (!data || !session) {
     return <HomePageLoader />;
   }
@@ -62,11 +63,12 @@ function Page() {
               key={post.postId}
               className="flexf flex-col mx-4 border-b border-white/30 py-4 "
             >
+              {/* <p>{post.LikeUsers.includes()}</p> */}
               {post ? (
                 <div className="flex flex-row items-center justify-between">
                   <div className=" flex items-center gap-2 my-4">
                     <Image
-                      src={post?.user?.image}
+                      src={post?.User?.image}
                       width={30}
                       height={30}
                       alt="user image"
@@ -74,7 +76,7 @@ function Page() {
                     />
                     <div className="flex flex-row items-center">
                       <p className="mt-auto text-sm font-semibold ">
-                        @{post?.user?.name}
+                        @{post?.User?.name}
                       </p>
                       <p className="text-[11px] text-white/30 mx-2">
                         {new Date(post?.createdAt).toLocaleDateString()}
@@ -160,7 +162,12 @@ function Page() {
                   <div className="flex items-center gap-1">
                     {/* Likes */}
                     <FaHeart
-                      className="text-sm text-neutral-600 cursor-pointer"
+                      className={cn("text-sm text-neutral-600 cursor-pointer", {
+                        "text-red-500": post.LikeUsers.find(
+                          (user) =>
+                            user.likedPostUserId === session.data?.userId
+                        ),
+                      })}
                       onClick={async () => await likePost(post.postId)}
                     />
                     <p className="text-xs font-light">{post.likes}</p>

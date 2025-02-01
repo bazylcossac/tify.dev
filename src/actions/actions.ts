@@ -96,7 +96,7 @@ export async function createPost(
   }
 
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
-  console.log(validatedData.success);
+
   if (!validatedData.success) {
     return {
       message: "Failed to validate post data",
@@ -130,16 +130,76 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function likePost(postId: string) {
-  await prisma.post.update({
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    redirect("/");
+  }
+
+  const user = await prisma.user.findUnique({
     where: {
-      postId: postId,
+      email: session?.user?.email,
     },
-    data: {
-      likes: {
-        increment: 1,
-      },
+    select: {
+      id: true,
     },
   });
 
+  if (!user) {
+    return {
+      message: "Failed to find a user",
+    };
+  }
+
+  const isUserLiked = await prisma.likeUsers.findUnique({
+    where: {
+      likedPostUserId: user.id,
+    },
+  });
+
+  if (isUserLiked) {
+    await prisma.post.update({
+      where: {
+        postId: postId,
+      },
+      data: {
+        likes: {
+          decrement: 1,
+        },
+      },
+    });
+    await prisma.likeUsers.delete({
+      where: { likedPostUserId: user.id },
+    });
+
+    return;
+  } else {
+    await prisma.likeUsers.upsert({
+      where: {
+        likedPostId: postId,
+        likedPostUserId: user.id,
+      },
+      update: {
+        likedPostUserId: user.id,
+        likedPostId: postId,
+      },
+      create: {
+        likedPostUserId: user.id,
+        likedPostId: postId,
+      },
+    });
+
+    await prisma.post.update({
+      where: {
+        postId: postId,
+      },
+      data: {
+        likes: {
+          increment: 1,
+        },
+      },
+    });
+  }
   revalidatePath("/home", "page");
+  /// add user to likes list for a post
 }
