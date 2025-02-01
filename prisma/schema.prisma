@@ -11,33 +11,35 @@ datasource db {
 }
 
 model User {
-  id       String     @id @default(uuid())
-  name     String
-  username String?
-  email    String     @unique
-  image    String
-  posts    Post[]
-  Comments Comments[]
+  id        String      @id @default(uuid())
+  name      String
+  username  String?
+  email     String      @unique
+  image     String
+  posts     Post[]
+  Comments  Comments[]
+  LikeUsers LikeUsers[]
 }
 
 model LikeUsers {
-  likedPostUser   User[] @relation(fields: [likedPostUserId], references: [id])
-  likedPostUserId String
-  post Post[] @relation(fields: [postId]: references: [postId])
-  postId          String
+  likedPostUser   User   @relation(fields: [likedPostUserId], references: [id])
+  likedPostUserId String @unique
+  likedPost       Post   @relation(fields: [likedPostId], references: [postId])
+  likedPostId     String @unique
 }
 
 model Post {
-  postId    String     @id @default(uuid())
+  postId    String      @id @default(uuid())
   comments  Comments[]
+  postText  String
   userId    String
   media     Media[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   likes     Int
   stars     Int
-  LikeUsers
-  User      User       @relation(fields: [userId], references: [id])
+  LikeUsers LikeUsers[]
+  User      User        @relation(fields: [userId], references: [id])
 }
 
 model Media {
