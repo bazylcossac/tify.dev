@@ -4,7 +4,13 @@ import { createPost } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { createContext, useContext, useTransition } from "react";
+import {
+  createContext,
+  startTransition,
+  useContext,
+  useOptimistic,
+  useTransition,
+} from "react";
 
 const UserContext = createContext<ContextTypes | null>(null);
 
@@ -13,21 +19,13 @@ export default function UserContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [isPending, startTransition] = useTransition();
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useInfiniteQuery({
+  const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
-    // refetchInterval: 1000,
     initialPageParam: 0,
-    staleTime: 0,
-    gcTime: 0,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
 
@@ -43,7 +41,13 @@ export default function UserContextProvider({
 
   return (
     <UserContext.Provider
-      value={{ addPostToDB, data, refetch, fetchNextPage, error, isPending }}
+      value={{
+        addPostToDB,
+        data,
+        refetch,
+        fetchNextPage,
+        error,
+      }}
     >
       {children}
     </UserContext.Provider>

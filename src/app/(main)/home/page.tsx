@@ -2,12 +2,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, timeMessage } from "@/lib/utils";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
 import Link from "next/link";
-import { useInfinityScrollFetch } from "@/lib/hooks";
 
 import {
   Dialog,
@@ -26,6 +25,8 @@ import { useUserContext } from "@/contexts/userContextProvider";
 function Page() {
   // const { data, error, fetchNextPage } = useInfinityScrollFetch();
   const { data, fetchNextPage, error, refetch } = useUserContext();
+  const link = "https://www.youtube.com/watch?v=yrsIDOka7FQ";
+  console.log(link.split("=")[1]);
 
   const session = useSession();
   console.log(session);
@@ -45,15 +46,21 @@ function Page() {
   }
 
   const formatText = (text: string) => {
-    return text.split(/(#\S+)/g).map((part, index) =>
-      part.startsWith("#") ? (
-        <Link href={`explore/${part.slice(1)}`} key={index}>
-          <span className="text-blue-500 font-bold">{part}</span>
-        </Link>
-      ) : (
-        part
-      )
-    );
+    return text
+      .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
+      .map((part, index) =>
+        part.startsWith("#") ? (
+          <Link href={`explore/${part.slice(1)}`} key={index}>
+            <span className="text-blue-500 font-bold">{part}</span>
+          </Link>
+        ) : part.startsWith("https://www.youtube.com/watch") ? (
+          <Link href={`${part.split("::")[1]}`} target="_blank" key={index}>
+            <span className="text-blue-500 font-bold">{part}</span>
+          </Link>
+        ) : (
+          part
+        )
+      );
   };
 
   return (
@@ -74,10 +81,10 @@ function Page() {
                       width={30}
                       height={30}
                       alt="user image"
-                      className="rounded-full w-6 h-6"
+                      className="rounded-full w-8 h-8"
                     />
                     <div className="flex flex-row items-center">
-                      <p className="mt-auto text-sm font-semibold ">
+                      <p className="mt-auto text-md font-semibold ">
                         @{post?.User?.name}
                       </p>
                       <p className="text-[11px] text-white/30 mx-2">
@@ -131,6 +138,16 @@ function Page() {
                     </DialogContent>
                   </Dialog>
                 )}
+                {post.postText.includes("https://www.youtube.com/watch") && (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${
+                      post.postText.split("=")[1]
+                    }`}
+                    className="w-full h-[300px] rounded-lg"
+                    allowFullScreen
+                  />
+                )}
+
                 {post?.media && post.media[0].type.startsWith("video") && (
                   <Dialog>
                     <DialogTrigger asChild>
@@ -149,12 +166,16 @@ function Page() {
                     <DialogContent className="absolute">
                       <DialogDescription></DialogDescription>
                       <video
-                        src={post.media[0].url}
                         width={1000}
                         height={800}
                         controls
                         className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain"
-                      />
+                      >
+                        <source
+                          src={post.media[0].url}
+                          type={post.media[0].type}
+                        />
+                      </video>
                     </DialogContent>
                   </Dialog>
                 )}

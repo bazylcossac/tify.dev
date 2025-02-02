@@ -31,7 +31,7 @@ function AddPostDialog() {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
-  const { addPostToDB, error, isPending } = useUserContext();
+  const { addPostToDB, error, addPostOptimistic } = useUserContext();
   const queryClient = useQueryClient();
 
   const session = useSession();
@@ -74,11 +74,12 @@ function AddPostDialog() {
       }
       console.log(mediaUrl);
       // const error = await createPost(postText, file?.type, mediaUrl);
-
+      console.log(postText);
       addPostToDB(postText, file?.type, mediaUrl);
+
       console.log("POST ADDED");
 
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // queryClient.invalidateQueries({ queryKey: ["posts"] });
 
       if (error) {
         toast(<p className="font-semibold">{error.message}</p>);

@@ -50,31 +50,11 @@ export function timeMessage(createdAt: Date) {
   return diffMessage;
 }
 export const fetchPosts = async (pageParam: number) => {
-  console.log("fetching data");
-  const response = await fetch(`/api/posts?pageParam=${pageParam}`, {
-    cache: "no-store",
-    next: { tags: ["posts"] },
-  });
+  const response = await fetch(`/api/posts?pageParam=${pageParam}`);
   const data = await response.json();
 
   return data;
 };
-
-// export const fetchPosts = async (pageParam: number) => {
-//   console.log("fetching data...");
-
-//   const response = await fetch(`/api/posts?pageParam=${pageParam}`, {
-//     cache: "no-store",
-//     next: { tags: ["posts"] }, // Dodanie tagu dla rewalidacji
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch posts");
-//   }
-
-//   const data = await response.json();
-//   return data;
-// };
 
 export async function getPosts({ pageParam }: { pageParam: number }) {
   const pageSize = 10;
