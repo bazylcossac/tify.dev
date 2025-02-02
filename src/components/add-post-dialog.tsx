@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserContext } from "@/contexts/userContextProvider";
+import { revalidateTag } from "next/cache";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -31,7 +32,7 @@ function AddPostDialog() {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
-  const { addPostToDB, error, addPostOptimistic } = useUserContext();
+  const { addPostToDB, error } = useUserContext();
   const queryClient = useQueryClient();
 
   const session = useSession();
@@ -76,6 +77,7 @@ function AddPostDialog() {
       // const error = await createPost(postText, file?.type, mediaUrl);
       console.log(postText);
       addPostToDB(postText, file?.type, mediaUrl);
+
 
       console.log("POST ADDED");
 

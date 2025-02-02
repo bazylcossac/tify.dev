@@ -24,7 +24,7 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const currentUser = session?.user;
-  console.log(session);
+
   if (currentUser) {
     const userValidate = userSchema.safeParse(currentUser);
 

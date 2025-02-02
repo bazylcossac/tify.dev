@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { prisma } from "./db";
-import { revalidatePath, revalidateTag } from "next/cache";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -50,7 +49,7 @@ export function timeMessage(createdAt: Date) {
   return diffMessage;
 }
 export const fetchPosts = async (pageParam: number) => {
-  const response = await fetch(`/api/posts?pageParam=${pageParam}`);
+  const response = await fetch(`/api/posts?pageParam=${pageParam}`, {});
   const data = await response.json();
 
   return data;

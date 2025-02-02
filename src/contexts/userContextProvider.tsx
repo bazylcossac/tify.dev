@@ -3,6 +3,7 @@
 import { createPost } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { revalidateTag } from "next/cache";
 
 import {
   createContext,
@@ -34,7 +35,8 @@ export default function UserContextProvider({
     fileType: string,
     mediaUrl: string
   ) {
-    await createPost(postText, fileType, mediaUrl);
+    const text = postText.replace(/\n/g, "\n");
+    await createPost(text, fileType, mediaUrl);
 
     refetch();
   }

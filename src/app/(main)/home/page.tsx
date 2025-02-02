@@ -7,7 +7,6 @@ import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import { PostType } from "@/types/types";
 import Link from "next/link";
-
 import {
   Dialog,
   DialogContent,
@@ -23,13 +22,8 @@ import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 
 function Page() {
-  // const { data, error, fetchNextPage } = useInfinityScrollFetch();
   const { data, fetchNextPage, error, refetch } = useUserContext();
-  const link = "https://www.youtube.com/watch?v=yrsIDOka7FQ";
-  console.log(link.split("=")[1]);
-
   const session = useSession();
-  console.log(session);
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -108,7 +102,7 @@ function Page() {
                 </div>
               )}
               {post.postText && (
-                <p className="text-sm font-semibold mb-2">
+                <p className="text-sm font-semibold mb-2 whitespace-pre-line">
                   {formatText(post?.postText)}
                 </p>
               )}
@@ -144,6 +138,7 @@ function Page() {
                       post.postText.split("=")[1]
                     }`}
                     className="w-full h-[300px] rounded-lg"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                 )}
@@ -157,9 +152,6 @@ function Page() {
                         height={800}
                         controls
                         className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain"
-                        onClick={(e) => {
-                          console.log(e.currentTarget);
-                        }}
                       />
                     </DialogTrigger>
                     <DialogTitle></DialogTitle>

@@ -1,18 +1,14 @@
 "use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
+
 import Image from "next/image";
 import Logo from "./logo";
 
-import {
-  ExitIcon,
-  HomeIcon,
-  MagnifyingGlassIcon,
-  BellIcon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
+import { ExitIcon } from "@radix-ui/react-icons";
 import { IoMdHome } from "react-icons/io";
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
 
@@ -85,10 +81,12 @@ function HomeSidebar() {
           </ul>
         </div>
         <div className="mx-auto  w-full flex items-center justify-center">
-          <AddPostDialog />
+          <Suspense fallback={<div>loading...</div>}>
+            <AddPostDialog />
+          </Suspense>
         </div>
       </div>
-      {user && user.image ? (
+      {user && user?.image ? (
         <div className="flex items-center justify-center gap-2 my-4 ">
           <Image
             src={user.image}

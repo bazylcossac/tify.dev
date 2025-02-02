@@ -137,63 +137,45 @@ export async function likePost(postId: string) {
     redirect("/");
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session?.user?.email,
-    },
-    select: {
-      id: true,
-    },
-  });
-  console.log(user?.id);
-  if (!user) {
-    return {
-      message: "Failed to find a user",
-    };
-  }
-
+  /// Chcec if user has already liked that post
   const isUserLiked = await prisma.likeUsers.findFirst({
     where: {
-      likedPostUserId: user.id,
+      likedPostUserId: session.userId,
       likedPostId: postId,
     },
   });
 
   if (isUserLiked) {
+    /// Decrement likes in this post
     await prisma.post.update({
       where: {
         postId: postId,
       },
-      data: {
-        likes: {
-          decrement: 1,
-        },
-      },
+      data: { likes: { decrement: 1 } },
     });
+    /// Delete user from likes on this post
     await prisma.likeUsers.deleteMany({
-      where: { likedPostUserId: user.id, likedPostId: postId },
+      where: { likedPostUserId: session.userId, likedPostId: postId },
     });
 
     return;
   } else {
+    /// Increment likes in this post
     await prisma.post.update({
       where: {
         postId: postId,
       },
-      data: {
-        likes: {
-          increment: 1,
-        },
-      },
+      data: { likes: { increment: 1 } },
     });
+
+    /// Add users to likes in this post
     await prisma.likeUsers.create({
       data: {
-        likedPostUserId: user.id,
+        likedPostUserId: session.userId,
         likedPostId: postId,
       },
     });
   }
   revalidateTag("posts");
   revalidatePath("/home", "page");
-  /// add user to likes list for a post
 }
