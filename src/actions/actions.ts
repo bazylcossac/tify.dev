@@ -40,7 +40,6 @@ export async function getSignedURL(
   if (!session?.user?.email) {
     redirect("/");
   }
-  const user = await getUserByEmail(session.user.email);
 
   if (!ACCEPTED_FILES.includes(type)) {
     return {
@@ -60,7 +59,7 @@ export async function getSignedURL(
     ContentLength: size,
     ChecksumSHA256: checksum,
     Metadata: {
-      userId: user!.email,
+      userId: session.userId,
     },
   });
 
@@ -81,20 +80,6 @@ export async function createPost(
     redirect("/");
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session?.user?.email,
-    },
-    select: {
-      id: true,
-    },
-  });
-  if (!user) {
-    return {
-      message: "Failed to find a user",
-    };
-  }
-
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
 
   if (!validatedData.success) {
@@ -104,7 +89,7 @@ export async function createPost(
   }
   await prisma.post.create({
     data: {
-      userId: user.id,
+      userId: session.userId,
       postText: String(validatedData.data.postText),
       likes: 0,
       stars: 0,

@@ -2,10 +2,14 @@ import { auth } from "@/auth";
 import LandingBackground from "@/components/landingbg";
 import LoginButtons from "@/components/login-buttons";
 import Logo from "@/components/logo";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function Page() {
   const session = await auth();
+  if (session?.user) {
+    redirect("/home");
+  }
 
   return (
     <div className="relative min-h-screen ">

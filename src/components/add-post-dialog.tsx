@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useTransition } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -16,15 +16,13 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { createPost, getSignedURL } from "@/actions/actions";
+import { getSignedURL } from "@/actions/actions";
 import { computeSHA265 } from "@/lib/utils";
-import { UserType } from "@/types/types";
 import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/constants";
-import { useQueryClient } from "@tanstack/react-query";
 import { useUserContext } from "@/contexts/userContextProvider";
-import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
@@ -33,11 +31,13 @@ function AddPostDialog() {
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 
   const { addPostToDB, error } = useUserContext();
-  const queryClient = useQueryClient();
 
   const session = useSession();
 
-  const user = session?.data?.user as UserType;
+  if (!session?.data?.user) {
+    redirect("/");
+  }
+  const user = session?.data?.user;
   if (!user) {
     return (
       <Skeleton className="w-[80px] h-[40px] bg-[#141414] animate-pulse rounded-lg" />
@@ -53,7 +53,7 @@ function AddPostDialog() {
     e.preventDefault();
 
     let checksum;
-    let mediaUrl;
+    let mediaUrl: string | undefined;
     try {
       if (file) {
         checksum = await computeSHA265(file);
@@ -73,16 +73,8 @@ function AddPostDialog() {
           },
         });
       }
-      console.log(mediaUrl);
-      // const error = await createPost(postText, file?.type, mediaUrl);
-      console.log(postText);
-      addPostToDB(postText, file?.type, mediaUrl);
 
-
-      console.log("POST ADDED");
-
-      // queryClient.invalidateQueries({ queryKey: ["posts"] });
-
+      addPostToDB(postText, mediaUrl, file?.type);
       if (error) {
         toast(<p className="font-semibold">{error.message}</p>);
         return;

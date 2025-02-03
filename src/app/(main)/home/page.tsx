@@ -5,25 +5,29 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
-import { PostType } from "@/types/types";
+
 import Link from "next/link";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 
 import { FaHeart } from "react-icons/fa";
-import { IoChatbox } from "react-icons/io5";
+
 import { likePost } from "@/actions/actions";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
+import { PagesType, PostType } from "@/types/types";
+import CommentDialog from "@/components/comment-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 function Page() {
   const { data, fetchNextPage, error, refetch } = useUserContext();
+
   const session = useSession();
+  console.log(session);
+  console.log(data);
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -31,7 +35,7 @@ function Page() {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
-  console.log(data);
+
   if (!data || !session) {
     return <HomePageLoader />;
   }
@@ -48,7 +52,7 @@ function Page() {
             <span className="text-blue-500 font-bold">{part}</span>
           </Link>
         ) : part.startsWith("https://www.youtube.com/watch") ? (
-          <Link href={`${part.split("::")[1]}`} target="_blank" key={index}>
+          <Link href={part} target="_blank" key={index}>
             <span className="text-blue-500 font-bold">{part}</span>
           </Link>
         ) : (
@@ -60,13 +64,12 @@ function Page() {
   return (
     <div className="flex flex-col overflow-y-auto no-scrollbar ">
       <ul>
-        {data.pages.map((posts) =>
-          posts.posts.map((post: PostType) => (
+        {data?.pages?.map((posts: PagesType) =>
+          posts?.posts?.map((post: PostType) => (
             <div
               key={post.postId}
               className="flexf flex-col mx-4 border-b border-white/30 py-4 "
             >
-              {/* <p>{post.LikeUsers.includes()}</p> */}
               {post ? (
                 <div className="flex flex-row items-center justify-between">
                   <div className=" flex items-center gap-2 my-4">
@@ -108,7 +111,7 @@ function Page() {
               )}
               <div className="justify-center flex">
                 {post?.media && post.media[0].type.startsWith("image") && (
-                  <Dialog modal>
+                  <Dialog>
                     <DialogTrigger asChild>
                       <Image
                         src={post.media[0].url}
@@ -120,14 +123,14 @@ function Page() {
                       />
                     </DialogTrigger>
                     <DialogTitle></DialogTitle>
-                    <DialogContent className="absolute outline-none z-10">
+                    <DialogContent>
                       <Image
                         src={post.media[0].url}
-                        width={1200}
-                        height={1000}
+                        width={1800}
+                        height={1400}
                         quality={100}
                         alt="post image"
-                        className="rounded-xl border border-white/30 w-full max-h-[1200px] object-contain transition hover:cursor-pointer z-10"
+                        className="rounded-xl border border-white/30 w-full max-h-[1400px] object-contain transition hover:cursor-pointer z-10"
                       />
                     </DialogContent>
                   </Dialog>
@@ -137,7 +140,7 @@ function Page() {
                     src={`https://www.youtube.com/embed/${
                       post.postText.split("=")[1]
                     }`}
-                    className="w-full h-[300px] rounded-lg"
+                    className="w-full h-[500px] rounded-lg"
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
@@ -178,25 +181,23 @@ function Page() {
                     {/* Likes */}
                     <FaHeart
                       className={cn("text-sm text-neutral-600 cursor-pointer", {
-                        "text-red-500": post.LikeUsers.find(
+                        "text-red-500": post.LikeUsers.some(
                           (user) =>
                             user.likedPostUserId === session.data?.userId
                         ),
                       })}
                       onClick={async () => {
                         await likePost(post.postId);
+
                         refetch();
                       }}
                     />
                     <p className="text-xs font-light">{post.likes}</p>
                   </div>
-                  <div className="flex items-center gap-1">
-                    {/* Comments */}
-                    <IoChatbox className="text-neutral-600 text-sm cursor-pointer" />
-                    <p className="text-xs font-light">
-                      {post?.comments?.length || 0}
-                    </p>
-                  </div>
+
+                  {/* Comments */}
+
+                  <CommentDialog post={post} />
                 </div>
                 {/* <div className="flex items-center gap-1">
                 

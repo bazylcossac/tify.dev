@@ -73,8 +73,7 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
   const totalPosts = await prisma.post.count();
 
   const hasMore = (pageParam + 1) * pageSize < totalPosts;
-  // revalidateTag("posts");
-  // revalidatePath("/home", "page");
+
   return {
     posts,
     nextCursor: hasMore ? pageParam + 1 : null,

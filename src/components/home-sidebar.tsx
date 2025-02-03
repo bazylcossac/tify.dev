@@ -80,7 +80,7 @@ function HomeSidebar() {
             ))}
           </ul>
         </div>
-        <div className="mx-auto  w-full flex items-center justify-center">
+        <div className="mx-auto w-full flex items-center justify-center">
           <Suspense fallback={<div>loading...</div>}>
             <AddPostDialog />
           </Suspense>
