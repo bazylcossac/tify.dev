@@ -19,18 +19,19 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Link2Icon } from "@radix-ui/react-icons";
+import FileInputComponent from "./file-input-component";
 
 function CommentDialog({ post }: { post: PostType }) {
   const [replyText, setReplyText] = useState("");
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | undefined>(undefined);
+  const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
   const session = useSession();
 
   if (!session.data?.user) {
     redirect("/");
   }
-  function openFileInput() {
-    inputFileRef?.current?.click();
-  }
+
   const formatText = (text: string) => {
     return text
       .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
@@ -104,6 +105,12 @@ function CommentDialog({ post }: { post: PostType }) {
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
           />
+          <FileInputComponent
+            file={file}
+            setFile={setFile}
+            fileUrl={fileUrl}
+            setFileUrl={setFileUrl}
+          />
         </div>
         <DialogDescription></DialogDescription>
         <DialogFooter>
@@ -116,19 +123,6 @@ function CommentDialog({ post }: { post: PostType }) {
               Post
             </Button>
           </DialogClose>
-
-          <>
-            <Link2Icon onClick={openFileInput} className="cursor-pointer " />
-            <p className="text-[8px] text-white/50 mt-1">MAX 10MB</p>
-          </>
-
-          <Input
-            type="file"
-            name="fileInput"
-            ref={inputFileRef}
-            accept="image/*, video/*"
-            className="bg-transparent flex-1 border-none outline-none hidden "
-          />
         </DialogFooter>
       </DialogContent>
       {/* <p className="text-xs font-light">{postComments.length || 0}</p> */}

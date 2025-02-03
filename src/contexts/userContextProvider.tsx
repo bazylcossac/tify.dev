@@ -38,6 +38,7 @@ export default function UserContextProvider({
   useEffect(() => {
     setPostData(data);
   }, [data]);
+
   async function addPostToDB(
     postText: string,
     mediaUrl?: string | undefined,
