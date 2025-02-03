@@ -107,6 +107,39 @@ export async function createPost(
   revalidatePath("/home", "page"); // Odświeżenie strony na serwerze
 }
 
+export async function createCommentToPost(
+  commentText: string,
+  postId: string,
+  type?: string,
+  mediaUrl?: string
+) {
+  const session = await auth();
+  if (!session?.user?.email) {
+    redirect("/");
+  }
+  console.log(postId);
+  /// validation
+
+  await prisma.comments.create({
+    data: {
+      userId: session.userId,
+      commentText: commentText,
+      postId: postId,
+      media: {
+        create: [
+          {
+            type: type || "",
+            url: mediaUrl || "",
+            postId: postId,
+          },
+        ],
+      },
+    },
+  });
+  revalidateTag("posts");
+  revalidatePath("/home", "page");
+}
+
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({
     where: {

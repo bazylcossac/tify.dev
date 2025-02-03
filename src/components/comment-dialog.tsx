@@ -20,10 +20,14 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Link2Icon } from "@radix-ui/react-icons";
 import FileInputComponent from "./file-input-component";
+import { computeSHA265 } from "@/lib/utils";
+import { createCommentToPost, getSignedURL } from "@/actions/actions";
+import { toast } from "sonner";
+import { useUserContext } from "@/contexts/userContextProvider";
 
 function CommentDialog({ post }: { post: PostType }) {
-  const [replyText, setReplyText] = useState("");
-  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [commentText, setCommentText] = useState("");
+  const { addCommentToPostToDB } = useUserContext();
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
   const session = useSession();
@@ -49,6 +53,50 @@ function CommentDialog({ post }: { post: PostType }) {
         )
       );
   };
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    let checksum;
+    let mediaUrl: string | undefined;
+    try {
+      if (file) {
+        checksum = await computeSHA265(file);
+        const { url } = await getSignedURL(file.type, file.size, checksum);
+
+        mediaUrl = url?.split("?")[0];
+        if (!mediaUrl) {
+          toast("Failed to get media url");
+          throw new Error("Failed to get media url");
+        }
+
+        await fetch(url!, {
+          method: "PUT",
+          body: file,
+          headers: {
+            "Content-Type": file?.type,
+          },
+        });
+      }
+
+      //   addPostToDB(postText, mediaUrl, file?.type);    const text = commentText.replace(/\n/g, "\n");
+      const text = commentText.replace(/\n/g, "\n");
+      await createCommentToPost(text, post.postId, mediaUrl, file?.type);
+      //   addCommentToPostToDB(commentText, mediaUrl, file?.type, post.postId);
+      //   if (error) {
+      //     toast(<p className="font-semibold">{error.message}</p>);
+      //     return;
+      //   }
+    } catch (err) {
+      console.error(err);
+    }
+
+    setFile(undefined);
+    setFileUrl(undefined);
+
+    setCommentText("");
+  }
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -76,7 +124,7 @@ function CommentDialog({ post }: { post: PostType }) {
               </div>
             </div>
           </div>
-          <p className="text-xs whitespace-pre-line">
+          <p className="text-xs whitespace-pre-line ">
             {formatText(post?.postText)}
           </p>
           <div className="flex flex-col text-white/30">
@@ -84,47 +132,51 @@ function CommentDialog({ post }: { post: PostType }) {
             <p className="-m-1">|</p>
           </div>
         </DialogHeader>
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Image
-              src={session.data.user.image}
-              width={30}
-              height={30}
-              alt="user image"
-              className="rounded-full w-5 h-5"
-            />
-            <div className="flex flex-row items-center">
-              <p className="mt-auto text-xs font-semibold ">
-                @{session.data.user.name}
-              </p>
-            </div>
+
+        <div className="flex items-center gap-2">
+          <Image
+            src={session.data.user.image}
+            width={30}
+            height={30}
+            alt="user image"
+            className="rounded-full w-5 h-5 "
+          />
+          <div className="flex flex-row items-center">
+            <p className="mt-auto text-xs font-semibold ">
+              @{session.data.user.name}
+            </p>
           </div>
-          <Input
-            className="transition font-semibold placeholder:text-white/50  p-0 border-none"
-            placeholder="Post your reply"
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-          />
-          <FileInputComponent
-            file={file}
-            setFile={setFile}
-            fileUrl={fileUrl}
-            setFileUrl={setFileUrl}
-          />
         </div>
-        <DialogDescription></DialogDescription>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              type="submit"
-              className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 "
-              disabled={replyText.trim().length === 0}
-            >
-              Post
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+        <form className="-mt-2" onSubmit={onSubmit}>
+          <div>
+            <Input
+              className="transition font-semibold placeholder:text-white/50 p-0 border-none"
+              placeholder="Post your reply"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <FileInputComponent
+              file={file}
+              setFile={setFile}
+              fileUrl={fileUrl}
+              setFileUrl={setFileUrl}
+            />
+          </div>
+          <DialogDescription></DialogDescription>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button
+                type="submit"
+                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 "
+                disabled={commentText.trim().length === 0}
+              >
+                Post
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </form>
       </DialogContent>
+
       {/* <p className="text-xs font-light">{postComments.length || 0}</p> */}
     </Dialog>
   );

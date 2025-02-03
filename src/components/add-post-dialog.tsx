@@ -47,8 +47,6 @@ function AddPostDialog() {
   }
 
   function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    if (e.target.value.startsWith("#")) {
-    }
     setPostText(e.target.value);
   }
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
