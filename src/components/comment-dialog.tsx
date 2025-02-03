@@ -35,7 +35,7 @@ function CommentDialog({ post }: { post: PostType }) {
   if (!session.data?.user) {
     redirect("/");
   }
-
+  console.log(post);
   const formatText = (text: string) => {
     return text
       .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
@@ -79,14 +79,9 @@ function CommentDialog({ post }: { post: PostType }) {
         });
       }
 
-      //   addPostToDB(postText, mediaUrl, file?.type);    const text = commentText.replace(/\n/g, "\n");
       const text = commentText.replace(/\n/g, "\n");
+
       await createCommentToPost(text, post.postId, mediaUrl, file?.type);
-      //   addCommentToPostToDB(commentText, mediaUrl, file?.type, post.postId);
-      //   if (error) {
-      //     toast(<p className="font-semibold">{error.message}</p>);
-      //     return;
-      //   }
     } catch (err) {
       console.error(err);
     }
@@ -177,7 +172,7 @@ function CommentDialog({ post }: { post: PostType }) {
         </form>
       </DialogContent>
 
-      {/* <p className="text-xs font-light">{postComments.length || 0}</p> */}
+      <p className="text-xs font-light">{post?.comments?.length || 0}</p>
     </Dialog>
   );
 }

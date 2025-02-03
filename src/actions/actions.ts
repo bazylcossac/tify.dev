@@ -114,7 +114,7 @@ export async function createCommentToPost(
   mediaUrl?: string
 ) {
   const session = await auth();
-  if (!session?.user?.email) {
+  if (!session?.user) {
     redirect("/");
   }
   console.log(postId);
@@ -123,8 +123,13 @@ export async function createCommentToPost(
   await prisma.comments.create({
     data: {
       userId: session.userId,
+      userName: session.user.name!,
+      userEmail: session.user.email!,
+      userImage: session.user.image!,
       commentText: commentText,
       postId: postId,
+      commentMediaUrl: mediaUrl || "",
+      commentMediaType: type || "",
       media: {
         create: [
           {

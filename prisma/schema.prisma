@@ -56,11 +56,16 @@ model Media {
 }
 
 model Comments {
-  commentId   String  @id @default(uuid())
-  commentText String
-  postId      String
-  media       Media[]
-  post        Post    @relation(fields: [postId], references: [postId])
-  user        User    @relation(fields: [userId], references: [id])
-  userId      String
+  commentId        String  @id @default(uuid())
+  commentText      String
+  postId           String
+  commentMediaUrl  String
+  commentMediaType String
+  userName         String
+  userEmail        String
+  userImage        String
+  media            Media[]
+  post             Post    @relation(fields: [postId], references: [postId])
+  user             User    @relation(fields: [userId], references: [id])
+  userId           String
 }
