@@ -202,3 +202,15 @@ export async function likePost(postId: string) {
   revalidateTag("posts");
   revalidatePath("/home", "page");
 }
+
+export async function getPostComments(postId: string) {
+  /// add caching
+  try {
+    const comments = await prisma.comments.findMany({
+      where: { postId },
+    });
+    return comments;
+  } catch {
+    throw "Failed to find comments";
+  }
+}

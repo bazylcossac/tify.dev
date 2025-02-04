@@ -12,6 +12,8 @@ export type MediaType = {
 export type CommentsType = {
   commentId: string;
   commentText: string;
+  commentMediaType: string;
+  commentMediaUrl: string;
   postId: string;
   media: MediaType[];
   post: PostType;

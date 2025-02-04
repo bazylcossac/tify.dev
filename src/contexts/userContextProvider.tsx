@@ -1,8 +1,12 @@
 "use client";
 
-import { createCommentToPost, createPost } from "@/actions/actions";
+import {
+  createCommentToPost,
+  createPost,
+  getPostComments,
+} from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
-import { DataType } from "@/types/types";
+import { CommentsType, DataType } from "@/types/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -16,6 +20,7 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
+  getComments: (postId: string) => CommentsType[];
   data: DataType | undefined;
   refetch: () => void;
   fetchNextPage: () => void;
@@ -67,11 +72,19 @@ export default function UserContextProvider({
     refetch();
   }
 
+  async function getComments(postId: string) {
+    /// post validation toast etc.
+    console.log(postId);
+    const posts = await getPostComments(postId);
+
+    return posts;
+  }
   return (
     <UserContext.Provider
       value={{
         addPostToDB,
         addCommentToPostToDB,
+        getComments,
         data: postData,
         refetch,
         fetchNextPage,
