@@ -1,6 +1,6 @@
 import { CommentsType, PostType } from "@/types/types";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { IoChatbox } from "react-icons/io5";
 import {
   Dialog,
@@ -18,16 +18,15 @@ import { redirect } from "next/navigation";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Link2Icon } from "@radix-ui/react-icons";
+
 import FileInputComponent from "./file-input-component";
 import { computeSHA265 } from "@/lib/utils";
 import { createCommentToPost, getSignedURL } from "@/actions/actions";
 import { toast } from "sonner";
-import { useUserContext } from "@/contexts/userContextProvider";
 
 function CommentDialog({ post }: { post: PostType }) {
   const [commentText, setCommentText] = useState("");
-  const { addCommentToPostToDB } = useUserContext();
+
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
   const session = useSession();
@@ -35,7 +34,7 @@ function CommentDialog({ post }: { post: PostType }) {
   if (!session.data?.user) {
     redirect("/");
   }
-  console.log(post);
+
   const formatText = (text: string) => {
     return text
       .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
@@ -107,7 +106,7 @@ function CommentDialog({ post }: { post: PostType }) {
                 width={30}
                 height={30}
                 alt="user image"
-                className="rounded-full w-5 h-5"
+                className="rounded-full w-6 h-6"
               />
               <div className="flex flex-row items-center">
                 <p className="mt-auto text-xs font-semibold ">
@@ -172,7 +171,7 @@ function CommentDialog({ post }: { post: PostType }) {
         </form>
       </DialogContent>
 
-      <p className="text-xs font-light">{post?.comments?.length || 0}</p>
+      <p className="text-xs font-light -ml-7">{post?.comments?.length || 0}</p>
     </Dialog>
   );
 }

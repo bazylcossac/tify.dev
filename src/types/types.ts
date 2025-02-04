@@ -17,6 +17,10 @@ export type CommentsType = {
   post: PostType;
   user: UserType;
   userId: string;
+  userEmail: string;
+  userImage: string;
+  userName: string;
+  createdAt: Date;
 };
 
 export type PostType = {

@@ -11,8 +11,6 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Link2Icon } from "@radix-ui/react-icons";
-import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -20,15 +18,13 @@ import { getSignedURL } from "@/actions/actions";
 import { computeSHA265 } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
-import { MAX_FILE_SIZE } from "@/lib/constants";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { redirect } from "next/navigation";
-import { FileInput } from "lucide-react";
 import FileInputComponent from "./file-input-component";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
-  const inputFileRef = useRef<HTMLInputElement>(null);
+
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
 

@@ -18,6 +18,7 @@ import CommentDialog from "@/components/comment-dialog";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -68,11 +69,11 @@ function Page() {
           posts?.posts?.map((post: PostType) => (
             <div
               key={post.postId}
-              className="flexf flex-col mx-4 border-b border-white/30 py-4 "
+              className="flexf flex-col mx-4 border-b border-white/30 py-4"
             >
               {post ? (
                 <div className="flex flex-row items-center justify-between">
-                  <div className=" flex items-center gap-2 my-4">
+                  <div className=" flex items-center gap-2 my-4 ">
                     <Image
                       src={post?.User?.image}
                       width={30}
@@ -119,19 +120,43 @@ function Page() {
                         height={800}
                         quality={100}
                         alt="post image"
-                        className="rounded-xl border border-white/30 w-full max-h-[1000px] hover:opacity-75 object-contain transition hover:cursor-pointer"
+                        className="rounded-xl border border-white/30 w-full max-h-[1000px] hover:opacity-75  transition hover:cursor-pointer"
                       />
                     </DialogTrigger>
                     <DialogTitle></DialogTitle>
-                    <DialogContent>
-                      <Image
-                        src={post.media[0].url}
-                        width={1800}
-                        height={1400}
-                        quality={100}
-                        alt="post image"
-                        className="rounded-xl border border-white/30 w-full max-h-[1400px] object-contain transition hover:cursor-pointer z-10"
-                      />
+                    <DialogContent className="bg-[#0D0D0D] border-none flex flex-row max-w-[1200px] max-h-[800px] p-4">
+                      <div className=" flex items-center">
+                        <Image
+                          src={post.media[0].url}
+                          width={1800}
+                          height={1400}
+                          quality={100}
+                          placeholder="blur"
+                          blurDataURL="public/images/noImage.jpg"
+                          alt="post image"
+                          className="rounded-xl border border-white/30 max-w-[700px] max-h-[700px] transition"
+                        />
+                      </div>
+                      <div>
+                        {post.comments.map((comment) => (
+                          <div key={comment.commentId}>
+                            <div className="flex flex-row gap-2 items-center">
+                              <Image
+                                src={comment.userImage}
+                                width={30}
+                                height={30}
+                                alt="user image"
+                                className="rounded-full w-6 h-6"
+                              />
+                              <div className="flex items-center">
+                                <p className="mt-auto text-sm font-semibold">
+                                  @{post?.User?.name}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </DialogContent>
                   </Dialog>
                 )}
@@ -158,9 +183,10 @@ function Page() {
                       />
                     </DialogTrigger>
                     <DialogTitle></DialogTitle>
-                    <DialogContent className="absolute">
+                    <DialogContent>
                       <DialogDescription></DialogDescription>
                       <video
+                        src={post.media[0].url}
                         width={1000}
                         height={800}
                         controls
