@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { timeMessage } from "@/lib/utils";
 import { CommentsType, PostType } from "@/types/types";
+import Link from "next/link";
 
 function CommentsClient({ post }: { post: PostType }) {
   const { getComments } = useUserContext();
@@ -17,6 +18,23 @@ function CommentsClient({ post }: { post: PostType }) {
 
   const session = useSession();
 
+  const formatText = (text: string) => {
+    return text
+      .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
+      .map((part, index) =>
+        part.startsWith("#") ? (
+          <Link href={`explore/${part.slice(1)}`} key={index}>
+            <span className="text-blue-500 font-bold">{part}</span>
+          </Link>
+        ) : part.startsWith("https://www.youtube.com/watch") ? (
+          <Link href={part} target="_blank" key={index}>
+            <span className="text-blue-500 font-bold">{part}</span>
+          </Link>
+        ) : (
+          part
+        )
+      );
+  };
   useEffect(() => {
     async function fetchComments() {
       const comments = await getComments(post.postId);
@@ -57,7 +75,7 @@ function CommentsClient({ post }: { post: PostType }) {
   }
   return (
     <>
-      <div className="flex flex-col justify-between overflow-y-auto overflow-x-hidden ml-4  w-full h-full">
+      <div className="flex flex-col overflow-y-auto overflow-x-hidden  w-full h-full ">
         {!comments?.length && (
           <div className="w-full h-full flex items-center justify-center font-light text-white/40">
             No comments...
@@ -85,9 +103,9 @@ function CommentsClient({ post }: { post: PostType }) {
                 <p className="text-xs">{timeMessage(comment?.createdAt)}</p>
               </div>
             </div>
-            <div className="mt-2 w-full">
-              <p className="mb-2 font-semibold text-xs">
-                {comment.commentText}
+            <div className="mt-4 w-full">
+              <p className=" font-semibold text-xs">
+                {formatText(comment.commentText)}
               </p>
               {comment?.commentMediaType &&
               comment.commentMediaUrl.includes("image") ? (
@@ -119,8 +137,8 @@ function CommentsClient({ post }: { post: PostType }) {
         ))}
       </div>
 
-      <div className=" flex flex-row items-center justify-between w-full mt-auto">
-        <div className="flex flex-row items-center mt-2">
+      <div className=" flex flex-row items-center justify-between w-full mt-auto ">
+        <div className="flex flex-row items-center ">
           <Image
             src={session.data.user.image || "./public/images/noImage.jpg"}
             width={26}
@@ -131,7 +149,7 @@ function CommentsClient({ post }: { post: PostType }) {
           />
 
           <Input
-            className="transition font-semibold placeholder:text-white/50 mb-2 border-none"
+            className="transition font-semibold placeholder:text-white/50 mb-2 border-none placeholder:"
             placeholder="Post your reply..."
           />
         </div>

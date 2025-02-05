@@ -12,15 +12,8 @@ import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { PagesType, PostType } from "@/types/types";
 import CommentDialog from "@/components/comment-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
-import CommentsComponent from "@/components/comments-component";
+import PostMainDialog from "@/components/post-main-dialog";
 
 function Page() {
   const { data, fetchNextPage, error, refetch } = useUserContext();
@@ -68,7 +61,7 @@ function Page() {
           posts?.posts?.map((post: PostType) => (
             <div
               key={post.postId}
-              className="flexf flex-col mx-4 border-b border-white/30 py-4"
+              className="flexf flex-col mx-4 border-b border-white/30 py-4 "
             >
               {post ? (
                 <div className="flex flex-row items-center justify-between">
@@ -104,6 +97,7 @@ function Page() {
                   </div>
                 </div>
               )}
+
               {post.postText && (
                 <p className="text-sm font-semibold mb-2 whitespace-pre-line">
                   {formatText(post?.postText)}
@@ -111,59 +105,9 @@ function Page() {
               )}
               <div className="justify-center flex">
                 {post?.media && post.media[0].type.startsWith("image") && (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Image
-                        src={post.media[0].url}
-                        width={1200}
-                        height={800}
-                        quality={100}
-                        alt="post image"
-                        className="rounded-xl border border-white/30 w-full max-h-[900px] hover:opacity-75  object-contain transition hover:cursor-pointer"
-                      />
-                    </DialogTrigger>
-                    <DialogTitle></DialogTitle>
-                    <DialogContent className="bg-[#0D0D0D] border-none flex flex-row max-w-[1200px] max-h-[720px] p-4 rounded-lg">
-                      <div className="flex flex-col ">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex gap-2 items-center">
-                            <Image
-                              src={post.User.image}
-                              width={30}
-                              height={30}
-                              alt="user image"
-                              className="rounded-full w-6 h-6"
-                            />
-                            <div className="flex items-center">
-                              <p className="mt-auto text-sm font-semibold">
-                                @{post?.User?.name}
-                              </p>
-                            </div>
-                          </div>
-                          <div>
-                            <p className="text-xs">
-                              {" "}
-                              {timeMessage(post?.createdAt)}
-                            </p>
-                          </div>
-                        </div>
-                        <Image
-                          src={post.media[0].url}
-                          width={1800}
-                          height={1400}
-                          quality={100}
-                          placeholder="blur"
-                          blurDataURL="public/images/noImage.jpg"
-                          alt="post image"
-                          className="rounded-xl border border-white/30 max-w-[680px] max-h-[650px] transition object-contain"
-                        />
-                      </div>
-                      <div className="flex flex-col w-full">
-                        {/* ----- COMMENTS ----- */}
-                        <CommentsComponent post={post} />
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <>
+                    <PostMainDialog type="image" post={post} />
+                  </>
                 )}
                 {post.postText.includes("https://www.youtube.com/watch") && (
                   <iframe
@@ -177,33 +121,7 @@ function Page() {
                 )}
 
                 {post?.media && post.media[0].type.startsWith("video") && (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <video
-                        src={post.media[0].url}
-                        width={1000}
-                        height={800}
-                        controls
-                        className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain"
-                      />
-                    </DialogTrigger>
-                    <DialogTitle></DialogTitle>
-                    <DialogContent>
-                      <DialogDescription></DialogDescription>
-                      <video
-                        src={post.media[0].url}
-                        width={1000}
-                        height={800}
-                        controls
-                        className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain"
-                      >
-                        <source
-                          src={post.media[0].url}
-                          type={post.media[0].type}
-                        />
-                      </video>
-                    </DialogContent>
-                  </Dialog>
+                  <PostMainDialog type="video" post={post} />
                 )}
               </div>
               <div className="flex flex-row justify-between items-center mt-4">

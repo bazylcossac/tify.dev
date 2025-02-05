@@ -165,7 +165,7 @@ export async function likePost(postId: string) {
     where: {
       likedPostUserId: session.userId,
       likedPostId: postId,
-    }, 
+    },
   });
 
   if (isUserLiked) {
@@ -203,7 +203,7 @@ export async function likePost(postId: string) {
   revalidatePath("/home", "page");
 }
 
-export const getPostComments = unstable_cache(async (postId: string) => {
+export async function getPostComments(postId: string) {
   /// add caching
   try {
     const comments = await prisma.comments.findMany({
@@ -213,4 +213,4 @@ export const getPostComments = unstable_cache(async (postId: string) => {
   } catch {
     throw "Failed to find comments";
   }
-});
+}
