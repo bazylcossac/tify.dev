@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { postSchema } from "@/lib/zod-schemas";
 
 /// generate random 32bit file name
@@ -165,7 +165,7 @@ export async function likePost(postId: string) {
     where: {
       likedPostUserId: session.userId,
       likedPostId: postId,
-    },
+    }, 
   });
 
   if (isUserLiked) {
@@ -203,7 +203,7 @@ export async function likePost(postId: string) {
   revalidatePath("/home", "page");
 }
 
-export async function getPostComments(postId: string) {
+export const getPostComments = unstable_cache(async (postId: string) => {
   /// add caching
   try {
     const comments = await prisma.comments.findMany({
@@ -213,4 +213,4 @@ export async function getPostComments(postId: string) {
   } catch {
     throw "Failed to find comments";
   }
-}
+});

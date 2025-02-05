@@ -8,7 +8,6 @@ import {
 import { fetchPosts } from "@/lib/utils";
 import { CommentsType, DataType } from "@/types/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -34,7 +33,6 @@ export default function UserContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const session = useSession();
   const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),

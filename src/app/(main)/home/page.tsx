@@ -5,11 +5,8 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
-
 import Link from "next/link";
-
 import { FaHeart } from "react-icons/fa";
-
 import { likePost } from "@/actions/actions";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
@@ -22,8 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+
 import CommentsComponent from "@/components/comments-component";
 
 function Page() {
@@ -230,15 +226,8 @@ function Page() {
                     <p className="text-xs font-light">{post.likes}</p>
                   </div>
 
-                  {/* Comments */}
-
                   <CommentDialog post={post} />
                 </div>
-                {/* <div className="flex items-center gap-1">
-                
-                  <FaStar className="text-neutral-600 text-sm cursor-pointer" />
-                  <p className="text-xs font-light">{post.stars}</p>
-                </div> */}
               </div>
             </div>
           ))
