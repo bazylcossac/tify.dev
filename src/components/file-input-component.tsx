@@ -9,6 +9,7 @@ import { toast } from "sonner";
 function FileInputComponent({ file, setFile, fileUrl, setFileUrl, showFile }) {
   const inputFileRef = useRef<HTMLInputElement>(null);
   console.log(file);
+
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
     console.log(file);
@@ -23,6 +24,7 @@ function FileInputComponent({ file, setFile, fileUrl, setFileUrl, showFile }) {
       URL.revokeObjectURL(fileUrl);
     }
     const url = URL.createObjectURL(file);
+    console.log(url);
 
     setFileUrl(url);
   }

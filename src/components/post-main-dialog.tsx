@@ -46,7 +46,7 @@ function PostMainDialog({
       <DialogTitle></DialogTitle>
       <DialogContent className="bg-[#0D0D0D] border-none flex flex-row max-w-[1200px] max-h-[720px] p-4 rounded-lg">
         <div className="flex flex-col ">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 mx-4">
             <div className="flex gap-2 items-center">
               <Image
                 src={post.User.image}

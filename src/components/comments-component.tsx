@@ -120,7 +120,7 @@ function CommentsClient({ post }: { post: PostType }) {
   }
   return (
     <>
-      <div className="flex flex-col overflow-y-auto overflow-x-hidden  w-full h-full ">
+      <div className="flex flex-col overflow-y-auto overflow-x-hidden  w-full h-full mt-10">
         {!comments?.length && (
           <div className="w-full h-full flex items-center justify-center font-light text-white/40">
             No comments...
@@ -129,7 +129,7 @@ function CommentsClient({ post }: { post: PostType }) {
         {comments?.map((comment) => (
           <div
             key={comment.commentId}
-            className="mt-6 border-b border-white/30 pb-4 m-2"
+            className="border-b border-white/30 pb-4 m-2"
           >
             <div className="flex flex-row gap-2 items-center ">
               <Image
@@ -141,7 +141,7 @@ function CommentsClient({ post }: { post: PostType }) {
               />
               <div className="flex items-center">
                 <p className="mt-auto text-sm font-semibold">
-                  @{post?.User?.name}
+                  @{comment.userName}
                 </p>
               </div>
               <div>

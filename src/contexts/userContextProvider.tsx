@@ -72,6 +72,7 @@ export default function UserContextProvider({
 
   async function getComments(postId: string) {
     /// post validation toast etc.
+    console.log("get comments");
     console.log(postId);
     const posts = await getPostComments(postId);
 
