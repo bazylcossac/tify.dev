@@ -208,6 +208,9 @@ export async function getPostComments(postId: string) {
   try {
     const comments = await prisma.comments.findMany({
       where: { postId },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return comments;
   } catch {

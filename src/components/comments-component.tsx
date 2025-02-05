@@ -6,17 +6,62 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
-import { timeMessage } from "@/lib/utils";
+import { computeSHA265, timeMessage } from "@/lib/utils";
 import { CommentsType, PostType } from "@/types/types";
 import Link from "next/link";
+import FileInputComponent from "./file-input-component";
+import { createCommentToPost, getSignedURL } from "@/actions/actions";
+import { toast } from "sonner";
+import { Textarea } from "./ui/textarea";
 
 function CommentsClient({ post }: { post: PostType }) {
   const { getComments } = useUserContext();
   const [comments, setCommnets] = useState<CommentsType[] | null>(null);
+  const [file, setFile] = useState();
+  const [fileUrl, setFileUrl] = useState();
+  const [commentText, setCommentText] = useState("");
 
   console.log(comments);
 
   const session = useSession();
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    let checksum;
+    let mediaUrl: string | undefined;
+    try {
+      if (file) {
+        checksum = await computeSHA265(file);
+        const { url } = await getSignedURL(file.type, file.size, checksum);
+
+        mediaUrl = url?.split("?")[0];
+        if (!mediaUrl) {
+          toast("Failed to get media url");
+          throw new Error("Failed to get media url");
+        }
+
+        await fetch(url!, {
+          method: "PUT",
+          body: file,
+          headers: {
+            "Content-Type": file?.type,
+          },
+        });
+      }
+
+      const text = commentText.replace(/\n/g, "\n");
+
+      await createCommentToPost(text, post.postId, mediaUrl, file?.type);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setFile(undefined);
+    setFileUrl(undefined);
+
+    setCommentText("");
+  }
 
   const formatText = (text: string) => {
     return text
@@ -104,7 +149,7 @@ function CommentsClient({ post }: { post: PostType }) {
               </div>
             </div>
             <div className="mt-4 w-full">
-              <p className=" font-semibold text-xs">
+              <p className=" font-semibold text-xs mb-2">
                 {formatText(comment.commentText)}
               </p>
               {comment?.commentMediaType &&
@@ -137,27 +182,47 @@ function CommentsClient({ post }: { post: PostType }) {
         ))}
       </div>
 
-      <div className=" flex flex-row items-center justify-between w-full mt-auto ">
-        <div className="flex flex-row items-center ">
-          <Image
-            src={session.data.user.image || "./public/images/noImage.jpg"}
-            width={26}
-            height={26}
-            quality={75}
-            alt="user image"
-            className="rounded-full my-auto"
-          />
+      <div className=" flex flex-row items-center justify-between w-full mt-auto pt-2">
+        <form
+          className="flex flex-row items-center justify-between w-full"
+          onSubmit={onSubmit}
+        >
+          <div className="flex flex-row items-center">
+            <Image
+              src={session.data.user.image || "./public/images/noImage.jpg"}
+              width={26}
+              height={26}
+              quality={75}
+              alt="user image"
+              className="rounded-full my-auto"
+            />
 
-          <Input
-            className="transition font-semibold placeholder:text-white/50 mb-2 border-none placeholder:"
-            placeholder="Post your reply..."
-          />
-        </div>
-        <div>
-          <Button className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 ">
-            Post
-          </Button>
-        </div>
+            <Textarea
+              className="transition font-semibold resize-none h-[30px] placeholder:text-white/50 mb-2 overflow-hidden "
+              placeholder="Post your reply..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+          </div>
+          <div>
+            <Button
+              className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6"
+              disabled={!commentText && !file}
+            >
+              Post
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      <div className="mt-1">
+        <FileInputComponent
+          file={file}
+          setFile={setFile}
+          fileUrl={fileUrl}
+          setFileUrl={setFileUrl}
+          showFile={false}
+        />
       </div>
     </>
   );

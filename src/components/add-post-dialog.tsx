@@ -116,11 +116,13 @@ function AddPostDialog() {
               value={postText}
             />
           </div>
+
           <FileInputComponent
             file={file}
             setFile={setFile}
             fileUrl={fileUrl}
             setFileUrl={setFileUrl}
+            showFile={true}
           />
 
           <DialogFooter>

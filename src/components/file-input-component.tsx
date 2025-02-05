@@ -6,9 +6,9 @@ import { Button } from "./ui/button";
 import { MAX_FILE_SIZE } from "@/lib/constants";
 import { toast } from "sonner";
 
-function FileInputComponent({ file, setFile, fileUrl, setFileUrl }) {
+function FileInputComponent({ file, setFile, fileUrl, setFileUrl, showFile }) {
   const inputFileRef = useRef<HTMLInputElement>(null);
-
+  console.log(file);
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
     console.log(file);
@@ -49,7 +49,7 @@ function FileInputComponent({ file, setFile, fileUrl, setFileUrl }) {
         className="bg-transparent flex-1 border-none outline-none hidden "
       />
 
-      {fileUrl && file?.type.includes("video") ? (
+      {showFile && fileUrl && file?.type.includes("video") ? (
         <video
           src={fileUrl}
           className="max-h-[300px] w-auto rounded-xl"
@@ -60,7 +60,7 @@ function FileInputComponent({ file, setFile, fileUrl, setFileUrl }) {
       ) : (
         ""
       )}
-      {fileUrl && file?.type.includes("image") ? (
+      {showFile && fileUrl && file?.type.includes("image") ? (
         <Image
           src={fileUrl}
           alt="file"
@@ -71,15 +71,20 @@ function FileInputComponent({ file, setFile, fileUrl, setFileUrl }) {
       ) : (
         ""
       )}
+      {!showFile && file && (
+        <p className="text-xs text-white/70 max-w-[150px] truncate ">
+          {file?.name}
+        </p>
+      )}
       {file && (
         <Button
           onClick={() => {
             setFile(undefined);
             setFileUrl(undefined);
           }}
-          className="bg-red-500 mt-2 text-xs font-semibold "
+          className="bg-red-500 mt-2 text-xs font-semibold w-[100px]"
         >
-          Remove
+          Remove media
         </Button>
       )}
     </>

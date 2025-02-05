@@ -154,6 +154,7 @@ function CommentDialog({ post }: { post: PostType }) {
               setFile={setFile}
               fileUrl={fileUrl}
               setFileUrl={setFileUrl}
+              showFile={true}
             />
           </div>
           <DialogDescription></DialogDescription>
