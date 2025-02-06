@@ -35,7 +35,8 @@ function PostMainDialog({
             onClick={(e) => {
               e.stopPropagation();
               if (videoRef?.current) {
-                videoRef.current.muted = !videoRef.current.muted;
+                videoRef.current.muted = true;
+                videoRef.current.pause();
               }
             }}
             controls

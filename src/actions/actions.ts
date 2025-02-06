@@ -87,7 +87,7 @@ export async function createPost(
       message: "Failed to validate post data",
     };
   }
-  await prisma.post.create({
+  const post = await prisma.post.create({
     data: {
       userId: session.userId,
       postText: String(validatedData.data.postText),
@@ -103,8 +103,9 @@ export async function createPost(
       },
     },
   });
-  revalidateTag("posts");
-  revalidatePath("/home", "page"); // Odświeżenie strony na serwerze
+  return post;
+  // revalidateTag("posts");
+  // revalidatePath("/home", "page"); // Odświeżenie strony na serwerze
 }
 
 export async function createCommentToPost(
@@ -216,4 +217,15 @@ export async function getPostComments(postId: string) {
   } catch {
     throw "Failed to find comments";
   }
+}
+
+export async function getPostById(postId: string) {
+  return await prisma.post.findUnique({
+    where: { postId },
+    include: {
+      User: true,
+      media: true,
+      LikeUsers: true,
+    },
+  });
 }

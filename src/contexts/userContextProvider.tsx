@@ -3,6 +3,7 @@
 import {
   createCommentToPost,
   createPost,
+  getPostById,
   getPostComments,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
@@ -19,7 +20,7 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
-  getComments: (postId: string) => CommentsType[];
+  getComments: (postId: string) => Promise<CommentsType[]>;
   data: DataType | undefined;
   refetch: () => void;
   fetchNextPage: () => void;
@@ -54,9 +55,16 @@ export default function UserContextProvider({
     fileType?: string | undefined
   ) {
     const text = postText.replace(/\n/g, "\n");
-    await createPost(text, fileType, mediaUrl);
+    const post = await createPost(text, fileType, mediaUrl);
+    const newPost = await getPostById(post.postId);
+    setPostData((prev) => ({
+      ...prev,
+      pages: prev.pages.map((page, index) =>
+        index === 0 ? { ...page, posts: [newPost, ...page.posts] } : page
+      ),
+    }));
 
-    refetch();
+    // refetch();
   }
 
   async function addCommentToPostToDB(
@@ -83,6 +91,7 @@ export default function UserContextProvider({
       value={{
         addPostToDB,
         addCommentToPostToDB,
+        setPostData,
         getComments,
         data: postData,
         refetch,
