@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -49,19 +49,23 @@ function AddPostDialog() {
     e.preventDefault();
 
     let checksum;
-    let mediaUrl: string | undefined;
+    let mediaUrl;
     try {
       if (file) {
         checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
 
-        mediaUrl = url?.split("?")[0];
+        if (!url) {
+          toast("Failed to get url");
+          throw new Error("Failed to get url");
+        }
+        mediaUrl = url?.split("?")[0] as string;
         if (!mediaUrl) {
           toast("Failed to get media url");
           throw new Error("Failed to get media url");
         }
 
-        await fetch(url!, {
+        await fetch(url, {
           method: "PUT",
           body: file,
           headers: {
@@ -96,7 +100,7 @@ function AddPostDialog() {
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-2">
             <Image
-              src={user?.image}
+              src={user.image!}
               alt="user-image"
               width={30}
               height={30}

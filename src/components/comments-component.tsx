@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
@@ -17,8 +16,8 @@ import { Textarea } from "./ui/textarea";
 function CommentsClient({ post }: { post: PostType }) {
   const { getComments } = useUserContext();
   const [comments, setCommnets] = useState<CommentsType[] | null>(null);
-  const [file, setFile] = useState();
-  const [fileUrl, setFileUrl] = useState();
+  const [file, setFile] = useState<File | undefined>();
+  const [fileUrl, setFileUrl] = useState("");
   const [commentText, setCommentText] = useState("");
 
   console.log(comments);
@@ -58,7 +57,7 @@ function CommentsClient({ post }: { post: PostType }) {
     }
 
     setFile(undefined);
-    setFileUrl(undefined);
+    setFileUrl("");
 
     setCommentText("");
   }
@@ -149,7 +148,7 @@ function CommentsClient({ post }: { post: PostType }) {
               </div>
             </div>
             <div className="mt-4 w-full">
-              <p className=" font-semibold text-xs mb-2">
+              <p className=" font-semibold text-xs mb-2 w-[400px] break-words">
                 {formatText(comment.commentText)}
               </p>
               {comment?.commentMediaType &&
@@ -198,7 +197,7 @@ function CommentsClient({ post }: { post: PostType }) {
             />
 
             <Textarea
-              className="transition font-semibold resize-none h-[30px] placeholder:text-white/50 mb-2 overflow-hidden "
+              className="transition font-semibold resize-none h-[30px] w-[300px] placeholder:text-white/50 mb-2 overflow-hidden "
               placeholder="Post your reply..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}

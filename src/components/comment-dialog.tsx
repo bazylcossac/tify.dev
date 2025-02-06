@@ -1,4 +1,4 @@
-import { CommentsType, PostType } from "@/types/types";
+import { PostType } from "@/types/types";
 
 import React, { useState } from "react";
 import { IoChatbox } from "react-icons/io5";
@@ -129,7 +129,7 @@ function CommentDialog({ post }: { post: PostType }) {
 
         <div className="flex items-center gap-2">
           <Image
-            src={session.data.user.image}
+            src={session.data.user.image!}
             width={30}
             height={30}
             alt="user image"

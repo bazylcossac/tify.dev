@@ -9,7 +9,9 @@ export default async function handler(
   const { pageParam } = req.query;
 
   try {
-    const data = await getPosts({ pageParam: parseInt(pageParam, 10) || 0 });
+    const data = await getPosts({
+      pageParam: parseInt(pageParam as string, 10) || 0,
+    });
     res.status(200).json(data);
   } catch (error) {
     console.error("Error fetching posts:", error);

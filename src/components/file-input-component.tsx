@@ -5,8 +5,15 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { MAX_FILE_SIZE } from "@/lib/constants";
 import { toast } from "sonner";
+import { FileInputT } from "@/types/types";
 
-function FileInputComponent({ file, setFile, fileUrl, setFileUrl, showFile }) {
+function FileInputComponent({
+  file,
+  setFile,
+  fileUrl,
+  setFileUrl,
+  showFile,
+}: FileInputT) {
   const inputFileRef = useRef<HTMLInputElement>(null);
   console.log(file);
 

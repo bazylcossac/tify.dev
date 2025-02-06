@@ -7,7 +7,7 @@ import { useInView } from "react-intersection-observer";
 import HomePageLoader from "@/components/home-page-loader";
 import Link from "next/link";
 import { FaHeart } from "react-icons/fa";
-import { likePost } from "@/actions/actions";
+
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { PagesType, PostType } from "@/types/types";
@@ -16,7 +16,7 @@ import CommentDialog from "@/components/comment-dialog";
 import PostMainDialog from "@/components/post-main-dialog";
 
 function Page() {
-  const { data, fetchNextPage, error, refetch, likePostDB } = useUserContext();
+  const { data, fetchNextPage, error, likePostDB } = useUserContext();
 
   const session = useSession();
   console.log(session);
@@ -135,10 +135,8 @@ function Page() {
                             user.likedPostUserId === session.data?.userId
                         ),
                       })}
-                      onClick={async () => {
-                        await likePostDB(post.postId);
-
-                        // refetch();
+                      onClick={() => {
+                        likePostDB(post.postId);
                       }}
                     />
                     <p className="text-xs font-light">{post.likes}</p>

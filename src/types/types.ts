@@ -1,4 +1,6 @@
-import type { Post, User } from "@prisma/client";
+import type { User } from "@prisma/client";
+
+/// DATA TYPES
 export type UserType = User;
 
 export type MediaType = {
@@ -26,7 +28,7 @@ export type CommentsType = {
 };
 
 export type PostType = {
-  LikeUsers: string[];
+  LikeUsers: LikeUserType[];
   User: UserType;
   createdAt: Date;
   likes: number;
@@ -52,4 +54,13 @@ export type LikeUserType = {
   id: string;
   likedPostId: string;
   likedPostUserId: string;
+};
+
+/// COMPONENT TYPES
+export type FileInputT = {
+  file: File | undefined;
+  setFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  fileUrl: string | undefined;
+  setFileUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
+  showFile: boolean;
 };

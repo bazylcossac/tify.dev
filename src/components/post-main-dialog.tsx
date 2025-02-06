@@ -45,7 +45,7 @@ function PostMainDialog({
         )}
       </DialogTrigger>
       <DialogTitle></DialogTitle>
-      <DialogContent className="bg-[#0D0D0D] border-none flex flex-row max-w-[1200px] max-h-[720px] p-4 rounded-lg">
+      <DialogContent className="bg-[#0D0D0D] border-none flex flex-row max-w-[1200px] max-h-[500px] p-4 rounded-lg">
         <div className="flex flex-col ">
           <div className="flex items-center justify-between mb-4 mx-4">
             <div className="flex gap-2 items-center">
@@ -75,7 +75,7 @@ function PostMainDialog({
               placeholder="blur"
               blurDataURL="public/images/noImage.jpg"
               alt="post image"
-              className="rounded-lg max-w-[680px] max-h-[650px] transition object-contain"
+              className="rounded-lg max-w-[680px] max-h-[400px] transition object-contain"
             />
           ) : (
             <video

@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { postSchema } from "@/lib/zod-schemas";
 
 /// generate random 32bit file name

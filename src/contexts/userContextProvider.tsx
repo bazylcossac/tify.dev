@@ -8,8 +8,9 @@ import {
   likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
-import { CommentsType, DataType } from "@/types/types";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { CommentsType, DataType, PagesType, PostType } from "@/types/types";
+
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -21,8 +22,11 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
-  getComments: (postId: string) => Promise<CommentsType[]>;
+  getComments: (
+    postId: string
+  ) => Promise<Omit<CommentsType[], "post" | "user" | "media">>;
   data: DataType | undefined;
+  likePostDB: (postId: string) => void;
   refetch: () => void;
   fetchNextPage: () => void;
   error: Error | null;
@@ -44,7 +48,9 @@ export default function UserContextProvider({
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
-  const [postData, setPostData] = useState<DataType>(data || []);
+  const [postData, setPostData] = useState<InfiniteData<PagesType> | undefined>(
+    data! || []
+  );
 
   useEffect(() => {
     setPostData(data);
@@ -54,15 +60,18 @@ export default function UserContextProvider({
     await likePost(postId);
     const post = await getPostById(postId);
 
-    const pageIndex = postData.pages.findIndex((page) =>
-      page.posts.some((p) => p.postId === post?.postId)
+    const pageIndex = postData?.pages.findIndex((page) =>
+      page.posts.some((p: PostType) => p.postId === post?.postId)
     );
-
+    if (!pageIndex) {
+      throw new Error("Failed to find infex");
+    }
     if (pageIndex === -1) {
       console.log("Post not found");
+      return;
     } else {
-      const postIndex = postData.pages[pageIndex].posts.findIndex(
-        (p) => p.postId === post?.postId
+      const postIndex = postData?.pages[pageIndex].posts.findIndex(
+        (p: PostType) => p.postId === post?.postId
       );
       console.log({ pageIndex, postIndex });
 
@@ -84,7 +93,7 @@ export default function UserContextProvider({
 
   async function addPostToDB(
     postText: string,
-    mediaUrl?: string | undefined,
+    mediaUrl?: string,
     fileType?: string | undefined
   ) {
     const text = postText.replace(/\n/g, "\n");
