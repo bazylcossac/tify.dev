@@ -200,8 +200,9 @@ export async function likePost(postId: string) {
       },
     });
   }
-  revalidateTag("posts");
-  revalidatePath("/home", "page");
+
+  // revalidateTag("posts");
+  // revalidatePath("/home", "page");
 }
 
 export async function getPostComments(postId: string) {

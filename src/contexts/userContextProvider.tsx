@@ -5,6 +5,7 @@ import {
   createPost,
   getPostById,
   getPostComments,
+  likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import { CommentsType, DataType } from "@/types/types";
@@ -43,11 +44,43 @@ export default function UserContextProvider({
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
-  const [postData, setPostData] = useState(data || []);
+  const [postData, setPostData] = useState<DataType>(data || []);
 
   useEffect(() => {
     setPostData(data);
   }, [data]);
+
+  async function likePostDB(postId: string) {
+    await likePost(postId);
+    const post = await getPostById(postId);
+
+    const pageIndex = postData.pages.findIndex((page) =>
+      page.posts.some((p) => p.postId === post?.postId)
+    );
+
+    if (pageIndex === -1) {
+      console.log("Post not found");
+    } else {
+      const postIndex = postData.pages[pageIndex].posts.findIndex(
+        (p) => p.postId === post?.postId
+      );
+      console.log({ pageIndex, postIndex });
+
+      setPostData((prev) => ({
+        ...prev,
+        pages: prev.pages.map((page, index) =>
+          index === pageIndex
+            ? {
+                ...page,
+                posts: page.posts.map((p, index) =>
+                  index === postIndex ? post : p
+                ),
+              }
+            : page
+        ),
+      }));
+    }
+  }
 
   async function addPostToDB(
     postText: string,
@@ -93,6 +126,7 @@ export default function UserContextProvider({
         addCommentToPostToDB,
         setPostData,
         getComments,
+        likePostDB,
         data: postData,
         refetch,
         fetchNextPage,

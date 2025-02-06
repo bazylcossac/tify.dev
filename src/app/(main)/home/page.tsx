@@ -16,7 +16,7 @@ import CommentDialog from "@/components/comment-dialog";
 import PostMainDialog from "@/components/post-main-dialog";
 
 function Page() {
-  const { data, fetchNextPage, error, refetch } = useUserContext();
+  const { data, fetchNextPage, error, refetch, likePostDB } = useUserContext();
 
   const session = useSession();
   console.log(session);
@@ -136,9 +136,9 @@ function Page() {
                         ),
                       })}
                       onClick={async () => {
-                        await likePost(post.postId);
+                        await likePostDB(post.postId);
 
-                        refetch();
+                        // refetch();
                       }}
                     />
                     <p className="text-xs font-light">{post.likes}</p>
