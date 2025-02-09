@@ -63,9 +63,9 @@ export default function UserContextProvider({
     const pageIndex = postData?.pages.findIndex((page) =>
       page.posts.some((p: PostType) => p.postId === post?.postId)
     );
-    if (!pageIndex) {
-      throw new Error("Failed to find infex");
-    }
+    // if (!pageIndex) {
+    //   throw new Error("Failed to find infex");
+    // }
     if (pageIndex === -1) {
       console.log("Post not found");
       return;

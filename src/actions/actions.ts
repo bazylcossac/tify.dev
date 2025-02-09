@@ -8,7 +8,7 @@ import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { postSchema } from "@/lib/zod-schemas";
+import { postSchema, userSchema } from "@/lib/zod-schemas";
 
 /// generate random 32bit file name
 const generateFileName = (bytes = 32) => {
@@ -104,8 +104,6 @@ export async function createPost(
     },
   });
   return post;
-  // revalidateTag("posts");
-  // revalidatePath("/home", "page"); // Odświeżenie strony na serwerze
 }
 
 export async function createCommentToPost(
@@ -115,18 +113,29 @@ export async function createCommentToPost(
   mediaUrl?: string
 ) {
   const session = await auth();
+
+  const userId = session?.userId;
   if (!session?.user) {
     redirect("/");
   }
-  console.log(postId);
-  /// validation
+  const { image, name, email } = session?.user;
 
+  /// zod validation
+  const userValidation = userSchema.safeParse({ name, email, image, userId });
+  if (!userValidation.success) {
+    return {
+      message: "Failed to validate user",
+    };
+  }
+  if (!userValidation.data.userId) {
+    redirect("/");
+  }
   await prisma.comments.create({
     data: {
-      userId: session.userId,
-      userName: session.user.name!,
-      userEmail: session.user.email!,
-      userImage: session.user.image!,
+      userId: userValidation.data.userId,
+      userName: userValidation.data.name,
+      userEmail: userValidation.data.email,
+      userImage: userValidation.data.image,
       commentText: commentText,
       postId: postId,
       commentMediaUrl: mediaUrl || "",
@@ -200,13 +209,9 @@ export async function likePost(postId: string) {
       },
     });
   }
-
-  // revalidateTag("posts");
-  // revalidatePath("/home", "page");
 }
 
 export async function getPostComments(postId: string) {
-  /// add caching
   try {
     const comments = await prisma.comments.findMany({
       where: { postId },

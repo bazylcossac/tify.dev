@@ -42,6 +42,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!userValidate.success) {
           throw new Error("Failed to validate user");
         }
+        console.log(userValidate);
         const { name, email, image } = userValidate.data;
 
         const user = await prisma.user.upsert({

@@ -10,4 +10,5 @@ export const userSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   image: z.string().url(),
+  userId: z.string().uuid().optional(),
 });

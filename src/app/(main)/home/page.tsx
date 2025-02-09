@@ -17,10 +17,11 @@ import PostMainDialog from "@/components/post-main-dialog";
 
 function Page() {
   const { data, fetchNextPage, error, likePostDB } = useUserContext();
-
   const session = useSession();
+
   console.log(session);
   console.log(data);
+
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
