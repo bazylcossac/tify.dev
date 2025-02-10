@@ -96,7 +96,7 @@ function CommentsClient({ post }: { post: PostType }) {
   }
   return (
     <>
-      <div className="flex flex-col overflow-y-auto overflow-x-hidden w-full mt-10 max-h-[300px]">
+      <div className="flex flex-col overflow-y-auto overflow-x-hidden w-full mt-10 ">
         {!comments?.length && (
           <div className="w-full h-full flex items-center justify-center font-light text-white/40">
             No comments...
@@ -122,29 +122,31 @@ function CommentsClient({ post }: { post: PostType }) {
                 </p>
               </div>
               <div>
-                <p className="text-xs">{timeMessage(comment?.createdAt)}</p>
+                <p className="md:text-[11px] text-[9px]">
+                  {timeMessage(comment?.createdAt)}
+                </p>
               </div>
             </div>
             <div className="mt-4 w-full">
-              <p className=" font-semibold text-xs mb-2 w-[400px] break-words">
+              <p className=" font-semibold text-xs mb-2 max-w-[400px] break-words">
                 {formatText(comment.commentText)}
               </p>
               {comment?.commentMediaType &&
               comment.commentMediaType.includes("image") ? (
                 <Image
                   src={comment.commentMediaUrl}
-                  width={600}
+                  width={400}
                   quality={100}
                   height={560}
                   alt="user image"
-                  className="rounded-lg max-w-[450px] "
+                  className="rounded-lg "
                 />
               ) : comment.commentMediaType.includes("video") ? (
                 <video
                   src={comment.commentMediaType}
                   height={100}
                   controls
-                  className="rounded-lg max-w-[450px]"
+                  className="rounded-lg "
                 >
                   <source
                     src={comment.commentMediaType}

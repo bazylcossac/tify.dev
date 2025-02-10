@@ -25,7 +25,7 @@ function PostMainDialog({
             height={800}
             quality={100}
             alt="post image"
-            className="rounded-xl border border-white/30 max-h-[900px] hover:opacity-75 object-contain transition hover:cursor-pointer"
+            className="rounded-xl border border-white/30 max-h-[500px] hover:opacity-75 object-contain transition hover:cursor-pointer"
           />
         ) : (
           <video
@@ -41,14 +41,14 @@ function PostMainDialog({
               }
             }}
             controls
-            className="rounded-xl border border-white/30 w-full max-h-[600px] object-contain hover:opacity-75 hover:cursor-pointer"
+            className="rounded-xl border border-white/30 w-full max-h-[500px] object-contain hover:opacity-75 hover:cursor-pointer"
           />
         )}
       </DialogTrigger>
       <DialogTitle></DialogTitle>
       <DialogDescription></DialogDescription>
-      <DialogContent className="bg-[#0D0D0D] md:w-3/4 w-full border-none flex flex-col md:flex-row md:max-h-[500px] p-4 rounded-lg ">
-        <div className="flex flex-col ">
+      <DialogContent className="bg-[#0D0D0D] md:w-3/4 w-full border-none flex flex-col md:flex-row h-3/4 p-4 rounded-lg overflow-y-auto">
+        <div className="flex flex-col border-b-[.5px] border-white/30 pb-4">
           <div className="flex items-center justify-between mb-4 mt-4 md:mt-0 mx-4">
             <div className="flex gap-2 items-center">
               <Image
@@ -77,7 +77,7 @@ function PostMainDialog({
               placeholder="blur"
               blurDataURL="public/images/noImage.jpg"
               alt="post image"
-              className="rounded-lg min-w-[300px] max-h-[400px] transition object-contain"
+              className="rounded-lg min-w-[300px] max-h-[600px] transition object-contain"
             />
           ) : (
             <video
@@ -89,7 +89,7 @@ function PostMainDialog({
             />
           )}
         </div>
-        <div className="flex flex-col w-full h-auto">
+        <div className="flex flex-col w-full  h-full">
           {/* ----- COMMENTS ----- */}
           <CommentsComponent post={post} />
         </div>

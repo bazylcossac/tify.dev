@@ -62,7 +62,7 @@ function CommentDialog({ post }: { post: PostType }) {
       if (file) {
         checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
-        
+
         mediaUrl = url?.split("?")[0];
         if (!mediaUrl) {
           toast("Failed to get media url");

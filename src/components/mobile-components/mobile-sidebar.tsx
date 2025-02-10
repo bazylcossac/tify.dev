@@ -73,7 +73,7 @@ export function SheetDemo() {
           <IoMdMenu />
         </Button>
       </SheetTrigger>
-      <SheetContent className="bg-[#0D0D0D] border-none w-2/4 p-2" side="left">
+      <SheetContent className="bg-[#020202] border-none w-2/4 p-2" side="left">
         <SheetHeader>
           <SheetTitle></SheetTitle>
           <SheetDescription></SheetDescription>

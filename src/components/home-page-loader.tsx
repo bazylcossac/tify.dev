@@ -3,7 +3,7 @@ import { Skeleton } from "./ui/skeleton";
 
 function HomePageLoader() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col justify-center">
         <div className="flex flex-row  justify-between mb-8">
           <div className="flex flex-row items-center gap-2">

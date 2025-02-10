@@ -58,7 +58,7 @@ function Page() {
           posts?.posts?.map((post: PostType) => (
             <div
               key={post.postId}
-              className="flexf flex-col mx-4 border-b border-white/30 py-4 "
+              className="flexf flex-col mx-4 border-b border-white/30 py-4"
             >
               {post ? (
                 <div className="flex flex-row items-center justify-between">
@@ -68,7 +68,7 @@ function Page() {
                       width={30}
                       height={30}
                       alt="user image"
-                      className="rounded-full md:w-8 md:h-8 w-4 h-4"
+                      className="rounded-full md:w-8 md:h-8 w-6 h-6"
                     />
                     <div className="flex flex-row items-center">
                       <p className="mt-auto md:text-md text-xs font-semibold ">

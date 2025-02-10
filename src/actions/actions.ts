@@ -101,6 +101,7 @@ export async function createPost(
       },
     },
   });
+  revalidatePath("/home", "page");
   return post;
 }
 
