@@ -48,9 +48,9 @@ export default function UserContextProvider({
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
-  const [postData, setPostData] = useState<
-    InfiniteData<DataType | undefined> 
-  >(data! || []);
+  const [postData, setPostData] = useState<InfiniteData<DataType | undefined>>(
+    data! || []
+  );
 
   useEffect(() => {
     setPostData(data);
@@ -65,13 +65,11 @@ export default function UserContextProvider({
     );
 
     if (pageIndex === -1) {
-      console.log("Post not found");
       return;
     } else {
       const postIndex = postData?.pages[pageIndex!].posts.findIndex(
         (p: PostType) => p.postId === post?.postId
       );
-      console.log({ pageIndex, postIndex });
 
       setPostData((prev) => ({
         ...prev,
@@ -120,8 +118,7 @@ export default function UserContextProvider({
 
   async function getComments(postId: string) {
     /// post validation toast etc.
-    console.log("get comments");
-    console.log(postId);
+
     const posts = await getPostComments(postId);
 
     return posts;

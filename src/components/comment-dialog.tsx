@@ -62,13 +62,13 @@ function CommentDialog({ post }: { post: PostType }) {
       if (file) {
         checksum = await computeSHA265(file);
         const { url } = await getSignedURL(file.type, file.size, checksum);
-
+        
         mediaUrl = url?.split("?")[0];
         if (!mediaUrl) {
           toast("Failed to get media url");
           throw new Error("Failed to get media url");
         }
-
+        console.log(mediaUrl);
         await fetch(url!, {
           method: "PUT",
           body: file,
@@ -79,7 +79,6 @@ function CommentDialog({ post }: { post: PostType }) {
       }
 
       const text = commentText.replace(/\n/g, "\n");
-
       await createCommentToPost(text, post.postId, mediaUrl, file?.type);
     } catch (err) {
       console.error(err);

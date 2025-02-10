@@ -21,10 +21,8 @@ function CommentsClient({ post }: { post: PostType }) {
   const [fileUrl, setFileUrl] = useState("");
   const [commentText, setCommentText] = useState("");
 
-  console.log(comments);
-
   const session = useSession();
-
+  console.log(comments);
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -36,6 +34,7 @@ function CommentsClient({ post }: { post: PostType }) {
         const { url } = await getSignedURL(file.type, file.size, checksum);
 
         mediaUrl = url?.split("?")[0];
+
         if (!mediaUrl) {
           toast("Failed to get media url");
           throw new Error("Failed to get media url");
@@ -97,7 +96,7 @@ function CommentsClient({ post }: { post: PostType }) {
   }
   return (
     <>
-      <div className="flex flex-col overflow-y-auto overflow-x-hidden  w-full h-full mt-10">
+      <div className="flex flex-col overflow-y-auto overflow-x-hidden w-full mt-10 max-h-[300px]">
         {!comments?.length && (
           <div className="w-full h-full flex items-center justify-center font-light text-white/40">
             No comments...
@@ -108,7 +107,7 @@ function CommentsClient({ post }: { post: PostType }) {
             key={comment.commentId}
             className="border-b border-white/30 pb-4 m-2"
           >
-            <div className="flex flex-row gap-2 items-center ">
+            <div className="flex flex-row gap-2 items-center">
               <Image
                 src={comment.userImage}
                 width={30}
@@ -116,6 +115,7 @@ function CommentsClient({ post }: { post: PostType }) {
                 alt="user image"
                 className="rounded-full w-6 h-6"
               />
+
               <div className="flex items-center">
                 <p className="mt-auto text-sm font-semibold">
                   @{comment.userName}
@@ -130,16 +130,16 @@ function CommentsClient({ post }: { post: PostType }) {
                 {formatText(comment.commentText)}
               </p>
               {comment?.commentMediaType &&
-              comment.commentMediaUrl.includes("image") ? (
+              comment.commentMediaType.includes("image") ? (
                 <Image
-                  src={comment.commentMediaType}
+                  src={comment.commentMediaUrl}
                   width={600}
                   quality={100}
                   height={560}
                   alt="user image"
-                  className="rounded-lg max-w-[450px]"
+                  className="rounded-lg max-w-[450px] "
                 />
-              ) : comment.commentMediaUrl.includes("video") ? (
+              ) : comment.commentMediaType.includes("video") ? (
                 <video
                   src={comment.commentMediaType}
                   height={100}
@@ -159,9 +159,9 @@ function CommentsClient({ post }: { post: PostType }) {
         ))}
       </div>
 
-      <div className=" flex flex-row items-center justify-between w-full mt-auto pt-2">
+      <div className="mt-auto pt-2">
         <form
-          className="flex flex-row items-center justify-between w-full"
+          className="flex flex-row items-center justify-between w-full "
           onSubmit={onSubmit}
         >
           <div className="flex flex-row items-center">
@@ -175,7 +175,7 @@ function CommentsClient({ post }: { post: PostType }) {
             />
 
             <Textarea
-              className="transition font-semibold resize-none h-[30px] w-[300px] placeholder:text-white/50 mb-2 overflow-hidden "
+              className="transition font-semibold resize-none h-[30px] max-w-[300px]  placeholder:text-white/50 mb-2 overflow-hidden "
               placeholder="Post your reply..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}

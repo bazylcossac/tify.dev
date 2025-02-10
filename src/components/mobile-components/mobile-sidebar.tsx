@@ -73,7 +73,7 @@ export function SheetDemo() {
           <IoMdMenu />
         </Button>
       </SheetTrigger>
-      <SheetContent className=" bg-[#0D0D0D] border-none w-2/4" side="left">
+      <SheetContent className="bg-[#0D0D0D] border-none w-2/4 p-2" side="left">
         <SheetHeader>
           <SheetTitle></SheetTitle>
           <SheetDescription></SheetDescription>
@@ -81,7 +81,7 @@ export function SheetDemo() {
         <div className="flex flex-col min-h-screen ">
           <div className="">
             <div>
-              <ul className=" space-y-4 ">
+              <ul className="space-y-4 ">
                 <div className="p-4">
                   <Logo />
                 </div>
@@ -111,7 +111,7 @@ export function SheetDemo() {
             </div>
           </div>
           {user && user?.image ? (
-            <div className="flex items-center justify-center gap-2 my-auto pb-8">
+            <div className="flex items-center justify-center gap-2 mt-auto mb-12">
               <Image
                 src={user.image}
                 width={30}

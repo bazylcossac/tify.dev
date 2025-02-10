@@ -15,11 +15,10 @@ function FileInputComponent({
   showFile,
 }: FileInputT) {
   const inputFileRef = useRef<HTMLInputElement>(null);
-  console.log(file);
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
-    console.log(file);
+
     if (file.size > MAX_FILE_SIZE) {
       toast("File is too big!");
       setFile(undefined);
@@ -31,8 +30,6 @@ function FileInputComponent({
       URL.revokeObjectURL(fileUrl);
     }
     const url = URL.createObjectURL(file);
-    console.log(url);
-
     setFileUrl(url);
   }
 

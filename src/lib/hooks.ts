@@ -2,8 +2,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchPosts } from "./utils";
 
 export function useInfinityScrollFetch() {
-  console.log("useinfinittquery");
-
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["posts"],

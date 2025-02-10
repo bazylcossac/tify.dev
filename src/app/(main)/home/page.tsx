@@ -19,13 +19,9 @@ function Page() {
   const { data, fetchNextPage, error, likePostDB } = useUserContext();
   const session = useSession();
 
-  console.log(session);
-  console.log(data);
-
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
-      console.log("in view");
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);

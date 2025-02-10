@@ -81,7 +81,7 @@ export async function createPost(
   }
 
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
-  console.log("create post " + validatedData.error);
+
   if (!validatedData.success) {
     throw new Error("Failed to validate post data");
   }
@@ -107,8 +107,8 @@ export async function createPost(
 export async function createCommentToPost(
   commentText: string,
   postId: string,
-  type?: string,
-  mediaUrl?: string
+  mediaUrl?: string,
+  type?: string
 ) {
   const session = await auth();
 
@@ -134,6 +134,7 @@ export async function createCommentToPost(
     type,
     mediaUrl,
   });
+
   if (!commentDataValidation.success) {
     return {
       message: "Failed to validate comment data",
@@ -161,6 +162,7 @@ export async function createCommentToPost(
       },
     },
   });
+
   revalidateTag("posts");
   revalidatePath("/home", "page");
 }
@@ -175,7 +177,7 @@ export async function getUserByEmail(email: string) {
 
 export async function likePost(postId: string) {
   const session = await auth();
-  console.log(session);
+
   if (!session?.user?.email) {
     redirect("/");
   }

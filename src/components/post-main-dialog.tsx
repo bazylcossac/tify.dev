@@ -5,6 +5,7 @@ import Image from "next/image";
 import CommentsComponent from "./comments-component";
 import { PostType } from "@/types/types";
 import { timeMessage } from "@/lib/utils";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 function PostMainDialog({
   type,
@@ -24,7 +25,7 @@ function PostMainDialog({
             height={800}
             quality={100}
             alt="post image"
-            className="rounded-xl border border-white/30 w-full max-h-[900px] hover:opacity-75  object-contain transition hover:cursor-pointer"
+            className="rounded-xl border border-white/30 max-h-[900px] hover:opacity-75 object-contain transition hover:cursor-pointer"
           />
         ) : (
           <video
@@ -45,9 +46,10 @@ function PostMainDialog({
         )}
       </DialogTrigger>
       <DialogTitle></DialogTitle>
-      <DialogContent className="bg-[#0D0D0D] border-none flex flex-row max-w-[1200px] max-h-[500px] p-4 rounded-lg">
+      <DialogDescription></DialogDescription>
+      <DialogContent className="bg-[#0D0D0D] md:w-3/4 w-full border-none flex flex-col md:flex-row md:max-h-[500px] p-4 rounded-lg ">
         <div className="flex flex-col ">
-          <div className="flex items-center justify-between mb-4 mx-4">
+          <div className="flex items-center justify-between mb-4 mt-4 md:mt-0 mx-4">
             <div className="flex gap-2 items-center">
               <Image
                 src={post.User.image}
@@ -75,7 +77,7 @@ function PostMainDialog({
               placeholder="blur"
               blurDataURL="public/images/noImage.jpg"
               alt="post image"
-              className="rounded-lg max-w-[680px] max-h-[400px] transition object-contain"
+              className="rounded-lg min-w-[300px] max-h-[400px] transition object-contain"
             />
           ) : (
             <video
@@ -83,11 +85,11 @@ function PostMainDialog({
               width={1800}
               height={1400}
               controls
-              className="rounded-xl border border-white/30  max-w-[680px] max-h-[600px] object-contain"
+              className="rounded-xl border border-white/30 max-w-[680px] max-h-[600px] object-contain"
             />
           )}
         </div>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full h-auto">
           {/* ----- COMMENTS ----- */}
           <CommentsComponent post={post} />
         </div>
