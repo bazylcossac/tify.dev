@@ -8,7 +8,7 @@ import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { postSchema, userSchema } from "@/lib/zod-schemas";
+import { commentSchema, postSchema, userSchema } from "@/lib/zod-schemas";
 
 /// generate random 32bit file name
 const generateFileName = (bytes = 32) => {
@@ -72,8 +72,8 @@ export async function getSignedURL(
 
 export async function createPost(
   postText: string,
-  type?: string,
-  mediaUrl?: string
+  type?: string | undefined,
+  mediaUrl?: string | undefined
 ) {
   const session = await auth();
   if (!session?.user?.email) {
@@ -81,11 +81,9 @@ export async function createPost(
   }
 
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
-
+  console.log("create post " + validatedData.error);
   if (!validatedData.success) {
-    return {
-      message: "Failed to validate post data",
-    };
+    throw new Error("Failed to validate post data");
   }
   const post = await prisma.post.create({
     data: {
@@ -120,7 +118,6 @@ export async function createCommentToPost(
   }
   const { image, name, email } = session?.user;
 
-  /// zod validation
   const userValidation = userSchema.safeParse({ name, email, image, userId });
   if (!userValidation.success) {
     return {
@@ -130,16 +127,29 @@ export async function createCommentToPost(
   if (!userValidation.data.userId) {
     redirect("/");
   }
+
+  const commentDataValidation = commentSchema.safeParse({
+    commentText,
+    postId,
+    type,
+    mediaUrl,
+  });
+  if (!commentDataValidation.success) {
+    return {
+      message: "Failed to validate comment data",
+    };
+  }
+
   await prisma.comments.create({
     data: {
       userId: userValidation.data.userId,
       userName: userValidation.data.name,
       userEmail: userValidation.data.email,
       userImage: userValidation.data.image,
-      commentText: commentText,
-      postId: postId,
-      commentMediaUrl: mediaUrl || "",
-      commentMediaType: type || "",
+      commentText: commentDataValidation.data.commentText,
+      postId: commentDataValidation.data.postId,
+      commentMediaUrl: commentDataValidation.data.mediaUrl || "",
+      commentMediaType: commentDataValidation.data.type || "",
       media: {
         create: [
           {
@@ -226,6 +236,9 @@ export async function getPostComments(postId: string) {
 }
 
 export async function getPostById(postId: string) {
+  if (!postId) {
+    throw new Error("No id provided");
+  }
   return await prisma.post.findUnique({
     where: { postId },
     include: {

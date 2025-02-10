@@ -66,26 +66,26 @@ function Page() {
             >
               {post ? (
                 <div className="flex flex-row items-center justify-between">
-                  <div className=" flex items-center gap-2 my-4 ">
+                  <div className="flex items-center gap-2 my-4 ">
                     <Image
                       src={post?.User?.image}
                       width={30}
                       height={30}
                       alt="user image"
-                      className="rounded-full w-8 h-8"
+                      className="rounded-full md:w-8 md:h-8 w-4 h-4"
                     />
                     <div className="flex flex-row items-center">
-                      <p className="mt-auto text-md font-semibold ">
+                      <p className="mt-auto md:text-md text-xs font-semibold ">
                         @{post?.User?.name}
                       </p>
-                      <p className="text-[11px] text-white/30 mx-2">
+                      <p className="md:text-[11px] text-[9px] text-white/30 mx-2">
                         {new Date(post?.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs text-white/60 font-semibold">
+                    <p className="md:text-xs text-[9px] text-white/60 font-semibold">
                       {timeMessage(post?.createdAt)}
                     </p>
                   </div>

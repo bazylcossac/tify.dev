@@ -53,13 +53,14 @@ function AddPostDialog() {
     try {
       if (file) {
         checksum = await computeSHA265(file);
+
         const { url } = await getSignedURL(file.type, file.size, checksum);
 
         if (!url) {
           toast("Failed to get url");
           throw new Error("Failed to get url");
         }
-        mediaUrl = url?.split("?")[0] as string;
+        mediaUrl = url?.split("?")[0];
         if (!mediaUrl) {
           toast("Failed to get media url");
           throw new Error("Failed to get media url");
@@ -75,6 +76,7 @@ function AddPostDialog() {
       }
 
       addPostToDB(postText, mediaUrl, file?.type);
+
       if (error) {
         toast(<p className="font-semibold">{error.message}</p>);
         return;
@@ -96,7 +98,7 @@ function AddPostDialog() {
           POST
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#0D0D0D] border-none">
+      <DialogContent className="w-4/5 md:max-w-[425px] bg-[#0D0D0D] border-none">
         <DialogHeader>
           <DialogTitle className="flex flex-row items-center gap-2">
             <Image
@@ -133,7 +135,7 @@ function AddPostDialog() {
             <DialogClose asChild>
               <Button
                 type="submit"
-                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 "
+                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
                 disabled={postText.trim().length === 0 && !file}
               >
                 Post

@@ -64,7 +64,6 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
       media: true,
       User: true,
       LikeUsers: true,
-      // comments: true,
     },
     orderBy: {
       createdAt: "desc",

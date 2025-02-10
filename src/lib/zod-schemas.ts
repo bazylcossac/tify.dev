@@ -12,3 +12,10 @@ export const userSchema = z.object({
   image: z.string().url(),
   userId: z.string().uuid().optional(),
 });
+
+export const commentSchema = z.object({
+  commentText: z.string(),
+  postId: z.string().uuid(),
+  type: z.string().optional(),
+  mediaUrl: z.string().url().optional(),
+});

@@ -48,9 +48,9 @@ export default function UserContextProvider({
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
-  const [postData, setPostData] = useState<InfiniteData<PagesType> | undefined>(
-    data! || []
-  );
+  const [postData, setPostData] = useState<
+    InfiniteData<DataType | undefined> 
+  >(data! || []);
 
   useEffect(() => {
     setPostData(data);
@@ -63,14 +63,12 @@ export default function UserContextProvider({
     const pageIndex = postData?.pages.findIndex((page) =>
       page.posts.some((p: PostType) => p.postId === post?.postId)
     );
-    // if (!pageIndex) {
-    //   throw new Error("Failed to find infex");
-    // }
+
     if (pageIndex === -1) {
       console.log("Post not found");
       return;
     } else {
-      const postIndex = postData?.pages[pageIndex].posts.findIndex(
+      const postIndex = postData?.pages[pageIndex!].posts.findIndex(
         (p: PostType) => p.postId === post?.postId
       );
       console.log({ pageIndex, postIndex });
@@ -81,7 +79,7 @@ export default function UserContextProvider({
           index === pageIndex
             ? {
                 ...page,
-                posts: page.posts.map((p, index) =>
+                posts: page.posts.map((p: PostType, index: number) =>
                   index === postIndex ? post : p
                 ),
               }
@@ -93,11 +91,13 @@ export default function UserContextProvider({
 
   async function addPostToDB(
     postText: string,
-    mediaUrl?: string,
+    mediaUrl?: string | undefined,
     fileType?: string | undefined
   ) {
     const text = postText.replace(/\n/g, "\n");
     const post = await createPost(text, fileType, mediaUrl);
+
+    /// Optimistic setting post
     const newPost = await getPostById(post.postId);
     setPostData((prev) => ({
       ...prev,
@@ -105,8 +105,6 @@ export default function UserContextProvider({
         index === 0 ? { ...page, posts: [newPost, ...page.posts] } : page
       ),
     }));
-
-    // refetch();
   }
 
   async function addCommentToPostToDB(
