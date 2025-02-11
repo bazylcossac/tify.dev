@@ -18,7 +18,7 @@ import PostMainDialog from "@/components/post-main-dialog";
 function Page() {
   const { data, fetchNextPage, error, likePostDB } = useUserContext();
   const session = useSession();
-
+  console.log(data);
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -71,17 +71,17 @@ function Page() {
                       className="rounded-full md:w-8 md:h-8 w-6 h-6"
                     />
                     <div className="flex flex-row items-center">
-                      <p className="mt-auto md:text-md text-xs font-semibold ">
+                      <p className="mt-auto md:text-md text-sm font-semibold ">
                         @{post?.User?.name}
                       </p>
-                      <p className="md:text-[11px] text-[9px] text-white/30 mx-2">
+                      <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
                         {new Date(post?.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="md:text-xs text-[9px] text-white/60 font-semibold">
+                    <p className="md:text-xs text-[11px] text-white/60 font-semibold">
                       {timeMessage(post?.createdAt)}
                     </p>
                   </div>

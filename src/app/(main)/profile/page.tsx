@@ -4,6 +4,10 @@ import { prisma } from "@/lib/db";
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { IoIosPeople, IoMdMail } from "react-icons/io";
+import { FaNewspaper } from "react-icons/fa";
+import UsersPosts from "@/components/users-posts-profile";
 
 async function Page() {
   const session = await auth();
@@ -15,6 +19,7 @@ async function Page() {
           comments: true,
           media: true,
           LikeUsers: true,
+          User: true,
         },
       },
     },
@@ -54,13 +59,21 @@ async function Page() {
           </div>
         </div>
       </section>
-      <section className="mt-7 flex flex-row gap-4 text-white/60 font-semibold text-sm">
-        <p>Friends: 216</p>
-        <p>Posts: {user.posts.length || 0}</p>
-        <p>Email</p>
+      <section className="mt-4 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+        <span className="flex flex-row items-center gap-1">
+          <IoIosPeople size={20} /> 216
+        </span>
+        <span className="flex flex-row items-center gap-1">
+          <FaNewspaper size={18} /> {user.posts.length || 0}
+        </span>
+        <Link href={`mailto::${user.email}`}>
+          <IoMdMail size={16} />
+        </Link>
       </section>
 
-      <section></section>
+      <section>
+        <UsersPosts />
+      </section>
     </main>
   );
 }

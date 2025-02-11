@@ -80,6 +80,13 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
   };
 }
 
+export const fetchUserPosts = async (pageParam: number) => {
+  const response = await fetch(`/api/userPosts?pageParam=${pageParam}`, {});
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
 /// FUNCTION TO TAKE ONLY #
 // const posts = await prisma.post.findMany({
 //   take: pageSize,

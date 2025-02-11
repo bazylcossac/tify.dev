@@ -166,6 +166,7 @@ export async function createCommentToPost(
 
   revalidateTag("posts");
   revalidatePath("/home", "page");
+  revalidatePath("/profile", "page");
 }
 
 export async function getUserByEmail(email: string) {
@@ -222,6 +223,7 @@ export async function likePost(postId: string) {
       },
     });
   }
+  revalidatePath("/profile", "page");
 }
 
 export async function getPostComments(postId: string) {
@@ -250,4 +252,34 @@ export async function getPostById(postId: string) {
       LikeUsers: true,
     },
   });
+}
+
+export async function getUserPosts({ pageParam }: { pageParam: number }) {
+  const session = await auth();
+
+  const pageSize = 10;
+  const posts = await prisma.post.findMany({
+    where: {
+      userId: session?.userId,
+    },
+    take: pageSize,
+    skip: pageParam * pageSize,
+    include: {
+      media: true,
+      User: true,
+      LikeUsers: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  console.log(posts);
+  const totalPosts = await prisma.post.count();
+
+  const hasMore = (pageParam + 1) * pageSize < totalPosts;
+
+  return {
+    posts,
+    nextCursor: hasMore ? pageParam + 1 : null,
+  };
 }
