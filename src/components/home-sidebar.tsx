@@ -9,7 +9,7 @@ import Image from "next/image";
 import Logo from "./logo";
 
 import { ExitIcon } from "@radix-ui/react-icons";
-import { IoMdHome } from "react-icons/io";
+import { IoMdHome, IoIosPeople } from "react-icons/io";
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
 
 import { FaBell } from "react-icons/fa";
@@ -33,9 +33,9 @@ const routes = [
     icon: <IoSearchSharp />,
   },
   {
-    name: "Notifications",
-    path: "/notifications",
-    icon: <FaBell />,
+    name: "Friends",
+    path: "/friends",
+    icon: <IoIosPeople />,
   },
   {
     name: "Profile",
@@ -54,7 +54,7 @@ function HomeSidebar() {
   }
 
   return (
-    <div className="sticky top-4 flex flex-col min-h-screen pl-2 ">
+    <div className="sticky top-4 flex flex-col min-h-screen pl-2 md:max-w-[200px] ">
       <div className="max-h-[800px] rounded-lg flex flex-col justify-between ">
         <div>
           <ul className="p-4 space-y-4 ">

@@ -8,7 +8,8 @@ import React, { Suspense } from "react";
 import Image from "next/image";
 
 import { ExitIcon } from "@radix-ui/react-icons";
-import { IoMdHome } from "react-icons/io";
+import { IoMdHome, IoIosPeople } from "react-icons/io";
+
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
 
 import { FaBell } from "react-icons/fa";
@@ -46,9 +47,9 @@ const routes = [
     icon: <IoSearchSharp />,
   },
   {
-    name: "Notifications",
-    path: "/notifications",
-    icon: <FaBell />,
+    name: "Friends",
+    path: "/friends",
+    icon: <IoIosPeople />,
   },
   {
     name: "Profile",

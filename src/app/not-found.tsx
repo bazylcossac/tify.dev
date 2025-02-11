@@ -8,8 +8,8 @@ function NotFound() {
       <div className="p-4">
         <Logo />
       </div>
-      <div className="flex items-center justify-center flex-col h-full pt-24">
-        <p className="text-6xl font-bold">Page not found | 404</p>
+      <div className="flex items-center justify-center flex-col h-full pt-32">
+        <p className="text-3xl md:text-3xl font-bold">Page not found | 404</p>
         <Link href="/home" className="font-semibold pt-4">
           Go to home page
         </Link>

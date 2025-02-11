@@ -48,7 +48,7 @@ function PostMainDialog({
       <DialogTitle></DialogTitle>
       <DialogDescription></DialogDescription>
       <DialogContent className="bg-[#0D0D0D] md:w-3/4 w-full border-none flex flex-col md:flex-row h-3/4 p-4 rounded-lg overflow-y-auto">
-        <div className="flex flex-col border-b-[.5px] border-white/30 pb-4">
+        <div className="flex flex-col border-b-[.5px] border-white/30 pb-4 md:border-none">
           <div className="flex items-center justify-between mb-4 mt-4 md:mt-0 mx-4">
             <div className="flex gap-2 items-center">
               <Image

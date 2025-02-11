@@ -1,7 +1,7 @@
 import React from "react";
 
 function Page() {
-  return <div>Notification page</div>;
+  return <div>Friends ( follows ) page</div>;
 }
 
 export default Page;
