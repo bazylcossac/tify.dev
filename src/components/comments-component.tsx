@@ -177,7 +177,7 @@ function CommentsClient({ post }: { post: PostType }) {
             />
 
             <Textarea
-              className="transition font-semibold resize-none h-[30px] max-w-[300px]  placeholder:text-white/50 mb-2 overflow-hidden "
+              className="transition font-semibold resize-none h-[30px] max-w-[300px] placeholder:text-white/50 mb-2 overflow-hidden "
               placeholder="Post your reply..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}

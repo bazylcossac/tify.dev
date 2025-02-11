@@ -41,7 +41,7 @@ function PostMainDialog({
               }
             }}
             controls
-            className="rounded-xl border border-white/30 w-full max-h-[500px] object-contain hover:opacity-75 hover:cursor-pointer"
+            className="rounded-xl border border-white/3 max-h-[500px] object-contain hover:opacity-75 hover:cursor-pointer"
           />
         )}
       </DialogTrigger>

@@ -24,12 +24,12 @@ function Layout({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <UserContextProvider>
             {/* DESKOP SIDEBAR */}
-            <div className="md:sticky md:top-0 md:self-start md:border-none hidden md:flex md:justify-end w-1/4  ">
+            <div className="md:sticky md:top-0 md:self-start md:border-none hidden md:flex md:justify-end w-1/4 ">
               <HomeSidebar />
             </div>
 
             {/* MOBILE SIDEBAR */}
-            <div className="flex flex-row justify-between md:hidden py-2 sticky top-0 self-start bg-black w-full border-b-[.5px] border-neutral-700">
+            <div className="flex flex-row justify-between md:hidden py-2 sticky top-0 self-start bg-black w-full border-b-[.5px] border-neutral-700 z-10">
               <div>
                 <SheetDemo />
               </div>
@@ -39,12 +39,12 @@ function Layout({ children }: { children: React.ReactNode }) {
             </div>
 
             <div>
-              <div className="min-h-screen rounded-xl overflow-y-auto no-scrollbar w-full ">
-                <div className="text-center overflow-x-hidden "></div>
+              <div className="min-h-screen rounded-xl overflow-y-auto no-scrollbar max-w-[1100px] ">
+                <div className="text-center overflow-x-hidden"></div>
                 <Suspense fallback={<div>loading...</div>}>{children}</Suspense>
               </div>
             </div>
-            <div className="w-1/4 "></div>
+            <div className="w-1/4"></div>
           </UserContextProvider>
         </QueryClientProvider>
       </div>
