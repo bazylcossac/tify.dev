@@ -55,6 +55,13 @@ export const fetchPosts = async (pageParam: number) => {
   return data;
 };
 
+// export const fetchProfilePosts = async (pageParam: number) => {
+//   const response = await fetch(`/api/profilePosts?pageParam=${pageParam}`, {});
+//   const data = await response.json();
+//   console.log(data);
+//   return data;
+// };
+
 export async function getPosts({ pageParam }: { pageParam: number }) {
   const pageSize = 10;
   const posts = await prisma.post.findMany({
@@ -79,6 +86,33 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
     nextCursor: hasMore ? pageParam + 1 : null,
   };
 }
+
+// export async function getProfilePosts({ pageParam }: { pageParam: number }) {
+//   const session = await auth();
+//   const pageSize = 10;
+//   const posts = await prisma.post.findMany({
+//     where: { userId: session?.userId },
+//     take: pageSize,
+//     skip: pageParam * pageSize,
+//     include: {
+//       media: true,
+//       User: true,
+//       LikeUsers: true,
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+
+//   const totalPosts = await prisma.post.count();
+
+//   const hasMore = (pageParam + 1) * pageSize < totalPosts;
+
+//   return {
+//     posts,
+//     nextCursor: hasMore ? pageParam + 1 : null,
+//   };
+// }
 
 export const fetchUserPosts = async (pageParam: number) => {
   const response = await fetch(`/api/userPosts?pageParam=${pageParam}`, {});

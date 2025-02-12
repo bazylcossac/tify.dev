@@ -8,7 +8,7 @@ import {
   likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
-import { CommentsType, DataType, PagesType, PostType } from "@/types/types";
+import { CommentsType, DataType, PostType } from "@/types/types";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 
@@ -39,6 +39,7 @@ export default function UserContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  /// /HOME POSTS
   const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
@@ -112,7 +113,7 @@ export default function UserContextProvider({
     fileType?: string | undefined
   ) {
     const text = commentText.replace(/\n/g, "\n");
-    await createCommentToPost(text, mediaUrl, fileType, postId);
+    await createCommentToPost(text, mediaUrl, fileType, postId); 
     refetch();
   }
 

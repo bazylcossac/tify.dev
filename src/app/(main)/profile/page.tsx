@@ -1,3 +1,4 @@
+"use client";
 import { auth } from "@/auth";
 import Loading from "@/components/loading";
 import { prisma } from "@/lib/db";
@@ -8,26 +9,15 @@ import Link from "next/link";
 import { IoIosPeople, IoMdMail } from "react-icons/io";
 import { FaNewspaper } from "react-icons/fa";
 import UsersPosts from "@/components/users-posts-profile";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-async function Page() {
-  const session = await auth();
-  const user = await prisma.user.findUnique({
-    where: { id: session?.userId },
-    include: {
-      posts: {
-        include: {
-          comments: true,
-          media: true,
-          LikeUsers: true,
-          User: true,
-        },
-      },
-    },
-  });
-  if (!user) {
-    return <Loading />;
+function Page() {
+  const session = useSession();
+  if (session.status === "unauthenticated") {
+    redirect("/");
   }
-  console.log(user);
+  const user = session.data?.user;
   return (
     <main className="w-full h-screen mt-4 md:mt-10 px-2 flex flex-col ">
       <section className="w-full ">
@@ -43,7 +33,7 @@ async function Page() {
           </div>
           <div className=" flex flex-col ">
             <Image
-              src={user.image}
+              src={user?.image}
               alt="bg image"
               width={100}
               height={100}
@@ -51,7 +41,7 @@ async function Page() {
               className="max-size-28 rounded-lg absolute top-24 left-4"
             />
             <div className="flex flex-row justify-between items-center mt-2">
-              <p className="ml-32 font-bold">{user.name}</p>
+              <p className="ml-32 font-bold">{user?.name}</p>
               <Button className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]">
                 Follow
               </Button>
@@ -64,9 +54,9 @@ async function Page() {
           <IoIosPeople size={20} /> 216
         </span>
         <span className="flex flex-row items-center gap-1">
-          <FaNewspaper size={18} /> {user.posts.length || 0}
+          {/* <FaNewspaper size={18} /> {user.posts.length || 0} */}
         </span>
-        <Link href={`mailto::${user.email}`}>
+        <Link href={`mailto::${user?.email}`}>
           <IoMdMail size={16} />
         </Link>
       </section>
