@@ -77,7 +77,10 @@ function Page() {
                     />
                     <div className="flex flex-row items-center">
                       <p className="mt-auto md:text-md text-sm font-semibold ">
-                        <Link href={`/profile/${post.userId}`}>
+                        <Link
+                          href={`/profile/${post.userId}`}
+                          className="hover:text-white/60 transition"
+                        >
                           @{post?.User?.name}
                         </Link>
                       </p>

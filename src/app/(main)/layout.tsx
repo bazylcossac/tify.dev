@@ -39,7 +39,8 @@ function Layout({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="min-h-screen rounded-xl overflow-y-auto no-scrollbar w-full ">
-              <div className="text-center overflow-x-hidden"></div>
+              {/* <div className="text-center overflow-x-hidden"></div> */}
+
               {children}
             </div>
 

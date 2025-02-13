@@ -176,6 +176,14 @@ export async function getUserById(userId: string) {
     },
   });
 }
+export async function getUserFollowers(userId: string) {
+  return await prisma.user.findFirst({
+    where: { id: userId },
+    include: {
+      Followers: true,
+    },
+  });
+}
 
 export async function likePost(postId: string) {
   const session = await auth();

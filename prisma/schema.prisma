@@ -19,6 +19,13 @@ model User {
   posts     Post[]
   Comments  Comments[]
   LikeUsers LikeUsers[]
+  Followers Followers[]
+}
+
+model Followers {
+  id         String @id @default(uuid())
+  follower   User   @relation(fields: [followerId], references: [id])
+  followerId String
 }
 
 model LikeUsers {

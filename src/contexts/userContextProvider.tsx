@@ -6,6 +6,7 @@ import {
   getPostById,
   getPostComments,
   getUserById,
+  getUserFollowers,
   likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
@@ -55,6 +56,10 @@ export default function UserContextProvider({
     refetchOnMount: true,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
+  useEffect(() => {
+    setPostData(data);
+  }, [data]);
+
   const [postData, setPostData] = useState<
     InfiniteData<DataType, unknown> | undefined
   >(data);
@@ -77,11 +82,9 @@ export default function UserContextProvider({
     }));
     return { userData, userPosts };
   }
-
-  useEffect(() => {
-    setPostData(data);
-  }, [data]);
-
+  async function getUserFollowersIds(userId: string) {
+    return await getUserFollowers(userId);
+  }
   async function likePostDB(postId: string) {
     await likePost(postId);
     const post = await getPostById(postId);
@@ -163,6 +166,7 @@ export default function UserContextProvider({
         getUniqueUserData,
         refetch,
         fetchNextPage,
+        getUserFollowersIds,
         error,
       }}
     >
