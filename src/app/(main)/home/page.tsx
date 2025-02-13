@@ -77,7 +77,9 @@ function Page() {
                     />
                     <div className="flex flex-row items-center">
                       <p className="mt-auto md:text-md text-sm font-semibold ">
-                        @{post?.User?.name}
+                        <Link href={`/profile/${post.userId}`}>
+                          @{post?.User?.name}
+                        </Link>
                       </p>
                       <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
                         {new Date(post?.createdAt).toLocaleDateString()}

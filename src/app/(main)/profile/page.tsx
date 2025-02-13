@@ -11,9 +11,11 @@ import { IoIosPeople, IoMdMail } from "react-icons/io";
 import UsersPosts from "@/components/users-posts-profile";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useUserContext } from "@/contexts/userContextProvider";
 
 function Page() {
   const session = useSession();
+  const { likePostDB, fetchNextPage, userPosts } = useUserContext();
   if (session.status === "unauthenticated") {
     redirect("/");
   }
@@ -35,6 +37,7 @@ function Page() {
               alt="bg image"
               width={1000}
               height={200}
+              priority={true}
               className="h-[150px] w-[1100px] rounded-lg object-cover"
             />
           </div>
@@ -46,6 +49,7 @@ function Page() {
                 width={100}
                 height={100}
                 quality={100}
+                priority={true}
                 className="max-size-28 rounded-lg absolute top-24 left-4"
               />
             )}
@@ -68,7 +72,8 @@ function Page() {
       </section>
 
       <section>
-        <UsersPosts />
+        <UsersPosts userPosts={userPosts} />
+        {/* <UsersPosts /> */}
       </section>
     </main>
   );

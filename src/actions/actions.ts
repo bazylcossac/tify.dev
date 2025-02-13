@@ -169,10 +169,10 @@ export async function createCommentToPost(
   revalidatePath("/profile", "page");
 }
 
-export async function getUserByEmail(email: string) {
+export async function getUserById(userId: string) {
   return await prisma.user.findUnique({
     where: {
-      email: email,
+      id: userId,
     },
   });
 }

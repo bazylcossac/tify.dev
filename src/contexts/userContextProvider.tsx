@@ -5,6 +5,7 @@ import {
   createPost,
   getPostById,
   getPostComments,
+  getUserById,
   likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
@@ -59,12 +60,23 @@ export default function UserContextProvider({
   >(data);
   console.log(postData);
 
+  /// CURRENT LOGGED IN USER POSTS
   const userPosts = postData?.pages?.map((posts) => ({
     ...posts,
     posts: posts?.posts.filter(
       (post: PostType) => post.userId === session.data?.userId
     ),
   }));
+
+  /// UNIQUE USER POSTS
+  async function getUniqueUserData(userId: string) {
+    const userData = await getUserById(userId);
+    const userPosts = postData?.pages?.map((posts) => ({
+      ...posts,
+      posts: posts?.posts.filter((post: PostType) => post.userId === userId),
+    }));
+    return { userData, userPosts };
+  }
 
   useEffect(() => {
     setPostData(data);
@@ -148,6 +160,7 @@ export default function UserContextProvider({
         likePostDB,
         data: postData,
         userPosts,
+        getUniqueUserData,
         refetch,
         fetchNextPage,
         error,

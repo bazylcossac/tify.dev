@@ -152,8 +152,6 @@ function CommentDialog({ post }: { post: PostType }) {
           </DialogFooter>
         </form>
       </DialogContent>
-
-      <p className="text-xs font-light -ml-7">{post?.comments?.length || 0}</p>
     </Dialog>
   );
 }

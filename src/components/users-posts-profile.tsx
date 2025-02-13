@@ -15,9 +15,9 @@ import Loading from "./loading";
 import { useInView } from "react-intersection-observer";
 import formatText from "@/lib/formatText";
 
-function UsersPosts() {
+function UsersPosts({ userPosts }) {
   const session = useSession();
-  const { likePostDB, fetchNextPage, userPosts } = useUserContext();
+  const { fetchNextPage, likePostDB } = useUserContext();
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -48,6 +48,7 @@ function UsersPosts() {
                       src={post?.User?.image}
                       width={30}
                       height={30}
+                      priority={true}
                       alt="user image"
                       className="rounded-full md:w-8 md:h-8 w-6 h-6"
                     />
@@ -128,7 +129,7 @@ function UsersPosts() {
         )}
       </ul>
 
-      <div className="h-[1px]" ref={ref}></div>
+      <div className="h-[10px]" ref={ref}></div>
     </div>
   );
 }
