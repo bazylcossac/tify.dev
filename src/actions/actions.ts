@@ -174,6 +174,10 @@ export async function getUserById(userId: string) {
     where: {
       id: userId,
     },
+    include: {
+      followed: true,
+      follower: true,
+    },
   });
 }
 export async function getUserFollowers(userId: string) {
@@ -181,6 +185,7 @@ export async function getUserFollowers(userId: string) {
     where: { id: userId },
     include: {
       followed: true,
+      follower: true,
     },
   });
 }
@@ -190,28 +195,30 @@ export async function followUser(userYouWantToFollow: string) {
   if (!session?.user) {
     redirect("/");
   }
-  // const isUserFollowing = await prisma.followers.findFirst({
-  //   where: {
-  //     followerId: session.userId,
-  //     followedId: userYouWantToFollow,
-  //   },
-  // });
-
-  // if (isUserFollowing) {
-  //   await prisma.followers.deleteMany({
-  //     where: {
-  //       followerId: session.userId,
-  //       followedId: userYouWantToFollow,
-  //     },
-  //   });
-  // } else {
-  await prisma.followers.create({
-    data: {
+  const isUserFollowing = await prisma.followers.findFirst({
+    where: {
       followerId: session.userId,
       followedId: userYouWantToFollow,
     },
   });
+  console.log(!!isUserFollowing);
 
+  if (isUserFollowing) {
+    await prisma.followers.deleteMany({
+      where: {
+        followerId: session.userId,
+        followedId: userYouWantToFollow,
+      },
+    });
+  } else {
+    await prisma.followers.create({
+      data: {
+        followerId: session.userId,
+        followedId: userYouWantToFollow,
+      },
+    });
+  }
+  revalidatePath("/profile", "page");
   /// find if current user is following user
 
   /// followerId: userYouWantToFollow

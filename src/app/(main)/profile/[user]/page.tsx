@@ -9,9 +9,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UsersPosts from "@/components/users-posts-profile";
 import { followUser } from "@/actions/actions";
+import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 function Page() {
   const params = useParams();
+  const session = useSession();
   const { getUniqueUserData, fetchNextPage, likePostDB } = useUserContext();
   const [userPosts, setUserPosts] = useState();
   const [userData, setUserData] = useState();
@@ -19,6 +22,7 @@ function Page() {
   useEffect(() => {
     const getData = async (userId: string) => {
       const { userData, userPosts } = await getUniqueUserData(userId);
+
       setUserData(userData);
       setUserPosts(userPosts);
     };
@@ -28,6 +32,9 @@ function Page() {
   if (!userPosts || !userData) {
     return <Loading />;
   }
+  const userIsFollowing = !!userData.followed.find(
+    (follow) => follow.followerId === session.data?.userId
+  );
 
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
@@ -57,19 +64,31 @@ function Page() {
             )}
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{userData?.name}</p>
-              <Button
-                className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]"
-                onClick={async () => followUser(userData.id)}
-              >
-                Follow
-              </Button>
+              {session.data?.userId !== userData.id && (
+                <Button
+                  className={cn(
+                    "px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]",
+                    {
+                      "bg-neutral-900": userIsFollowing,
+                    }
+                  )}
+                  onClick={async () => followUser(userData.id)}
+                >
+                  {userIsFollowing ? "Following" : "Follow"}
+                </Button>
+              )}
             </div>
           </div>
         </div>
       </section>
-      <section className="mt-4 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+      <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
-          <IoIosPeople size={20} /> 216
+          {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
+          {userData?.follower.length} Following
+        </span>
+        <span className="flex flex-row items-center gap-1">
+          {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
+          {userData?.followed.length} Followed
         </span>
         <Link href={`mailto::${userData?.email}`}>
           <IoMdMail size={16} />

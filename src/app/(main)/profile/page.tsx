@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
 import NextNProgress from "nextjs-progressbar";
+import { followUser } from "@/actions/actions";
 
 function Page() {
   const session = useSession();
@@ -79,7 +80,12 @@ function Page() {
       </section>
       <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
-          <IoIosPeople size={20} /> {userFollowers?.Followers.length}
+          {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
+          {userFollowers?.follower.length} Following
+        </span>
+        <span className="flex flex-row items-center gap-1">
+          {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
+          {userFollowers?.followed.length} Followed
         </span>
         <Link href={`mailto::${user?.email}`}>
           <IoMdMail size={16} />
