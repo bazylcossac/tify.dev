@@ -4,8 +4,7 @@ import { cn, timeMessage } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import HomePageLoader from "@/components/home-page-loader";
-import Link from "next/link";
+
 import { FaHeart } from "react-icons/fa";
 
 import { useSession } from "next-auth/react";
@@ -14,11 +13,14 @@ import { PagesType, PostType } from "@/types/types";
 import CommentDialog from "@/components/comment-dialog";
 
 import PostMainDialog from "@/components/post-main-dialog";
+// import formatText from "@/lib/formatText";
+import Loading from "@/components/loading";
+import Link from "next/link";
 
 function Page() {
   const { data, fetchNextPage, error, likePostDB } = useUserContext();
   const session = useSession();
-  console.log(data);
+
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -27,13 +29,16 @@ function Page() {
   }, [inView, fetchNextPage]);
 
   if (!data || !session) {
-    return <HomePageLoader />;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loading />
+      </div>
+    );
   }
   if (error) {
     return <p>Error, please refresh page</p>;
   }
-
-  const formatText = (text: string) => {
+  function formatText(text: string) {
     return text
       .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
       .map((part, index) =>
@@ -49,7 +54,7 @@ function Page() {
           part
         )
       );
-  };
+  }
 
   return (
     <div className="flex flex-col overflow-y-auto no-scrollbar ">
@@ -58,7 +63,7 @@ function Page() {
           posts?.posts?.map((post: PostType) => (
             <div
               key={post.postId}
-              className="flexf flex-col mx-4 border-b border-white/30 py-4"
+              className="flex flex-col mx-4 border-b border-white/30 py-4"
             >
               {post ? (
                 <div className="flex flex-row items-center justify-between">
@@ -100,7 +105,7 @@ function Page() {
                   {formatText(post?.postText)}
                 </p>
               )}
-              <div className="justify-center flex">
+              <div className="justify-center flex w-full">
                 {post?.media && post.media[0].type.startsWith("image") && (
                   <>
                     <PostMainDialog type="image" post={post} />

@@ -12,8 +12,6 @@ import { IoMdHome, IoIosPeople } from "react-icons/io";
 
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
 
-import { FaBell } from "react-icons/fa";
-
 import { useSession } from "next-auth/react";
 
 import { logOut } from "@/actions/actions";
@@ -23,10 +21,8 @@ import { Button } from "@/components/ui/button";
 import { IoMdMenu } from "react-icons/io";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,

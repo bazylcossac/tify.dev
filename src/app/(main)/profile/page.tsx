@@ -1,13 +1,13 @@
 "use client";
-import { auth } from "@/auth";
+
 import Loading from "@/components/loading";
-import { prisma } from "@/lib/db";
+
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { IoIosPeople, IoMdMail } from "react-icons/io";
-import { FaNewspaper } from "react-icons/fa";
+
 import UsersPosts from "@/components/users-posts-profile";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -18,8 +18,15 @@ function Page() {
     redirect("/");
   }
   const user = session.data?.user;
+  if (!user) {
+    return (
+      <div className="w-full h-screen flex items-center justifty-center ">
+        <Loading />
+      </div>
+    );
+  }
   return (
-    <main className="w-full h-screen mt-4 md:mt-10 px-2 flex flex-col ">
+    <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
       <section className="w-full ">
         <div className="relative">
           <div className="flex flex-col">
@@ -32,14 +39,16 @@ function Page() {
             />
           </div>
           <div className=" flex flex-col ">
-            <Image
-              src={user?.image}
-              alt="bg image"
-              width={100}
-              height={100}
-              quality={100}
-              className="max-size-28 rounded-lg absolute top-24 left-4"
-            />
+            {user.image && (
+              <Image
+                src={user.image}
+                alt="bg image"
+                width={100}
+                height={100}
+                quality={100}
+                className="max-size-28 rounded-lg absolute top-24 left-4"
+              />
+            )}
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{user?.name}</p>
               <Button className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]">
@@ -52,9 +61,6 @@ function Page() {
       <section className="mt-4 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
           <IoIosPeople size={20} /> 216
-        </span>
-        <span className="flex flex-row items-center gap-1">
-          {/* <FaNewspaper size={18} /> {user.posts.length || 0} */}
         </span>
         <Link href={`mailto::${user?.email}`}>
           <IoMdMail size={16} />

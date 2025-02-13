@@ -12,7 +12,6 @@ import { ExitIcon } from "@radix-ui/react-icons";
 import { IoMdHome, IoIosPeople } from "react-icons/io";
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
 
-import { FaBell } from "react-icons/fa";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 

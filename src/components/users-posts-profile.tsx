@@ -10,13 +10,14 @@ import CommentDialog from "./comment-dialog";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
-import Link from "next/link";
+
 import Loading from "./loading";
 import { useInView } from "react-intersection-observer";
+import formatText from "@/lib/formatText";
 
-function UsersPosts(posts: PostType[]) {
+function UsersPosts() {
   const session = useSession();
-  const { likePostDB, data, fetchNextPage } = useUserContext();
+  const { likePostDB, fetchNextPage, userPosts } = useUserContext();
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -26,36 +27,11 @@ function UsersPosts(posts: PostType[]) {
   if (session.status === "unauthenticated") {
     redirect("/");
   }
-  if (!posts) {
-    return <p>No posts found</p>;
-  }
-  if (!data) {
+
+  if (!userPosts) {
     return <Loading />;
   }
-
-  const userPosts = data.pages.map((posts) => ({
-    ...posts,
-    posts: posts.posts.filter((post) => post.userId === session.data?.userId),
-  }));
-  //   console.log(userPosts.map((posts) => posts.posts.map((post) => post)));
   console.log(userPosts);
-  const formatText = (text: string) => {
-    return text
-      .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
-      .map((part, index) =>
-        part.startsWith("#") ? (
-          <Link href={`explore/${part.slice(1)}`} key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
-          </Link>
-        ) : part.startsWith("https://www.youtube.com/watch") ? (
-          <Link href={part} target="_blank" key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
-          </Link>
-        ) : (
-          part
-        )
-      );
-  };
   return (
     <div>
       <ul>

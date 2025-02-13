@@ -17,12 +17,12 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import Link from "next/link";
 
 import FileInputComponent from "./file-input-component";
 import { computeSHA265 } from "@/lib/utils";
 import { createCommentToPost, getSignedURL } from "@/actions/actions";
 import { toast } from "sonner";
+import formatText from "@/lib/formatText";
 
 function CommentDialog({ post }: { post: PostType }) {
   const [commentText, setCommentText] = useState("");
@@ -34,24 +34,6 @@ function CommentDialog({ post }: { post: PostType }) {
   if (!session.data?.user) {
     redirect("/");
   }
-
-  const formatText = (text: string) => {
-    return text
-      .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
-      .map((part, index) =>
-        part.startsWith("#") ? (
-          <Link href={`explore/${part.slice(1)}`} key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
-          </Link>
-        ) : part.startsWith("https://www.youtube.com/watch") ? (
-          <Link href={part} target="_blank" key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
-          </Link>
-        ) : (
-          part
-        )
-      );
-  };
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

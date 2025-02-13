@@ -8,9 +8,10 @@ import {
   likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
-import { CommentsType, DataType, PostType } from "@/types/types";
+import { CommentsType, DataType, PagesType, PostType } from "@/types/types";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -26,6 +27,7 @@ type ContextTypes = {
     postId: string
   ) => Promise<Omit<CommentsType[], "post" | "user" | "media">>;
   data: DataType | undefined;
+  userPosts: PagesType[] | undefined;
   likePostDB: (postId: string) => void;
   refetch: () => void;
   fetchNextPage: () => void;
@@ -39,19 +41,30 @@ export default function UserContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const session = useSession();
+
   /// /HOME POSTS
   const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 30,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
-  const [postData, setPostData] = useState<InfiniteData<DataType | undefined>>(
-    data! || []
-  );
+  const [postData, setPostData] = useState<
+    InfiniteData<DataType, unknown> | undefined
+  >(data);
+  console.log(postData);
+
+  const userPosts = postData?.pages?.map((posts) => ({
+    ...posts,
+    posts: posts?.posts.filter(
+      (post: PostType) => post.userId === session.data?.userId
+    ),
+  }));
 
   useEffect(() => {
     setPostData(data);
@@ -62,7 +75,7 @@ export default function UserContextProvider({
     const post = await getPostById(postId);
 
     const pageIndex = postData?.pages.findIndex((page) =>
-      page.posts.some((p: PostType) => p.postId === post?.postId)
+      page?.posts.some((p: PostType) => p.postId === post?.postId)
     );
 
     if (pageIndex === -1) {
@@ -113,7 +126,7 @@ export default function UserContextProvider({
     fileType?: string | undefined
   ) {
     const text = commentText.replace(/\n/g, "\n");
-    await createCommentToPost(text, mediaUrl, fileType, postId); 
+    await createCommentToPost(text, mediaUrl, fileType, postId);
     refetch();
   }
 
@@ -134,6 +147,7 @@ export default function UserContextProvider({
         getComments,
         likePostDB,
         data: postData,
+        userPosts,
         refetch,
         fetchNextPage,
         error,

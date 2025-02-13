@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
-import React, { Suspense } from "react";
+import React from "react";
 
 function Layout({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
@@ -38,12 +38,11 @@ function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
 
-            <div>
-              <div className="min-h-screen rounded-xl overflow-y-auto no-scrollbar max-w-[1100px] ">
-                <div className="text-center overflow-x-hidden"></div>
-                <Suspense fallback={<div>loading...</div>}>{children}</Suspense>
-              </div>
+            <div className="min-h-screen rounded-xl overflow-y-auto no-scrollbar w-full ">
+              <div className="text-center overflow-x-hidden"></div>
+              {children}
             </div>
+
             <div className="w-1/4"></div>
           </UserContextProvider>
         </QueryClientProvider>
