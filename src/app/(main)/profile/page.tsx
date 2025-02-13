@@ -7,7 +7,7 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { IoMdMail } from "react-icons/io";
-
+import { HiDotsHorizontal } from "react-icons/hi";
 import UsersPosts from "@/components/users-posts-profile";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -76,6 +76,9 @@ function Page() {
             )}
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{user?.name}</p>
+              <span className="cursor-pointer ">
+                <HiDotsHorizontal />
+              </span>
             </div>
           </div>
         </div>

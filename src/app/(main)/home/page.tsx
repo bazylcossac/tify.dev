@@ -6,7 +6,8 @@ import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { FaHeart } from "react-icons/fa";
-
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { PagesType, PostType } from "@/types/types";
@@ -16,6 +17,7 @@ import PostMainDialog from "@/components/post-main-dialog";
 // import formatText from "@/lib/formatText";
 import Loading from "@/components/loading";
 import Link from "next/link";
+import formatText from "@/lib/formatText";
 
 function Page() {
   const { data, fetchNextPage, error, likePostDB } = useUserContext();
@@ -37,23 +39,6 @@ function Page() {
   }
   if (error) {
     return <p>Error, please refresh page</p>;
-  }
-  function formatText(text: string) {
-    return text
-      .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
-      .map((part, index) =>
-        part.startsWith("#") ? (
-          <Link href={`explore/${part.slice(1)}`} key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
-          </Link>
-        ) : part.startsWith("https://www.youtube.com/watch") ? (
-          <Link href={part} target="_blank" key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
-          </Link>
-        ) : (
-          part
-        )
-      );
   }
 
   return (
@@ -107,7 +92,10 @@ function Page() {
               )}
 
               {post.postText && (
-                <p className="text-sm font-semibold mb-2 whitespace-pre-line">
+                <p
+                  className="text-sm font-semibold mb-2 whitespace-pre-line"
+                  key={post.postId}
+                >
                   {formatText(post?.postText)}
                 </p>
               )}

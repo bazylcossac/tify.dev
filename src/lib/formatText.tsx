@@ -1,19 +1,42 @@
 import Link from "next/link";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 export default function formatText(text: string) {
   return text
-    .split(/(#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
-    .map((part, index) =>
-      part.startsWith("#") ? (
-        <Link href={`explore/${part.slice(1)}`} key={index}>
-          <span className="text-blue-500 font-bold">{part}</span>
-        </Link>
-      ) : part.startsWith("https://www.youtube.com/watch") ? (
-        <Link href={part} target="_blank" key={index}>
-          <span className="text-blue-500 font-bold">{part}</span>
-        </Link>
-      ) : (
-        part
-      )
-    );
+    .split(/(```[\s\S]*?```|#\S+|https?:\/\/www\.youtube\.com\/watch\S+)/g)
+    .map((part, index) => {
+      if (part.startsWith("#")) {
+        return (
+          <Link href={`explore/${part.slice(1)}`} key={index}>
+            <span className="text-blue-500 font-bold">{part}</span>
+          </Link>
+        );
+      }
+      if (part.startsWith("https://www.youtube.com/watch")) {
+        return (
+          <Link href={part} target="_blank" key={index}>
+            <span className="text-blue-500 font-bold">{part}</span>
+          </Link>
+        );
+      }
+      if (part.startsWith("```") && part.endsWith("```")) {
+        const languageWithDrops = part.split("\n");
+        const language = languageWithDrops[0].slice(3);
+        console.log(language);
+        const code = part.slice(3 + language.length, -3);
+        return (
+          <SyntaxHighlighter
+            language={language}
+            style={atomOneDark}
+            key={index}
+            showLineNumbers
+          >
+            {code}
+          </SyntaxHighlighter>
+        );
+      } else {
+        return part;
+      }
+    });
 }
