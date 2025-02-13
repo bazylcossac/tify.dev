@@ -28,9 +28,10 @@ function UsersPosts({ userPosts }) {
     redirect("/");
   }
 
-  if (!userPosts) {
-    return <Loading />;
-  }
+    // if (!userPosts) {
+    //   return <Loading />;
+    // }
+
   console.log(userPosts);
   return (
     <div>

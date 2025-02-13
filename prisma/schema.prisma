@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,18 +16,20 @@ model User {
   posts     Post[]
   Comments  Comments[]
   LikeUsers LikeUsers[]
-  Followers Followers[]
+  follower  Followers[] @relation("follower")
+  followed  Followers[] @relation("followed")
 }
 
 model Followers {
   id         String @id @default(uuid())
-  follower   User   @relation(fields: [followerId], references: [id])
+  follower   User   @relation("follower", fields: [followerId], references: [id]) /// 
   followerId String
+  followed   User   @relation("followed", fields: [followedId], references: [id]) /// 
+  followedId String
 }
 
 model LikeUsers {
-  id String @id @default(uuid())
-
+  id              String  @id @default(uuid())
   likedPostUser   User    @relation(fields: [likedPostUserId], references: [id])
   likedPostUserId String
   Post            Post?   @relation(fields: [likedPostId], references: [postId])

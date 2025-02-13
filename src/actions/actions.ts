@@ -180,9 +180,46 @@ export async function getUserFollowers(userId: string) {
   return await prisma.user.findFirst({
     where: { id: userId },
     include: {
-      Followers: true,
+      followed: true,
     },
   });
+}
+
+export async function followUser(userYouWantToFollow: string) {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/");
+  }
+  // const isUserFollowing = await prisma.followers.findFirst({
+  //   where: {
+  //     followerId: session.userId,
+  //     followedId: userYouWantToFollow,
+  //   },
+  // });
+
+  // if (isUserFollowing) {
+  //   await prisma.followers.deleteMany({
+  //     where: {
+  //       followerId: session.userId,
+  //       followedId: userYouWantToFollow,
+  //     },
+  //   });
+  // } else {
+  await prisma.followers.create({
+    data: {
+      followerId: session.userId,
+      followedId: userYouWantToFollow,
+    },
+  });
+
+  /// find if current user is following user
+
+  /// followerId: userYouWantToFollow
+  /// yourId: session.userId
+
+  /// if its following => unfollow
+
+  /// if not follow
 }
 
 export async function likePost(postId: string) {

@@ -8,6 +8,7 @@ import { IoIosPeople, IoMdMail } from "react-icons/io";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UsersPosts from "@/components/users-posts-profile";
+import { followUser } from "@/actions/actions";
 
 function Page() {
   const params = useParams();
@@ -56,7 +57,10 @@ function Page() {
             )}
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{userData?.name}</p>
-              <Button className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]">
+              <Button
+                className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]"
+                onClick={async () => followUser(userData.id)}
+              >
                 Follow
               </Button>
             </div>
