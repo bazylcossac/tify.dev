@@ -10,7 +10,14 @@ import {
   likePost,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
-import { CommentsType, DataType, PagesType, PostType } from "@/types/types";
+import {
+  DataType,
+  GetCommentsType,
+  GetUniqueUserData,
+  PagesType,
+  PostType,
+  UserFollowerIdsFn,
+} from "@/types/types";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -25,15 +32,17 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
-  getComments: (
-    postId: string
-  ) => Promise<Omit<CommentsType[], "post" | "user" | "media">>;
+  getComments: (postId: string) => Promise<GetCommentsType>;
   data: DataType | undefined;
   userPosts: PagesType[] | undefined;
   likePostDB: (postId: string) => void;
   refetch: () => void;
   fetchNextPage: () => void;
   error: Error | null;
+  getUniqueUserData: (userId: string) => Promise<GetUniqueUserData | undefined>;
+  getUserFollowersIds: (
+    userId: string
+  ) => Promise<UserFollowerIdsFn | undefined>;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);
@@ -61,7 +70,7 @@ export default function UserContextProvider({
   }, [data]);
 
   const [postData, setPostData] = useState<
-    InfiniteData<DataType, unknown> | undefined
+    InfiniteData<PagesType, unknown> | undefined
   >(data);
   console.log(postData);
 
@@ -82,9 +91,11 @@ export default function UserContextProvider({
     }));
     return { userData, userPosts };
   }
+
   async function getUserFollowersIds(userId: string) {
     return await getUserFollowers(userId);
   }
+
   async function likePostDB(postId: string) {
     await likePost(postId);
     const post = await getPostById(postId);
@@ -118,8 +129,8 @@ export default function UserContextProvider({
 
   async function addPostToDB(
     postText: string,
-    mediaUrl?: string | undefined,
-    fileType?: string | undefined
+    mediaUrl?: string,
+    fileType?: string
   ) {
     const text = postText.replace(/\n/g, "\n");
     const post = await createPost(text, fileType, mediaUrl);

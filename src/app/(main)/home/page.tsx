@@ -72,6 +72,7 @@ function Page() {
                       src={post?.User?.image}
                       width={30}
                       height={30}
+                      quality={50}
                       alt="user image"
                       className="rounded-full md:w-8 md:h-8 w-6 h-6"
                     />

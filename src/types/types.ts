@@ -56,6 +56,16 @@ export type LikeUserType = {
   likedPostUserId: string;
 };
 
+export type userFollowersType = UserType & {
+  followed: Follow[];
+  follower: Follow[];
+};
+
+export type Follow = {
+  id: string;
+  followerId: string;
+  followedId: string;
+};
 /// COMPONENT TYPES
 export type FileInputT = {
   file: File | undefined;
@@ -64,3 +74,45 @@ export type FileInputT = {
   setFileUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
   showFile: boolean;
 };
+
+/// FUNCTION TYPES
+
+export type UserFollowerIdsFn = {
+  follower: { id: string; followerId: string; followedId: string }[];
+  followed: { id: string; followerId: string; followedId: string }[];
+} & {
+  name: string;
+  id: string;
+  username: string | null;
+  email: string;
+  image: string;
+};
+
+export type GetUniqueUserData = {
+  userData:
+    | ({
+        follower: { id: string; followerId: string; followedId: string }[];
+        followed: { id: string; followerId: string; followedId: string }[];
+      } & {
+        name: string;
+        id: string;
+        username: string | null;
+        email: string;
+        image: string;
+      })
+    | null;
+  userPosts: PostType[] | undefined;
+};
+
+export type GetCommentsType = {
+  postId: string;
+  userId: string;
+  createdAt: Date;
+  commentId: string;
+  commentText: string;
+  commentMediaUrl: string;
+  commentMediaType: string;
+  userName: string;
+  userEmail: string;
+  userImage: string;
+}[];

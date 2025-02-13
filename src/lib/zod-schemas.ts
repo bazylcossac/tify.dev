@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const postSchema = z.object({
-  mediaUrl: z.string().url({ message: "Invalid url" }).optional(),
+  mediaUrl: z.string().optional(),
   postText: z.string(),
   type: z.string().optional(),
 });

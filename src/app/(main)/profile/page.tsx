@@ -4,24 +4,28 @@ import Loading from "@/components/loading";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
-import { IoIosPeople, IoMdMail } from "react-icons/io";
+import { IoMdMail } from "react-icons/io";
 
 import UsersPosts from "@/components/users-posts-profile";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
 import NextNProgress from "nextjs-progressbar";
-import { followUser } from "@/actions/actions";
+import {} from "@/actions/actions";
+import { userFollowersType } from "@/types/types";
 
 function Page() {
   const session = useSession();
-  const [userFollowers, setUserFollowers] = useState();
+  const [userFollowers, setUserFollowers] = useState<
+    userFollowersType | undefined
+  >();
   const { userPosts, getUserFollowersIds } = useUserContext();
   if (session.status === "unauthenticated") {
     redirect("/");
   }
+  console.log(userFollowers);
 
   const user = session.data?.user;
   useEffect(() => {
@@ -29,8 +33,10 @@ function Page() {
       const followers = await getUserFollowersIds(userId);
       setUserFollowers(followers);
     };
-    getFollowers(session.data?.userId);
-  }, [getUserFollowersIds, session.data?.userId]);
+    if (session.data) {
+      getFollowers(session.data?.userId);
+    }
+  }, [getUserFollowersIds, session.data]);
 
   if (!user) {
     return (
@@ -51,7 +57,8 @@ function Page() {
               alt="bg image"
               width={1000}
               height={200}
-              priority={true}
+              quality={50}
+              priority
               className="h-[150px] w-[1100px] rounded-lg object-cover"
             />
           </div>
@@ -63,21 +70,17 @@ function Page() {
                 width={100}
                 height={100}
                 quality={100}
-                priority={true}
+                priority
                 className="max-size-28 rounded-lg absolute top-24 left-4"
               />
             )}
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{user?.name}</p>
-              {user.id !== userFollowers?.userId && (
-                <Button className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]">
-                  Follow
-                </Button>
-              )}
             </div>
           </div>
         </div>
       </section>
+
       <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
           {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
@@ -94,7 +97,6 @@ function Page() {
 
       <section>
         <UsersPosts userPosts={userPosts} />
-        {/* <UsersPosts /> */}
       </section>
     </main>
   );

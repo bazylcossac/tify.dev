@@ -11,7 +11,6 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
 
-import Loading from "./loading";
 import { useInView } from "react-intersection-observer";
 import formatText from "@/lib/formatText";
 
@@ -27,10 +26,6 @@ function UsersPosts({ userPosts }) {
   if (session.status === "unauthenticated") {
     redirect("/");
   }
-
-      // if (!userPosts) {
-      //   return <Loading />;
-      // }
 
   console.log(userPosts);
   return (

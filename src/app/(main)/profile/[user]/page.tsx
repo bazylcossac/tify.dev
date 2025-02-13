@@ -4,7 +4,7 @@ import { useUserContext } from "@/contexts/userContextProvider";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { IoIosPeople, IoMdMail } from "react-icons/io";
+import { IoMdMail } from "react-icons/io";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UsersPosts from "@/components/users-posts-profile";
@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 function Page() {
   const params = useParams();
   const session = useSession();
-  const { getUniqueUserData, fetchNextPage, likePostDB } = useUserContext();
+  const { getUniqueUserData} = useUserContext();
   const [userPosts, setUserPosts] = useState();
   const [userData, setUserData] = useState();
 
