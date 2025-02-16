@@ -3,7 +3,7 @@
 import {
   createCommentToPost,
   createPost,
-  getPostById,
+  getPostLikesById,
   getPostComments,
   getUserById,
   getUserFollowers,
@@ -18,6 +18,7 @@ import {
   PostType,
   UserFollowerIdsFn,
 } from "@/types/types";
+import { Post } from "@prisma/client";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -35,7 +36,7 @@ type ContextTypes = {
   getComments: (postId: string) => Promise<GetCommentsType>;
   data: DataType | undefined;
   userPosts: PagesType[] | undefined;
-  likePostDB: (postId: string) => void;
+  likePostDB: (post: PostType) => void;
   refetch: () => void;
   fetchNextPage: () => void;
   error: Error | null;
@@ -96,19 +97,19 @@ export default function UserContextProvider({
     return await getUserFollowers(userId);
   }
 
-  async function likePostDB(postId: string) {
-    await likePost(postId);
-    const post = await getPostById(postId);
+  async function likePostDB(currentPost: PostType) {
+    await likePost(currentPost.postId);
+    const postLikes = await getPostLikesById(currentPost.postId);
 
     const pageIndex = postData?.pages.findIndex((page) =>
-      page?.posts.some((p: PostType) => p.postId === post?.postId)
+      page?.posts.some((p: PostType) => p.postId === currentPost?.postId)
     );
 
     if (pageIndex === -1) {
       return;
     } else {
       const postIndex = postData?.pages[pageIndex!].posts.findIndex(
-        (p: PostType) => p.postId === post?.postId
+        (p: PostType) => p.postId === currentPost?.postId
       );
 
       setPostData((prev) => ({
@@ -117,8 +118,14 @@ export default function UserContextProvider({
           index === pageIndex
             ? {
                 ...page,
-                posts: page.posts.map((p: PostType, index: number) =>
-                  index === postIndex ? post : p
+                posts: page.posts.map((p: PostType, i: number) =>
+                  i === postIndex
+                    ? {
+                        ...p,
+                        likes: postLikes.likes,
+                        LikeUsers: postLikes?.LikeUsers,
+                      } // Aktualizacja tylko liczby lajków
+                    : p
                 ),
               }
             : page

@@ -267,7 +267,7 @@ export async function likePost(postId: string) {
       },
     });
   }
-  // revalidatePath("/profile", "page");
+  revalidatePath("/home", "page");
 }
 
 export async function getPostComments(postId: string) {
@@ -284,16 +284,15 @@ export async function getPostComments(postId: string) {
   }
 }
 
-export async function getPostById(postId: string) {
+export async function getPostLikesById(postId: string) {
   if (!postId) {
     throw new Error("No id provided");
   }
   return await prisma.post.findUnique({
     where: { postId },
-    include: {
-      User: true,
-      media: true,
-      LikeUsers: true,
+    select: {
+      likes: true,
+      LikeUsers: true
     },
   });
 }

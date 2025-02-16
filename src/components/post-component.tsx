@@ -14,8 +14,10 @@ import CommentDialog from "./comment-dialog";
 
 function PostComponent({ post }: { post: PostType }) {
   console.log("RENDERING " + post.postId);
+
   const { likePostDB } = useUserContext();
   const session = useSession();
+
   const [isLiked, setIsLiked] = useState(
     post.LikeUsers.some((user) => user.likedPostUserId === session.data?.userId)
   );
@@ -110,7 +112,7 @@ function PostComponent({ post }: { post: PostType }) {
                   setIsLiked(true);
                   setPostLikes((prev) => prev + 1);
                 }
-                likePostDB(post.postId);
+                likePostDB(post);
               }}
             />
             <p className="text-xs font-light">{postLikes}</p>
