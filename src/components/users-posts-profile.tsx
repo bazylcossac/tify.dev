@@ -74,9 +74,9 @@ function UsersPosts({ userPosts }) {
               )}
 
               {post.postText && (
-                <p className="text-sm font-semibold mb-2 whitespace-pre-line">
+                <div className="text-sm font-semibold mb-2 whitespace-pre-line">
                   {formatText(post?.postText)}
-                </p>
+                </div>
               )}
               <div className="justify-center flex">
                 {post?.media && post.media[0].type.startsWith("image") && (

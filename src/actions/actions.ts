@@ -165,8 +165,8 @@ export async function createCommentToPost(
   });
 
   revalidateTag("posts");
-  revalidatePath("/home", "page");
-  revalidatePath("/profile", "page");
+  // revalidatePath("/home", "page");
+  // revalidatePath("/profile", "page");
 }
 
 export async function getUserById(userId: string) {
@@ -219,14 +219,6 @@ export async function followUser(userYouWantToFollow: string) {
     });
   }
   revalidatePath("/profile", "page");
-  /// find if current user is following user
-
-  /// followerId: userYouWantToFollow
-  /// yourId: session.userId
-
-  /// if its following => unfollow
-
-  /// if not follow
 }
 
 export async function likePost(postId: string) {
@@ -275,7 +267,7 @@ export async function likePost(postId: string) {
       },
     });
   }
-  revalidatePath("/profile", "page");
+  // revalidatePath("/profile", "page");
 }
 
 export async function getPostComments(postId: string) {

@@ -54,7 +54,7 @@ const routes = [
   },
 ];
 
-export function SheetDemo() {
+export function MobileSidebar() {
   const activePath = usePathname();
   const session = useSession();
 

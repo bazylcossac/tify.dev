@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 function Page() {
   const params = useParams();
   const session = useSession();
-  const { getUniqueUserData} = useUserContext();
+  const { getUniqueUserData } = useUserContext();
   const [userPosts, setUserPosts] = useState();
   const [userData, setUserData] = useState();
 

@@ -23,7 +23,7 @@ export default function formatText(text: string) {
       if (part.startsWith("```") && part.endsWith("```")) {
         const languageWithDrops = part.split("\n");
         const language = languageWithDrops[0].slice(3);
-        console.log(language);
+
         const code = part.slice(3 + language.length, -3);
         return (
           <SyntaxHighlighter

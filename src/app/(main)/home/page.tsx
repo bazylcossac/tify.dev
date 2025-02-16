@@ -6,8 +6,7 @@ import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { FaHeart } from "react-icons/fa";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { PagesType, PostType } from "@/types/types";
@@ -18,9 +17,10 @@ import PostMainDialog from "@/components/post-main-dialog";
 import Loading from "@/components/loading";
 import Link from "next/link";
 import formatText from "@/lib/formatText";
+import PostComponent from "@/components/post-component";
 
 function Page() {
-  const { data, fetchNextPage, error, likePostDB } = useUserContext();
+  const { data, fetchNextPage, error } = useUserContext();
   const session = useSession();
 
   const { ref, inView } = useInView();
@@ -46,102 +46,7 @@ function Page() {
       <ul>
         {data?.pages?.map((posts: PagesType) =>
           posts?.posts?.map((post: PostType) => (
-            <div
-              key={post.postId}
-              className="flex flex-col mx-4 border-b border-white/30 py-4"
-            >
-              {post ? (
-                <div className="flex flex-row items-center justify-between">
-                  <div className="flex items-center gap-2 my-4 ">
-                    <Image
-                      src={post?.User?.image}
-                      width={30}
-                      height={30}
-                      quality={50}
-                      alt="user image"
-                      className="rounded-full md:w-8 md:h-8 w-6 h-6"
-                    />
-                    <div className="flex flex-row items-center">
-                      <p className="mt-auto md:text-md text-sm font-semibold ">
-                        <Link
-                          href={`/profile/${post.userId}`}
-                          className="hover:text-white/60 transition"
-                        >
-                          @{post?.User?.name}
-                        </Link>
-                      </p>
-                      <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
-                        {new Date(post?.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="md:text-xs text-[11px] text-white/60 font-semibold">
-                      {timeMessage(post?.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-4 my-4">
-                  <Skeleton className="h-6 w-6 rounded-full bg-[#141414] animate-pulse" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-[90px] bg-[#141414] animate-pulse" />
-                  </div>
-                </div>
-              )}
-
-              {post.postText && (
-                <p
-                  className="text-sm font-semibold mb-2 whitespace-pre-line"
-                  key={post.postId}
-                >
-                  {formatText(post?.postText)}
-                </p>
-              )}
-              <div className="justify-center flex w-full">
-                {post?.media && post.media[0].type.startsWith("image") && (
-                  <>
-                    <PostMainDialog type="image" post={post} />
-                  </>
-                )}
-                {post.postText.includes("https://www.youtube.com/watch") && (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${
-                      post.postText.split("=")[1]
-                    }`}
-                    className="w-full h-[500px] rounded-lg"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                )}
-
-                {post?.media && post.media[0].type.startsWith("video") && (
-                  <PostMainDialog type="video" post={post} />
-                )}
-              </div>
-              <div className="flex flex-row justify-between items-center mt-4">
-                <div className="flex flex-row gap-8 ">
-                  <div className="flex items-center gap-1">
-                    {/* Likes */}
-                    <FaHeart
-                      className={cn("text-sm text-neutral-600 cursor-pointer", {
-                        "text-red-500": post.LikeUsers.some(
-                          (user) =>
-                            user.likedPostUserId === session.data?.userId
-                        ),
-                      })}
-                      onClick={() => {
-                        likePostDB(post.postId);
-                      }}
-                    />
-                    <p className="text-xs font-light">{post.likes}</p>
-                  </div>
-
-                  <CommentDialog post={post} />
-                </div>
-              </div>
-            </div>
+            <PostComponent post={post} key={post.postId} />
           ))
         )}
       </ul>
