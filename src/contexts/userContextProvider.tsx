@@ -123,7 +123,7 @@ export default function UserContextProvider({
                     ? {
                         ...p,
                         likes: postLikes.likes,
-                        LikeUsers: postLikes?.LikeUsers,
+                        LikeUsers: postLikes.LikeUsers,
                       } // Aktualizacja tylko liczby lajków
                     : p
                 ),

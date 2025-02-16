@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import React, { Suspense } from "react";
 
 import Logo from "./logo";
-
+import Image from "next/image";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { IoMdHome, IoIosPeople } from "react-icons/io";
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
@@ -86,6 +86,14 @@ function HomeSidebar() {
       </div>
       {user && user?.image ? (
         <div className="flex items-center justify-center gap-2 my-4 ">
+          <Image
+            src={user.image}
+            width={10}
+            height={10}
+            quality={50}
+            alt="user image"
+            className="rounded-full size-6"
+          />
           <div>
             <p className="mt-auto text-xs font-bold">@{user?.name}</p>
           </div>

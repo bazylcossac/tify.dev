@@ -1,6 +1,6 @@
 "use client";
 import { PostType } from "@/types/types";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, timeMessage } from "@/lib/utils";
@@ -12,7 +12,11 @@ import { useUserContext } from "@/contexts/userContextProvider";
 import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
 
-function PostComponent({ post }: { post: PostType }) {
+const PostComponent = memo(function PostComponent({
+  post,
+}: {
+  post: PostType;
+}) {
   console.log("RENDERING " + post.postId);
 
   const { likePostDB } = useUserContext();
@@ -123,6 +127,6 @@ function PostComponent({ post }: { post: PostType }) {
       </div>
     </div>
   );
-}
+});
 
 export default PostComponent;
