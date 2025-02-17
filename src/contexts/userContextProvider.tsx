@@ -56,7 +56,7 @@ export default function UserContextProvider({
   const session = useSession();
 
   /// /HOME POSTS
-  const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
+  const { data, error, fetchNextPage: fetchNextHomePage, refetch } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
     initialPageParam: 0,
@@ -86,11 +86,7 @@ export default function UserContextProvider({
   async function getUniqueUserData(userId: string) {
     const userData = await getUserById(userId);
 
-    // const userPosts = postData?.pages?.map((posts) => ({
-    //   ...posts,
-    //   posts: posts?.posts.filter((post: PostType) => post.userId === userId),
-    // }));
-    return { userData, userPosts };
+    return userData;
   }
 
   async function getUserFollowersIds(userId: string) {
@@ -182,7 +178,7 @@ export default function UserContextProvider({
         userPosts,
         getUniqueUserData,
         refetch,
-        fetchNextPage,
+        fetchNextHomePage,
         getUserFollowersIds,
         error,
       }}

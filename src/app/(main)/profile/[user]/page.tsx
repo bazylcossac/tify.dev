@@ -17,36 +17,18 @@ function Page() {
   const params = useParams();
   const session = useSession();
   const { getUniqueUserData } = useUserContext();
-  const [userPosts, setUserPosts] = useState();
+
   const [userData, setUserData] = useState();
-
-  const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
-    queryKey: ["user-posts"],
-    queryFn: async ({ pageParam = 1 }) =>
-      await fetchProfilePosts(pageParam, params.user),
-    initialPageParam: 0,
-    staleTime: 0,
-    gcTime: 0,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
-  });
-  console.log(data);
-
-  const memoizedPosts = useMemo(() => {
-    return data?.pages?.flatMap((page) => page.posts) || [];
-  }, [data]);
 
   useEffect(() => {
     const getData = async (userId: string) => {
-      const { userData, userPosts } = await getUniqueUserData(userId);
+      const userData = await getUniqueUserData(userId);
       setUserData(userData);
-      setUserPosts(userPosts);
     };
     getData(params.user);
   }, [getUniqueUserData, params.user]);
 
-  if (!userPosts || !userData) {
+  if (!userData) {
     return <Loading />;
   }
   const userIsFollowing = !!userData.followed.find(
@@ -111,7 +93,7 @@ function Page() {
       </section>
 
       <section>
-        <UsersPosts userPosts={memoizedPosts} />
+        <UsersPosts userId={params.user} />
       </section>
     </main>
   );

@@ -27,13 +27,13 @@ function Page() {
   if (session.status === "unauthenticated") {
     redirect("/");
   }
-  const { fetchNextPage } = useUserContext();
+  const { fetchNextHomePage } = useUserContext();
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
-      fetchNextPage();
+      fetchNextHomePage();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNextHomePage]);
 
   const user = session.data?.user;
   useEffect(() => {

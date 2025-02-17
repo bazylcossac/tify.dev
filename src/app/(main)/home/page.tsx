@@ -12,15 +12,15 @@ import Loading from "@/components/loading";
 import PostComponent from "@/components/post-component";
 
 function Page() {
-  const { data, fetchNextPage, error } = useUserContext();
+  const { data, fetchNextHomePage, error } = useUserContext();
   const session = useSession();
 
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
-      fetchNextPage();
+      fetchNextHomePage();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNextHomePage]);
 
   const memoizedPosts = useMemo(() => {
     return data?.pages?.flatMap((page) => page.posts) || [];
