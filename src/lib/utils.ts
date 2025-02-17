@@ -55,12 +55,16 @@ export const fetchPosts = async (pageParam: number) => {
   return data;
 };
 
-// export const fetchProfilePosts = async (pageParam: number) => {
-//   const response = await fetch(`/api/profilePosts?pageParam=${pageParam}`, {});
-//   const data = await response.json();
-//   console.log(data);
-//   return data;
-// };
+export const fetchProfilePosts = async (pageParam: number, userId: string) => {
+  console.log(userId);
+  const response = await fetch(
+    `/api/profilePosts?pageParam=${pageParam}&userId=${userId}`,
+    {}
+  );
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
 
 export async function getPosts({ pageParam }: { pageParam: number }) {
   console.log("fetching");
@@ -88,12 +92,39 @@ export async function getPosts({ pageParam }: { pageParam: number }) {
   };
 }
 
-export const fetchUserPosts = async (pageParam: number) => {
-  const response = await fetch(`/api/userPosts?pageParam=${pageParam}`, {});
-  const data = await response.json();
-  console.log(data);
-  return data;
-};
+export async function getUserPosts({
+  pageParam,
+  userId,
+}: {
+  pageParam: number;
+  userId: string;
+}) {
+  console.log("fetching");
+
+  const pageSize = 10;
+  const posts = await prisma.post.findMany({
+    where: { userId: userId },
+    take: pageSize,
+    skip: pageParam * pageSize,
+    include: {
+      media: true,
+      User: true,
+      LikeUsers: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const totalPosts = await prisma.post.count();
+
+  const hasMore = (pageParam + 1) * pageSize < totalPosts;
+
+  return {
+    posts,
+    nextCursor: hasMore ? pageParam + 1 : null,
+  };
+}
 
 /// FUNCTION TO TAKE ONLY #
 // const posts = await prisma.post.findMany({

@@ -1,4 +1,4 @@
-import { getPosts } from "@/lib/utils";
+import { getUserPosts } from "@/lib/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 export const dynamic = "force-dynamic";
 
@@ -6,11 +6,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { pageParam } = req.query;
+  const { pageParam, userId } = req.query;
 
   try {
-    const data = await getPosts({
+    const data = await getUserPosts({
       pageParam: parseInt(pageParam as string, 10) || 0,
+      userId: userId,
     });
 
     res.status(200).json(data);

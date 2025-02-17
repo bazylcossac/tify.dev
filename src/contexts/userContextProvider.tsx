@@ -8,6 +8,7 @@ import {
   getUserById,
   getUserFollowers,
   likePost,
+  getPostById,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
@@ -18,7 +19,6 @@ import {
   PostType,
   UserFollowerIdsFn,
 } from "@/types/types";
-import { Post } from "@prisma/client";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -73,7 +73,6 @@ export default function UserContextProvider({
   const [postData, setPostData] = useState<
     InfiniteData<PagesType, unknown> | undefined
   >(data);
-  console.log(postData);
 
   /// CURRENT LOGGED IN USER POSTS
   const userPosts = postData?.pages?.map((posts) => ({
@@ -86,10 +85,11 @@ export default function UserContextProvider({
   /// UNIQUE USER POSTS
   async function getUniqueUserData(userId: string) {
     const userData = await getUserById(userId);
-    const userPosts = postData?.pages?.map((posts) => ({
-      ...posts,
-      posts: posts?.posts.filter((post: PostType) => post.userId === userId),
-    }));
+
+    // const userPosts = postData?.pages?.map((posts) => ({
+    //   ...posts,
+    //   posts: posts?.posts.filter((post: PostType) => post.userId === userId),
+    // }));
     return { userData, userPosts };
   }
 
@@ -124,7 +124,7 @@ export default function UserContextProvider({
                         ...p,
                         likes: postLikes.likes,
                         LikeUsers: postLikes.LikeUsers,
-                      } // Aktualizacja tylko liczby lajków
+                      }
                     : p
                 ),
               }
@@ -142,7 +142,7 @@ export default function UserContextProvider({
     const text = postText.replace(/\n/g, "\n");
     const post = await createPost(text, fileType, mediaUrl);
 
-    /// Optimistic setting post
+    /// Add optimistic setting post !!!! ( or some skeleton )
     const newPost = await getPostById(post.postId);
     setPostData((prev) => ({
       ...prev,
@@ -166,7 +166,6 @@ export default function UserContextProvider({
   async function getComments(postId: string) {
     /// post validation toast etc.
 
-    console.log(postId);
     const posts = await getPostComments(postId);
 
     return posts;

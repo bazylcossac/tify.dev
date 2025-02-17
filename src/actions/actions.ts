@@ -201,7 +201,6 @@ export async function followUser(userYouWantToFollow: string) {
       followedId: userYouWantToFollow,
     },
   });
-  console.log(!!isUserFollowing);
 
   if (isUserFollowing) {
     await prisma.followers.deleteMany({
@@ -292,7 +291,7 @@ export async function getPostLikesById(postId: string) {
     where: { postId },
     select: {
       likes: true,
-      LikeUsers: true
+      LikeUsers: true,
     },
   });
 }
@@ -325,4 +324,11 @@ export async function getUserPosts({ pageParam }: { pageParam: number }) {
     posts,
     nextCursor: hasMore ? pageParam + 1 : null,
   };
+}
+
+export async function getPostById(postId: string) {
+  return await prisma.post.findUnique({
+    where: { postId: postId },
+    include: { User: true, LikeUsers: true, media: true },
+  });
 }

@@ -3,14 +3,15 @@ import Loading from "@/components/loading";
 import { useUserContext } from "@/contexts/userContextProvider";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { IoMdMail } from "react-icons/io";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UsersPosts from "@/components/users-posts-profile";
 import { followUser } from "@/actions/actions";
 import { useSession } from "next-auth/react";
-import { cn } from "@/lib/utils";
+import { cn, fetchProfilePosts } from "@/lib/utils";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 function Page() {
   const params = useParams();
@@ -19,10 +20,26 @@ function Page() {
   const [userPosts, setUserPosts] = useState();
   const [userData, setUserData] = useState();
 
+  const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
+    queryKey: ["user-posts"],
+    queryFn: async ({ pageParam = 1 }) =>
+      await fetchProfilePosts(pageParam, params.user),
+    initialPageParam: 0,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+  });
+  console.log(data);
+
+  const memoizedPosts = useMemo(() => {
+    return data?.pages?.flatMap((page) => page.posts) || [];
+  }, [data]);
+
   useEffect(() => {
     const getData = async (userId: string) => {
       const { userData, userPosts } = await getUniqueUserData(userId);
-
       setUserData(userData);
       setUserPosts(userPosts);
     };
@@ -83,11 +100,9 @@ function Page() {
       </section>
       <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
-          {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
           {userData?.follower.length} Following
         </span>
         <span className="flex flex-row items-center gap-1">
-          {/* <IoIosPeople size={20} /> {userFollowers?.follower.length} */}
           {userData?.followed.length} Followed
         </span>
         <Link href={`mailto::${userData?.email}`}>
@@ -96,7 +111,7 @@ function Page() {
       </section>
 
       <section>
-        <UsersPosts userPosts={userPosts} />
+        <UsersPosts userPosts={memoizedPosts} />
       </section>
     </main>
   );

@@ -52,7 +52,7 @@ function HomeSidebar() {
   }
 
   return (
-    <div className="sticky top-4 flex flex-col min-h-screen pl-2 md:max-w-[200px] ">
+    <div className="sticky top-4 flex flex-col min-h-screen pl-5 md:max-w-[200px] ">
       <div className="max-h-[800px] rounded-lg flex flex-col justify-between ">
         <div>
           <ul className="p-4 space-y-4 ">

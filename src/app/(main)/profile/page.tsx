@@ -8,13 +8,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { IoMdMail } from "react-icons/io";
 import { HiDotsHorizontal } from "react-icons/hi";
-import UsersPosts from "@/components/users-posts-profile";
+
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
 import NextNProgress from "nextjs-progressbar";
 import {} from "@/actions/actions";
-import { userFollowersType } from "@/types/types";
+import { PostType, userFollowersType } from "@/types/types";
+import PostComponent from "@/components/post-component";
+import { useInView } from "react-intersection-observer";
 
 function Page() {
   const session = useSession();
@@ -25,7 +27,13 @@ function Page() {
   if (session.status === "unauthenticated") {
     redirect("/");
   }
-  console.log(userFollowers);
+  const { fetchNextPage } = useUserContext();
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
 
   const user = session.data?.user;
   useEffect(() => {
@@ -99,7 +107,18 @@ function Page() {
       </section>
 
       <section>
-        <UsersPosts userPosts={userPosts} />
+        {/* <UsersPosts userPosts={userPosts} /> */}
+        <div>
+          <ul>
+            {userPosts?.map((posts) =>
+              posts?.posts?.map((post: PostType) => (
+                <PostComponent post={post} key={post.postId} />
+              ))
+            )}
+          </ul>
+
+          <div className="h-[10px]" ref={ref}></div>
+        </div>
       </section>
     </main>
   );

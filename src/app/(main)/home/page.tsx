@@ -25,6 +25,7 @@ function Page() {
   const memoizedPosts = useMemo(() => {
     return data?.pages?.flatMap((page) => page.posts) || [];
   }, [data]);
+
   if (!data || !session) {
     return (
       <div className="h-screen flex items-center justify-center">
