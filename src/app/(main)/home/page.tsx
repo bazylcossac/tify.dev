@@ -2,18 +2,15 @@
 
 import React, { useEffect, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
-
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
-
-// import formatText from "@/lib/formatText";
 import Loading from "@/components/loading";
 
 import PostComponent from "@/components/post-component";
 
 function Page() {
-  const { data, fetchNextHomePage, error } = useUserContext();
   const session = useSession();
+  const { data, fetchNextHomePage, error } = useUserContext();
 
   const { ref, inView } = useInView();
   useEffect(() => {

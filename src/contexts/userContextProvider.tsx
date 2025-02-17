@@ -9,6 +9,7 @@ import {
   getUserFollowers,
   likePost,
   getPostById,
+  updateUserBackgroundImage,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
@@ -39,8 +40,14 @@ type ContextTypes = {
   likePostDB: (post: PostType) => void;
   refetch: () => void;
   fetchNextPage: () => void;
+  fetchNextHomePage: () => void;
   error: Error | null;
   getUniqueUserData: (userId: string) => Promise<GetUniqueUserData | undefined>;
+  updateUserBackgroundImg: (
+    bgUrl: string,
+    bgType: string,
+    userId: string
+  ) => void;
   getUserFollowersIds: (
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;
@@ -56,7 +63,12 @@ export default function UserContextProvider({
   const session = useSession();
 
   /// /HOME POSTS
-  const { data, error, fetchNextPage: fetchNextHomePage, refetch } = useInfiniteQuery({
+  const {
+    data,
+    error,
+    fetchNextPage: fetchNextHomePage,
+    refetch,
+  } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
     initialPageParam: 0,
@@ -166,6 +178,14 @@ export default function UserContextProvider({
 
     return posts;
   }
+
+  async function updateUserBackgroundImg(
+    bgUrl: string,
+    bgType: string,
+    userId: string
+  ) {
+    await updateUserBackgroundImage(bgUrl, bgType, userId);
+  }
   return (
     <UserContext.Provider
       value={{
@@ -180,6 +200,7 @@ export default function UserContextProvider({
         refetch,
         fetchNextHomePage,
         getUserFollowersIds,
+        updateUserBackgroundImg,
         error,
       }}
     >

@@ -1,18 +1,19 @@
 "use client";
-import { PagesType, PostType } from "@/types/types";
+
 import React, { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useUserContext } from "@/contexts/userContextProvider";
-
 import { useInView } from "react-intersection-observer";
-
 import PostComponent from "./post-component";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchProfilePosts } from "@/lib/utils";
+import Loading from "./loading";
+import { Button } from "./ui/button";
 
 function UsersPosts({ userId }: { userId: string }) {
-  const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
+  const session = useSession();
+
+  const { data, isLoading, error, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ["user-posts"],
     queryFn: async ({ pageParam = 1 }) =>
       await fetchProfilePosts(pageParam, userId),
@@ -28,8 +29,6 @@ function UsersPosts({ userId }: { userId: string }) {
     return data?.pages?.flatMap((page) => page.posts) || [];
   }, [data]);
 
-  const session = useSession();
-
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -39,7 +38,28 @@ function UsersPosts({ userId }: { userId: string }) {
   if (session.status === "unauthenticated") {
     redirect("/");
   }
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center mt-10">
+        <Loading />;
+      </div>
+    );
 
+  if (error)
+    return (
+      <div
+        className="
+       mt-14 flex flex-col items-center justify-center gap-4"
+      >
+        <p className="font-bold">Failed to fetch posts</p>{" "}
+        <Button
+          onClick={() => refetch}
+          className="px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]"
+        >
+          Try again
+        </Button>
+      </div>
+    );
   return (
     <div>
       <ul>

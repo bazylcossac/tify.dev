@@ -24,7 +24,7 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const currentUser = session?.user;
-
+  console.log(currentUser);
   if (currentUser) {
     const userValidate = userSchema.safeParse(currentUser);
 
@@ -42,6 +42,7 @@ export default async function RootLayout({
         email: email,
         image: image,
         username: "",
+        backgroundImage: "",
       },
       update: {
         name: name,

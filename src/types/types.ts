@@ -88,7 +88,7 @@ export type UserFollowerIdsFn = {
   image: string;
 };
 
-export type GetUniqueUserData = {
+export type GetUniqueUserDataType = {
   userData:
     | ({
         follower: { id: string; followerId: string; followedId: string }[];
@@ -97,11 +97,11 @@ export type GetUniqueUserData = {
         name: string;
         id: string;
         username: string | null;
+        backgroundImage: string | null;
         email: string;
         image: string;
       })
     | null;
-  userPosts: PostType[] | undefined;
 };
 
 export type GetCommentsType = {

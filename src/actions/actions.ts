@@ -4,7 +4,7 @@ import { auth, signIn, signOut } from "@/auth";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { redirect } from "next/navigation";
-import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
+import { ACCEPTED_BACKGROUND_FILES, ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -170,7 +170,7 @@ export async function createCommentToPost(
 }
 
 export async function getUserById(userId: string) {
-  return await prisma.user.findUnique({
+  return await prisma.user.findFirst({
     where: {
       id: userId,
     },
@@ -330,5 +330,28 @@ export async function getPostById(postId: string) {
   return await prisma.post.findUnique({
     where: { postId: postId },
     include: { User: true, LikeUsers: true, media: true },
+  });
+}
+
+export async function updateUserBackgroundImage(
+  bgUrl: string,
+  bgType: string,
+  userId: string
+) {
+  const session = await auth();
+  if (session?.userId !== userId) {
+    throw new Error("Invalid user");
+  }
+  if(!ACCEPTED_BACKGROUND_FILES.includes(bgType)){
+    return {
+      message: "Invalid file type"
+    }
+  }
+  /// add url validation
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      backgroundImage: bgUrl,
+    },
   });
 }

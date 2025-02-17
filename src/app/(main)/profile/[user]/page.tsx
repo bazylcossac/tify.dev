@@ -3,33 +3,38 @@ import Loading from "@/components/loading";
 import { useUserContext } from "@/contexts/userContextProvider";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdMail } from "react-icons/io";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UsersPosts from "@/components/users-posts-profile";
 import { followUser } from "@/actions/actions";
 import { useSession } from "next-auth/react";
-import { cn, fetchProfilePosts } from "@/lib/utils";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { GetUniqueUserDataType } from "@/types/types";
+import { cn } from "@/lib/utils";
 
 function Page() {
   const params = useParams();
   const session = useSession();
   const { getUniqueUserData } = useUserContext();
 
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState<GetUniqueUserDataType>();
 
   useEffect(() => {
     const getData = async (userId: string) => {
       const userData = await getUniqueUserData(userId);
       setUserData(userData);
     };
+
     getData(params.user);
   }, [getUniqueUserData, params.user]);
 
   if (!userData) {
-    return <Loading />;
+    return (
+      <div className=" h-screen w-full">
+        <Loading />
+      </div>
+    );
   }
   const userIsFollowing = !!userData.followed.find(
     (follow) => follow.followerId === session.data?.userId
@@ -41,7 +46,10 @@ function Page() {
         <div className="relative">
           <div className="flex flex-col">
             <Image
-              src="https://images.unsplash.com/photo-1567360425618-1594206637d2?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src={
+                userData.backgroundImage ||
+                "https://images.unsplash.com/photo-1567360425618-1594206637d2?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              }
               alt="bg image"
               width={1000}
               height={200}
