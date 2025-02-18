@@ -83,7 +83,7 @@ export type UserFollowerIdsFn = {
 } & {
   name: string;
   id: string;
-  username: string | null;
+  username: string;
   email: string;
   image: string;
 };
@@ -96,8 +96,8 @@ export type GetUniqueUserDataType = {
       } & {
         name: string;
         id: string;
-        username: string | null;
-        backgroundImage: string | null;
+        username: string;
+        backgroundImage: string;
         email: string;
         image: string;
       })

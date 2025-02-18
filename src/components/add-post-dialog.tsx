@@ -27,6 +27,7 @@ function AddPostDialog() {
 
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { addPostToDB, error } = useUserContext();
 
@@ -74,7 +75,7 @@ function AddPostDialog() {
           },
         });
       }
-
+      console.log(postText);
       addPostToDB(postText, mediaUrl, file?.type);
 
       if (error) {
@@ -87,14 +88,17 @@ function AddPostDialog() {
 
     setFile(undefined);
     setFileUrl(undefined);
-
     setPostText("");
+    setDialogOpen(false);
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="font-bold rounded-xl bg-blue-600 text-xs px-10 mb-2 w-3/4">
+        <Button
+          className="font-bold rounded-xl bg-blue-600 text-xs px-10 mb-2 w-3/4"
+          onClick={() => setDialogOpen(true)}
+        >
           POST
         </Button>
       </DialogTrigger>
@@ -132,15 +136,13 @@ function AddPostDialog() {
           />
 
           <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                type="submit"
-                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
-                disabled={postText.trim().length === 0 && !file}
-              >
-                Post
-              </Button>
-            </DialogClose>
+            <Button
+              type="submit"
+              className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
+              disabled={postText.trim().length === 0 && !file}
+            >
+              Post
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -20,7 +20,7 @@ function Page() {
 
     window.addEventListener("scroll", showButton);
     return () => window.removeEventListener("scroll", showButton);
-  }, [window.scrollY]);
+  }, []);
 
   const memoizedPosts = useMemo(() => {
     return data?.pages?.flatMap((page) => page.posts) || [];
@@ -39,11 +39,11 @@ function Page() {
 
   return (
     <>
-      <div className=" bg-red-300 w-full justify-center flex md:mt-10 mt-4 ">
+      <div className=" bg-red-300 w-full justify-center flex md:mt-8 mt-4 ">
         {showRefreshBtn && (
-          <div className="fixed ">
+          <div className="fixed z-20">
             <Button
-              className="bg-blue-500 rounded-full z-20 p-3"
+              className="bg-blue-500 rounded-full  p-[10px] hover:rotate-180 transition hover:bg-blue-500 active:rotate-180 focus:rotate-180"
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 refetch();

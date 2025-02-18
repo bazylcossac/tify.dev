@@ -155,6 +155,8 @@ export default function UserContextProvider({
     fileType?: string
   ) {
     const text = postText.replace(/\n/g, "\n");
+    console.log(postText);
+
     const post = await createPost(text, fileType, mediaUrl);
 
     /// Add optimistic setting post !!!! ( or some skeleton )
