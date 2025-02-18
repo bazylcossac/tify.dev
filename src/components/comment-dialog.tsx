@@ -99,12 +99,14 @@ function CommentDialog({ post }: { post: PostType }) {
               </div>
             </div>
           </div>
-          <p className="text-xs whitespace-pre-line ">
-            {formatText(post?.postText)}
-          </p>
-          <div className="flex flex-col text-white/30">
-            <p className="-m-1">|</p>
-            <p className="-m-1">|</p>
+          <div className="flex flex-col items-start">
+            <p className="text-xs whitespace-pre-line-">
+              {formatText(post?.postText)}
+            </p>
+            <div className="flex flex-col mt-2 text-white/30">
+              <p className="-m-1">|</p>
+              <p className="-m-1">|</p>
+            </div>
           </div>
         </DialogHeader>
 
@@ -143,7 +145,7 @@ function CommentDialog({ post }: { post: PostType }) {
             <DialogClose asChild>
               <Button
                 type="submit"
-                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 "
+                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4 md:mt-0"
                 disabled={commentText.trim().length === 0}
               >
                 Post
