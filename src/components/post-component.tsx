@@ -1,6 +1,6 @@
 "use client";
 import { PostType } from "@/types/types";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, timeMessage } from "@/lib/utils";
@@ -11,13 +11,20 @@ import { FaHeart } from "react-icons/fa";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
+import { useInView } from "react-intersection-observer";
 
 const PostComponent = memo(function PostComponent({
   post,
 }: {
   post: PostType;
 }) {
-  const { likePostDB } = useUserContext();
+  const { likePostDB, fetchNextHomePage } = useUserContext();
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView) {
+      fetchNextHomePage();
+    }
+  }, [inView, fetchNextHomePage]);
   const session = useSession();
   const [isLiked, setIsLiked] = useState(
     post.LikeUsers.some((user) => user.likedPostUserId === session.data?.userId)
@@ -124,6 +131,7 @@ const PostComponent = memo(function PostComponent({
           <CommentDialog post={post} />
         </div>
       </div>
+      <div className="h-[1px]" ref={ref}></div>
     </div>
   );
 });

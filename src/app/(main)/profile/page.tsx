@@ -31,7 +31,7 @@ function Page() {
   }, [inView, fetchNextHomePage]);
 
   useEffect(() => {
-    const getData = async (userId: string) => {
+    const getData = async (userId: string | undefined) => {
       const userData = await getUniqueUserData(userId);
       setUserData(userData);
     };
@@ -87,14 +87,15 @@ function Page() {
             </div>
           </div>
         </div>
+        <div className="hidden text-blue-500"></div>
       </section>
 
       <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
-          {userData?.follower.length} Following
+          {userData?.follower?.length} Following
         </span>
         <span className="flex flex-row items-center gap-1">
-          {userData?.followed.length} Followed
+          {userData?.followed?.length} Followed
         </span>
       </section>
 

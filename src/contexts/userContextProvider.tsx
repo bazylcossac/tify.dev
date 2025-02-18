@@ -42,8 +42,14 @@ type ContextTypes = {
   fetchNextPage: () => void;
   fetchNextHomePage: () => void;
   error: Error | null;
-  getUniqueUserData: (userId: string) => Promise<GetUniqueUserData | undefined>;
-  updateUserBackgroundImg: (bgUrl: string, bgType: string, userId: string) => void;
+  getUniqueUserData: (
+    userId: string | undefined
+  ) => Promise<GetUniqueUserData | undefined>;
+  updateUserBackgroundImg: (
+    bgUrl: string,
+    bgType: string,
+    userId: string
+  ) => void;
   getUserFollowersIds: (
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;
@@ -91,7 +97,12 @@ export default function UserContextProvider({
   }));
 
   /// UNIQUE USER POSTS
-  async function getUniqueUserData(userId: string) {
+  async function getUniqueUserData(userId: string | undefined) {
+    if (!userId) {
+      return {
+        message: "No user id provided!",
+      };
+    }
     const userData = await getUserById(userId);
 
     return userData;

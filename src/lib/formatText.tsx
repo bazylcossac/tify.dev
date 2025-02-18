@@ -16,7 +16,7 @@ export default function formatText(text: string) {
       if (part.startsWith("https://www.youtube.com/watch")) {
         return (
           <Link href={part} target="_blank" key={index}>
-            <span className="text-blue-500 font-bold">{part}</span>
+            <span className="text-blue-500 font-bold ">{part}</span>
           </Link>
         );
       }
