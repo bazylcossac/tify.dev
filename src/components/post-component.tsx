@@ -17,11 +17,8 @@ const PostComponent = memo(function PostComponent({
 }: {
   post: PostType;
 }) {
-  console.log("RENDERING " + post.postId);
-
   const { likePostDB } = useUserContext();
   const session = useSession();
-
   const [isLiked, setIsLiked] = useState(
     post.LikeUsers.some((user) => user.likedPostUserId === session.data?.userId)
   );

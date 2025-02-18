@@ -43,11 +43,7 @@ type ContextTypes = {
   fetchNextHomePage: () => void;
   error: Error | null;
   getUniqueUserData: (userId: string) => Promise<GetUniqueUserData | undefined>;
-  updateUserBackgroundImg: (
-    bgUrl: string,
-    bgType: string,
-    userId: string
-  ) => void;
+  updateUserBackgroundImg: (bgUrl: string, bgType: string, userId: string) => void;
   getUserFollowersIds: (
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;

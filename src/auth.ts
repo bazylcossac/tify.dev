@@ -61,6 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           },
         });
         session.userId = user.id;
+        session.userBackground = user.backgroundImage;
 
         return session;
       }

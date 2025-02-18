@@ -1,24 +1,13 @@
 "use client";
 
 import Loading from "@/components/loading";
-
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-
-import Link from "next/link";
-import { IoMdMail } from "react-icons/io";
-import { HiDotsHorizontal } from "react-icons/hi";
-
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
 import NextNProgress from "nextjs-progressbar";
-import {} from "@/actions/actions";
-import {
-  GetUniqueUserDataType,
-  PostType,
-  userFollowersType,
-} from "@/types/types";
+import { GetUniqueUserDataType, PostType } from "@/types/types";
 import PostComponent from "@/components/post-component";
 import { useInView } from "react-intersection-observer";
 import ProfileEditDialog from "@/components/profile-edit-dialog";
@@ -61,45 +50,45 @@ function Page() {
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
       <NextNProgress color="#FFFFFF" />
-      {userData && (
-        <section className="w-full ">
-          <div className="relative">
-            <div className="flex flex-col">
+
+      <section className="w-full ">
+        <div className="relative">
+          <div className="flex flex-col">
+            <Image
+              src={
+                session.data?.userBackground ||
+                "https://images.unsplash.com/photo-1567360425618-1594206637d2?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              }
+              alt="bg image"
+              width={1000}
+              height={200}
+              quality={50}
+              priority
+              className="h-[150px] w-[1100px] rounded-lg object-cover"
+            />
+          </div>
+          <div className=" flex flex-col ">
+            {user.image && (
               <Image
-                src={
-                  userData.backgroundImage ||
-                  "https://images.unsplash.com/photo-1567360425618-1594206637d2?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                }
+                src={user.image}
                 alt="bg image"
-                width={1000}
-                height={200}
-                quality={50}
+                width={100}
+                height={100}
+                quality={100}
                 priority
-                className="h-[150px] w-[1100px] rounded-lg object-cover"
+                className="max-size-28 rounded-lg absolute top-24 left-4"
               />
-            </div>
-            <div className=" flex flex-col ">
-              {user.image && (
-                <Image
-                  src={user.image}
-                  alt="bg image"
-                  width={100}
-                  height={100}
-                  quality={100}
-                  priority
-                  className="max-size-28 rounded-lg absolute top-24 left-4"
-                />
-              )}
-              <div className="flex flex-row justify-between items-center mt-2">
-                <p className="ml-32 font-bold">{user?.name}</p>
-                <span className="cursor-pointer ">
-                  <ProfileEditDialog userId={session.data?.userId} />
-                </span>
-              </div>
+            )}
+            <div className="flex flex-row justify-between items-center mt-2">
+              <p className="ml-32 font-bold">{user?.name}</p>
+              <span className="cursor-pointer ">
+                <ProfileEditDialog userId={session.data?.userId} />
+              </span>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
       <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
           {userData?.follower.length} Following

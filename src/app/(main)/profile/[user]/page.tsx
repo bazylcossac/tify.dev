@@ -19,26 +19,33 @@ function Page() {
   const { getUniqueUserData } = useUserContext();
 
   const [userData, setUserData] = useState<GetUniqueUserDataType>();
-
+  const [isFollowing, setIsFollowing] = useState<boolean | undefined>(
+    !!userData?.followed.find(
+      (follow) => follow.followerId === session.data?.userId
+    )
+  );
+  console.log(userData);
   useEffect(() => {
     const getData = async (userId: string) => {
-      const userData = await getUniqueUserData(userId);
-      setUserData(userData);
+      console.log("fetchibg");
+      const user = await getUniqueUserData(userId);
+      setUserData(user);
+      const userIsFollowing = !!user.followed.find(
+        (follow) => follow.followerId === session.data?.userId
+      );
+      setIsFollowing(userIsFollowing);
     };
 
     getData(params.user);
-  }, [getUniqueUserData, params.user]);
+  }, [getUniqueUserData, params.user, session.data?.userId]);
 
   if (!userData) {
     return (
-      <div className=" h-screen w-full">
+      <div className="h-screen w-full">
         <Loading />
       </div>
     );
   }
-  const userIsFollowing = !!userData.followed.find(
-    (follow) => follow.followerId === session.data?.userId
-  );
 
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
@@ -76,12 +83,24 @@ function Page() {
                   className={cn(
                     "px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]",
                     {
-                      "bg-neutral-900": userIsFollowing,
+                      "bg-neutral-900": isFollowing,
                     }
                   )}
-                  onClick={async () => followUser(userData.id)}
+                  onClick={async () => {
+                    setIsFollowing((prev) => !prev);
+                    setUserData((prev) => {
+                      if (!prev) return { followed: isFollowing ? [] : [[]] };
+                      return {
+                        ...prev,
+                        followed: isFollowing
+                          ? prev.followed.slice(0, -1)
+                          : [...prev.followed, []],
+                      };
+                    });
+                    followUser(userData.id);
+                  }}
                 >
-                  {userIsFollowing ? "Following" : "Follow"}
+                  {isFollowing ? "Following" : "Follow"}
                 </Button>
               )}
             </div>
