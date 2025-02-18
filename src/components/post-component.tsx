@@ -23,7 +23,7 @@ const PostComponent = memo(function PostComponent({
     post.LikeUsers.some((user) => user.likedPostUserId === session.data?.userId)
   );
   const [postLikes, setPostLikes] = useState(post.likes);
-
+  console.log(post.postText?.split("=")[1]?.split("\n")[0]);
   return (
     <div
       key={post.postId}
@@ -86,7 +86,9 @@ const PostComponent = memo(function PostComponent({
         )}
         {post.postText.includes("https://www.youtube.com/watch") && (
           <iframe
-            src={`https://www.youtube.com/embed/${post.postText.split("=")[1]}`}
+            src={`https://www.youtube.com/embed/${
+              post.postText.split("=")[1].split("\n")[0]
+            }`}
             className="w-full h-[500px] rounded-lg"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
