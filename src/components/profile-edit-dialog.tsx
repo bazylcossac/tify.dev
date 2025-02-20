@@ -1,7 +1,7 @@
+"use client";
 import React, { useState } from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogTitle,
@@ -19,6 +19,7 @@ import { useUserContext } from "@/contexts/userContextProvider";
 function ProfileEditDialog({ userId }: { userId: string }) {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { updateUserBackgroundImg } = useUserContext();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -51,23 +52,18 @@ function ProfileEditDialog({ userId }: { userId: string }) {
         });
       }
 
-      //   addPostToDB(postText, mediaUrl, file?.type);
       updateUserBackgroundImg(mediaUrl, file?.size, file?.type, userId);
-
-      //   if (error) {
-      //     toast(<p className="font-semibold">{error.message}</p>);
-      //     return;
-      //   }
     } catch (err) {
       console.error(err);
     }
 
     setFile(undefined);
     setFileUrl(undefined);
+    setDialogOpen(false);
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger>
         <HiDotsHorizontal />
       </DialogTrigger>
@@ -80,6 +76,7 @@ function ProfileEditDialog({ userId }: { userId: string }) {
             setFileUrl={setFileUrl}
             fileUrl={fileUrl}
             showFile
+            usage="backgroundimage"
           />
           <DialogFooter>
             <Button

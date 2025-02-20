@@ -73,6 +73,7 @@ export type FileInputT = {
   fileUrl: string | undefined;
   setFileUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
   showFile: boolean;
+  usage?: string;
 };
 
 /// FUNCTION TYPES

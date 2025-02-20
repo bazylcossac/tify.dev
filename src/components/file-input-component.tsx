@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { Input } from "./ui/input";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { MAX_FILE_SIZE } from "@/lib/constants";
+import { ACCEPTED_BACKGROUND_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import { toast } from "sonner";
 import { FileInputT } from "@/types/types";
 
@@ -13,6 +13,7 @@ function FileInputComponent({
   fileUrl,
   setFileUrl,
   showFile,
+  usage,
 }: FileInputT) {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -23,6 +24,13 @@ function FileInputComponent({
       toast("File is too big!");
       setFile(undefined);
       return;
+    }
+    if (usage && usage === "backgroundimage") {
+      if (!ACCEPTED_BACKGROUND_FILES.includes(file.type)) {
+        toast("Ahgg! We don't accept this type of file");
+        setFile(undefined);
+        return;
+      }
     }
     setFile(file);
 
