@@ -71,7 +71,7 @@ export type FileInputT = {
   file: File | undefined;
   setFile: React.Dispatch<React.SetStateAction<File | undefined>>;
   fileUrl: string | undefined;
-  setFileUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setFileUrl: React.Dispatch<React.SetStateAction<string>>;
   showFile: boolean;
   usage?: string;
 };

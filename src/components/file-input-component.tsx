@@ -94,7 +94,7 @@ function FileInputComponent({
         <Button
           onClick={() => {
             setFile(undefined);
-            setFileUrl(undefined);
+            setFileUrl(""); /// bylo undefined
           }}
           className="bg-red-500 mt-2 text-xs font-semibold w-[100px]"
         >

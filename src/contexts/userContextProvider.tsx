@@ -13,6 +13,7 @@ import {
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
+  CommentsType,
   DataType,
   GetCommentsType,
   GetUniqueUserData,
@@ -38,7 +39,7 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
-  getComments: (postId: string) => Promise<GetCommentsType>;
+  getComments: (postId: string) => Promise<CommentsType[]>;
   data: DataType | undefined;
   userPosts: PagesType[] | undefined;
   likePostDB: (post: PostType) => void;
