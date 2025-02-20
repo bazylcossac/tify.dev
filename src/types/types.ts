@@ -90,6 +90,13 @@ export type UserFollowerIdsFn = {
 };
 
 export type GetUniqueUserDataType = {
+  id: string;
+  follower: { id: string; followerId: string; followedId: string }[];
+  followed: { id: string; followerId: string; followedId: string }[];
+  image: string;
+  name: string;
+  backgroundImage: string;
+  email: string;
   userData:
     | ({
         follower: { id: string; followerId: string; followedId: string }[];
