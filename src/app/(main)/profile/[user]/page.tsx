@@ -73,7 +73,7 @@ function Page() {
                 height={100}
                 quality={100}
                 priority={true}
-                className="max-size-28 rounded-lg absolute top-24 left-4"
+                className="max-size-28 rounded-lg absolute top-24 left-4 border-4 border-black"
               />
             )}
             <div className="flex flex-row justify-between items-center mt-2">

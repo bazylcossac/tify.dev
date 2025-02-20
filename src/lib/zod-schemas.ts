@@ -19,3 +19,5 @@ export const commentSchema = z.object({
   type: z.string().optional(),
   mediaUrl: z.string().url().optional(),
 });
+
+export const backgroundUrlSchema = z.string().url();

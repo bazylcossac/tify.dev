@@ -52,7 +52,7 @@ function ProfileEditDialog({ userId }: { userId: string }) {
       }
 
       //   addPostToDB(postText, mediaUrl, file?.type);
-      updateUserBackgroundImg(mediaUrl, file?.type, userId);
+      updateUserBackgroundImg(mediaUrl, file?.size, file?.type, userId);
 
       //   if (error) {
       //     toast(<p className="font-semibold">{error.message}</p>);
@@ -82,15 +82,13 @@ function ProfileEditDialog({ userId }: { userId: string }) {
             showFile
           />
           <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                type="submit"
-                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
-                disabled={!fileUrl}
-              >
-                Post
-              </Button>
-            </DialogClose>
+            <Button
+              type="submit"
+              className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
+              disabled={!fileUrl}
+            >
+              Post
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

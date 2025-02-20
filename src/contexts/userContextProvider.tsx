@@ -47,6 +47,7 @@ type ContextTypes = {
   ) => Promise<GetUniqueUserData | undefined>;
   updateUserBackgroundImg: (
     bgUrl: string,
+    bgSize: string,
     bgType: string,
     userId: string
   ) => void;
@@ -190,10 +191,17 @@ export default function UserContextProvider({
 
   async function updateUserBackgroundImg(
     bgUrl: string,
+    bgSize: number,
     bgType: string,
     userId: string
   ) {
-    await updateUserBackgroundImage(bgUrl, bgType, userId);
+    const message = await updateUserBackgroundImage(
+      bgUrl,
+      bgSize,
+      bgType,
+      userId
+    );
+    console.log(message);
   }
   return (
     <UserContext.Provider

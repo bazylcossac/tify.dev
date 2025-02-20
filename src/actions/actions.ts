@@ -4,13 +4,17 @@ import { auth, signIn, signOut } from "@/auth";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { redirect } from "next/navigation";
-import { ACCEPTED_BACKGROUND_FILES, ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
+import {
+  ACCEPTED_BACKGROUND_FILES,
+  ACCEPTED_FILES,
+  MAX_FILE_SIZE,
+} from "@/lib/constants";
 import crypto from "crypto";
+
 import { prisma } from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { commentSchema, postSchema, userSchema } from "@/lib/zod-schemas";
 
-/// generate random 32bit file name
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
 };
@@ -335,6 +339,7 @@ export async function getPostById(postId: string) {
 
 export async function updateUserBackgroundImage(
   bgUrl: string,
+  bgSize: number,
   bgType: string,
   userId: string
 ) {
@@ -342,10 +347,17 @@ export async function updateUserBackgroundImage(
   if (session?.userId !== userId) {
     throw new Error("Invalid user");
   }
-  if(!ACCEPTED_BACKGROUND_FILES.includes(bgType)){
+
+  if (bgSize > MAX_FILE_SIZE) {
     return {
-      message: "Invalid file type"
-    }
+      message: "File is too big",
+    };
+  }
+
+  if (!ACCEPTED_BACKGROUND_FILES.includes(bgType)) {
+    return {
+      message: "Invalid file type",
+    };
   }
   /// add url validation
   await prisma.user.update({
