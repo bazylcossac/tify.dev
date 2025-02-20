@@ -26,7 +26,7 @@ function ProfileEditDialog({ userId }: { userId: string }) {
     e.preventDefault();
 
     let checksum;
-    let mediaUrl;
+    let mediaUrl = "";
     try {
       if (file) {
         checksum = await computeSHA265(file);
@@ -50,9 +50,8 @@ function ProfileEditDialog({ userId }: { userId: string }) {
             "Content-Type": file?.type,
           },
         });
+        updateUserBackgroundImg(mediaUrl, file.size, file.type, userId);
       }
-
-      updateUserBackgroundImg(mediaUrl, file?.size, file?.type, userId);
     } catch (err) {
       console.error(err);
     }

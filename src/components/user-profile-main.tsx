@@ -18,7 +18,7 @@ function UserProfileMain({
   setUserData: React.Dispatch<
     React.SetStateAction<GetUniqueUserDataType | undefined>
   >;
-  isFollowing: boolean;
+  isFollowing: boolean | undefined;
   setIsFollowing: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }) {
   const session = useSession();

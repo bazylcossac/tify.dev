@@ -27,7 +27,11 @@ import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type ContextTypes = {
-  addPostToDB: (postText: string, fileType: string, mediaUrl: string) => void;
+  addPostToDB: (
+    postText: string,
+    fileType: string,
+    mediaUrl: string | undefined
+  ) => void;
   addCommentToPostToDB: (
     postText: string,
     fileType: string,
@@ -43,11 +47,11 @@ type ContextTypes = {
   fetchNextHomePage: () => void;
   error: Error | null;
   getUniqueUserData: (
-    userId: string | undefined
+    userId: string | string[] | undefined
   ) => Promise<GetUniqueUserData | undefined>;
   updateUserBackgroundImg: (
     bgUrl: string,
-    bgSize: string,
+    bgSize: number,
     bgType: string,
     userId: string
   ) => void;
@@ -98,7 +102,7 @@ export default function UserContextProvider({
   }));
 
   /// UNIQUE USER POSTS
-  async function getUniqueUserData(userId: string | undefined) {
+  async function getUniqueUserData(userId: string | string[] | undefined) {
     if (!userId) {
       return {
         message: "No user id provided!",
@@ -152,7 +156,7 @@ export default function UserContextProvider({
 
   async function addPostToDB(
     postText: string,
-    mediaUrl?: string,
+    mediaUrl?: string | undefined,
     fileType?: string
   ) {
     const text = postText.replace(/\n/g, "\n");

@@ -49,7 +49,7 @@ function AddPostDialog() {
     e.preventDefault();
 
     let checksum;
-    let mediaUrl;
+    let mediaUrl = "";
     try {
       if (file) {
         checksum = await computeSHA265(file);
@@ -74,7 +74,7 @@ function AddPostDialog() {
           },
         });
       }
-      console.log(postText);
+
       addPostToDB(postText, mediaUrl, file?.type);
 
       if (error) {

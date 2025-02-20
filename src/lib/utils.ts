@@ -55,7 +55,10 @@ export const fetchPosts = async (pageParam: number) => {
   return data;
 };
 
-export const fetchProfilePosts = async (pageParam: number, userId: string) => {
+export const fetchProfilePosts = async (
+  pageParam: number,
+  userId: string | string[]
+) => {
   console.log(userId);
   const response = await fetch(
     `/api/profilePosts?pageParam=${pageParam}&userId=${userId}`,

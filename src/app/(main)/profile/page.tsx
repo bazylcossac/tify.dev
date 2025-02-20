@@ -16,9 +16,9 @@ function Page() {
   const session = useSession();
   const user = session.data?.user;
   const [userData, setUserData] = useState<GetUniqueUserDataType>();
-  console.log(userData);
+
   const { userPosts } = useUserContext();
-  if (session.status === "unauthenticated") {
+  if (!user) {
     redirect("/");
   }
   const { fetchNextHomePage, getUniqueUserData } = useUserContext();
@@ -82,7 +82,9 @@ function Page() {
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{user?.name}</p>
               <span className="cursor-pointer ">
-                <ProfileEditDialog userId={session.data?.userId} />
+                {session.data?.userId && (
+                  <ProfileEditDialog userId={session.data?.userId} />
+                )}
               </span>
             </div>
           </div>

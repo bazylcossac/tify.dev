@@ -10,7 +10,7 @@ import { fetchProfilePosts } from "@/lib/utils";
 import Loading from "./loading";
 import { Button } from "./ui/button";
 
-function UsersPosts({ userId }: { userId: string }) {
+function UsersPosts({ userId }: { userId: string | string[] }) {
   const session = useSession();
 
   const { data, isLoading, error, fetchNextPage, refetch } = useInfiniteQuery({

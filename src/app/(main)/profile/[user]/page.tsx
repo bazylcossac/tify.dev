@@ -1,17 +1,19 @@
 "use client";
 import Loading from "@/components/loading";
 import { useUserContext } from "@/contexts/userContextProvider";
-
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
 import UsersPosts from "@/components/users-posts-profile";
-
 import { useSession } from "next-auth/react";
 import { GetUniqueUserDataType } from "@/types/types";
-
 import UserStats from "@/components/user-profile-stats";
 import UserProfileMain from "@/components/user-profile-main";
+
+type follow = {
+  id: string;
+  followerId: string;
+  followedId: string;
+};
 
 function Page() {
   const params = useParams();
@@ -24,20 +26,21 @@ function Page() {
       (follow) => follow.followerId === session.data?.userId
     )
   );
-  console.log(userData);
+
   useEffect(() => {
-    const getData = async (userId: string) => {
-      console.log("fetchibg");
+    const getData = async (userId: string | string[]) => {
       const user = await getUniqueUserData(userId);
       setUserData(user);
       const userIsFollowing = !!user.followed.find(
-        (follow) => follow.followerId === session.data?.userId
+        (follow: follow) => follow.followerId === session.data?.userId
       );
       setIsFollowing(userIsFollowing);
     };
 
-    getData(params.user);
-  }, [getUniqueUserData, params.user, session.data?.userId]);
+    if (params) {
+      getData(params.user);
+    }
+  }, [getUniqueUserData, params, session.data?.userId]);
 
   if (!userData) {
     return (
@@ -68,7 +71,7 @@ function Page() {
       </section>
 
       <section>
-        <UsersPosts userId={params.user} />
+        <UsersPosts userId={params!.user} />
       </section>
     </main>
   );
