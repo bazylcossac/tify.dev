@@ -1,45 +1,21 @@
-"use client";
-
 import Loading from "@/components/loading";
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { useUserContext } from "@/contexts/userContextProvider";
-import NextNProgress from "nextjs-progressbar";
-import { GetUniqueUserDataType, PostType } from "@/types/types";
-import PostComponent from "@/components/post-component";
-import { useInView } from "react-intersection-observer";
 import ProfileEditDialog from "@/components/profile-edit-dialog";
+import { auth } from "@/auth";
+import CurrentUserProfilePosts from "@/components/current-user-profile-posts";
+import { getUserById } from "@/actions/actions";
+import { redirect } from "next/navigation";
 
-function Page() {
-  const session = useSession();
-  const user = session.data?.user;
-  const [userData, setUserData] = useState<GetUniqueUserDataType>();
-
-  const { userPosts } = useUserContext();
-  if (!user) {
+async function Page() {
+  const session = await auth();
+  if (!session) {
     redirect("/");
   }
-  const { fetchNextHomePage, getUniqueUserData } = useUserContext();
+  // const user = session?.user;
+  const user = await getUserById(session?.userId);
+  // console.log(userData);
 
-  const { ref, inView } = useInView();
-  useEffect(() => {
-    if (inView) {
-      fetchNextHomePage();
-    }
-  }, [inView, fetchNextHomePage]);
-
-  useEffect(() => {
-    const getData = async (userId: string | undefined) => {
-      const userData = await getUniqueUserData(userId);
-      setUserData(userData);
-    };
-
-    getData(session.data?.userId);
-  }, [session.data?.userId, getUniqueUserData]);
-
-  if (!user || !userData) {
+  if (!user) {
     return (
       <div className="w-full h-screen flex items-center justifty-center ">
         <Loading />
@@ -49,14 +25,12 @@ function Page() {
 
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
-      <NextNProgress color="#FFFFFF" />
-
       <section className="w-full ">
         <div className="relative">
           <div className="flex flex-col">
             <Image
               src={
-                session.data?.userBackground ||
+                session.userBackground ||
                 "https://images.unsplash.com/photo-1567360425618-1594206637d2?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               }
               alt="bg image"
@@ -82,8 +56,8 @@ function Page() {
             <div className="flex flex-row justify-between items-center mt-2">
               <p className="ml-32 font-bold">{user?.name}</p>
               <span className="cursor-pointer ">
-                {session.data?.userId && (
-                  <ProfileEditDialog userId={session.data?.userId} />
+                {session.userId && (
+                  <ProfileEditDialog userId={session.userId} />
                 )}
               </span>
             </div>
@@ -92,15 +66,15 @@ function Page() {
         <div className="hidden text-blue-500"></div>
       </section>
 
-      <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+      {/* <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
           {userData?.follower?.length} Following
         </span>
         <span className="flex flex-row items-center gap-1">
           {userData?.followed?.length} Followed
         </span>
-      </section>
-
+      </section>  */}
+      {/* 
       <section>
         <div>
           <ul>
@@ -113,6 +87,9 @@ function Page() {
 
           <div className="h-[10px]" ref={ref}></div>
         </div>
+      </section> */}
+      <section>
+        <CurrentUserProfilePosts />
       </section>
     </main>
   );

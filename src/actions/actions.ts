@@ -366,4 +366,5 @@ export async function updateUserBackgroundImage(
       backgroundImage: bgUrl,
     },
   });
+  revalidatePath("/profle", "page");
 }
