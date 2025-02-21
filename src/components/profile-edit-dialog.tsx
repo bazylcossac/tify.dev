@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import FileInputComponent from "./file-input-component";
 import { Button } from "./ui/button";
 import { useUserContext } from "@/contexts/userContextProvider";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 function ProfileEditDialog({ userId }: { userId: string }) {
   const [file, setFile] = useState<File | undefined>(undefined);
@@ -68,6 +69,7 @@ function ProfileEditDialog({ userId }: { userId: string }) {
       </DialogTrigger>
       <DialogContent className="w-4/5 md:max-w-[425px] bg-[#0D0D0D] border-none">
         <DialogTitle>Edit your profile</DialogTitle>
+        <DialogDescription></DialogDescription>
         <form onSubmit={onSubmit}>
           <FileInputComponent
             file={file}
@@ -83,7 +85,7 @@ function ProfileEditDialog({ userId }: { userId: string }) {
               className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
               disabled={!fileUrl}
             >
-              Post
+              Update
             </Button>
           </DialogFooter>
         </form>

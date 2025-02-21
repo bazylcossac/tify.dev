@@ -1,18 +1,17 @@
 "use client";
 import { useUserContext } from "@/contexts/userContextProvider";
-import { GetUniqueUserDataType, PostType } from "@/types/types";
+import { PostType } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import PostComponent from "./post-component";
 
 function CurrentUserProfilePosts() {
   const session = useSession();
   const user = session.data?.user;
-  const [userData, setUserData] = useState<GetUniqueUserDataType>();
 
-  const { userPosts, fetchNextHomePage, getUniqueUserData } = useUserContext();
+  const { userPosts, fetchNextHomePage } = useUserContext();
   if (!user) {
     redirect("/");
   }
@@ -23,15 +22,6 @@ function CurrentUserProfilePosts() {
       fetchNextHomePage();
     }
   }, [inView, fetchNextHomePage]);
-
-  useEffect(() => {
-    const getData = async (userId: string | undefined) => {
-      const userData = await getUniqueUserData(userId);
-      setUserData(userData);
-    };
-
-    getData(session.data?.userId);
-  }, [session.data?.userId, getUniqueUserData]);
 
   return (
     <div>

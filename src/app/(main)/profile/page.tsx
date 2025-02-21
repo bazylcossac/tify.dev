@@ -11,9 +11,7 @@ async function Page() {
   if (!session) {
     redirect("/");
   }
-  // const user = session?.user;
   const user = await getUserById(session?.userId);
-  // console.log(userData);
 
   if (!user) {
     return (
@@ -66,28 +64,15 @@ async function Page() {
         <div className="hidden text-blue-500"></div>
       </section>
 
-      {/* <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+      <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
         <span className="flex flex-row items-center gap-1">
-          {userData?.follower?.length} Following
+          {user?.follower?.length} Following
         </span>
         <span className="flex flex-row items-center gap-1">
-          {userData?.followed?.length} Followed
+          {user?.followed?.length} Followed
         </span>
-      </section>  */}
-      {/* 
-      <section>
-        <div>
-          <ul>
-            {userPosts?.map((posts) =>
-              posts?.posts?.map((post: PostType) => (
-                <PostComponent post={post} key={post.postId} />
-              ))
-            )}
-          </ul>
+      </section>
 
-          <div className="h-[10px]" ref={ref}></div>
-        </div>
-      </section> */}
       <section>
         <CurrentUserProfilePosts />
       </section>

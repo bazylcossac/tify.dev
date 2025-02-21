@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { followUser } from "@/actions/actions";
@@ -7,21 +7,31 @@ import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { GetUniqueUserDataType } from "@/types/types";
 import Loading from "./loading";
+import UserStats from "./user-profile-stats";
 
-function UserProfileMain({
-  userData,
-  setUserData,
-  isFollowing,
-  setIsFollowing,
-}: {
-  userData: GetUniqueUserDataType;
-  setUserData: React.Dispatch<
-    React.SetStateAction<GetUniqueUserDataType | undefined>
-  >;
-  isFollowing: boolean | undefined;
-  setIsFollowing: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-}) {
+function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
   const session = useSession();
+  const [userData, setUserData] = useState<GetUniqueUserDataType | undefined>(
+    user
+  );
+  const [isFollowing, setIsFollowing] = useState<boolean | undefined>(
+    !!userData?.followed.find(
+      (follow) => follow.followerId === session.data?.userId
+    )
+  );
+
+  console.log(userData);
+  console.log(isFollowing);
+
+  useEffect(() => {
+    if (!userData) return;
+
+    const following = !!userData.followed.find(
+      (follow) => follow.followerId === session.data?.userId
+    );
+
+    setIsFollowing(following);
+  }, [userData, session.data?.userId]); // Teraz isFollowing się zaktualizuje
 
   if (!userData) {
     return (
@@ -68,15 +78,21 @@ function UserProfileMain({
                 setIsFollowing((prev) => !prev);
                 setUserData((prev) => {
                   if (!prev) return prev;
-                  return {
-                    ...prev,
-                    followed: isFollowing
-                      ? prev.followed.slice(0, -1)
-                      : [
-                          ...prev.followed,
-                          { id: "", followerId: "", followedId: "" },
-                        ],
-                  };
+
+                  const updatedFollowed = isFollowing
+                    ? prev.followed.filter(
+                        (follow) => follow.followerId !== session.data?.userId
+                      ) // Usuwa follow po ID
+                    : [
+                        ...prev.followed,
+                        {
+                          id: "noweId",
+                          followerId: session.data?.userId || "",
+                          followedId: prev.id,
+                        }, // Dodaje poprawny follow
+                      ];
+
+                  return { ...prev, followed: updatedFollowed };
                 });
                 followUser(userData.id);
               }}
@@ -85,6 +101,15 @@ function UserProfileMain({
             </Button>
           )}
         </div>
+      </div>
+      <div>
+        <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+          <UserStats
+            userFollowed={userData.followed.length || 0}
+            userFollower={userData.follower.length || 0}
+            email={userData.email}
+          />
+        </section>
       </div>
     </>
   );

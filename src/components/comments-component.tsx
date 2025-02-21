@@ -19,7 +19,7 @@ function CommentsClient({ post }: { post: PostType }) {
   const { getComments } = useUserContext();
   const [comments, setCommnets] = useState<CommentsType[] | null>(null);
   const [file, setFile] = useState<File | undefined>();
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileUrl, setFileUrl] = useState<string | undefined>("");
   const [commentText, setCommentText] = useState("");
 
   const session = useSession();

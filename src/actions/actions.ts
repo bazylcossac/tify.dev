@@ -169,14 +169,18 @@ export async function createCommentToPost(
   });
 
   revalidateTag("posts");
-  // revalidatePath("/home", "page");
-  // revalidatePath("/profile", "page");
 }
 
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string | string[]) {
+  let id;
+  if (typeof userId === "string") {
+    id = userId;
+  } else {
+    id = userId[0];
+  }
   return await prisma.user.findFirst({
     where: {
-      id: userId,
+      id: id,
     },
     include: {
       followed: true,
@@ -221,7 +225,7 @@ export async function followUser(userYouWantToFollow: string) {
       },
     });
   }
-  revalidatePath("/profile", "page");
+  revalidatePath(`/profile/${userYouWantToFollow}`, "page");
 }
 
 export async function likePost(postId: string) {
