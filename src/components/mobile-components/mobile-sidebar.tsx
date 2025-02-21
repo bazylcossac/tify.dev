@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 
 import Image from "next/image";
 
@@ -55,6 +55,7 @@ const routes = [
 ];
 
 export function MobileSidebar() {
+  const [isOpen, setIsOpen] = useState(false);
   const activePath = usePathname();
   const session = useSession();
 
@@ -64,7 +65,7 @@ export function MobileSidebar() {
   }
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" className="border-none">
           <IoMdMenu />
@@ -83,7 +84,11 @@ export function MobileSidebar() {
                   <Logo />
                 </div>
                 {routes.map((route) => (
-                  <Link href={route.path} key={route.path}>
+                  <Link
+                    href={route.path}
+                    key={route.path}
+                    onClick={() => setIsOpen(false)}
+                  >
                     <li
                       className={cn(
                         "p-4 text-white/60 text-md rounded-lg font-bold transition flex items-center gap-2",
