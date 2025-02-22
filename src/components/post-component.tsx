@@ -33,7 +33,7 @@ const PostComponent = memo(function PostComponent({
   console.log(post.postText?.split("=")[1]?.split("\n")[0]);
   return (
     <div
-      key={post.postId}
+      key={`${post.postId}-${post.createdAt}`}
       className="flex flex-col mx-4 border-b border-white/30 py-4"
     >
       {post ? (
@@ -80,7 +80,7 @@ const PostComponent = memo(function PostComponent({
       {post.postText && (
         <div
           className="text-sm font-semibold mb-2 whitespace-pre-line"
-          key={post.postId}
+          key={`${post.postId}-${post.createdAt}`}
         >
           {formatText(post?.postText)}
         </div>
@@ -111,9 +111,12 @@ const PostComponent = memo(function PostComponent({
           <div className="flex items-center gap-1">
             {/* Likes */}
             <FaHeart
-              className={cn("text-sm text-neutral-600 cursor-pointer", {
-                "text-red-500": isLiked,
-              })}
+              className={cn(
+                "md:text-lg text-sm text-neutral-600 cursor-pointer",
+                {
+                  "text-red-500": isLiked,
+                }
+              )}
               onClick={() => {
                 if (isLiked) {
                   setIsLiked(false);
@@ -125,7 +128,7 @@ const PostComponent = memo(function PostComponent({
                 likePostDB(post);
               }}
             />
-            <p className="text-xs font-light">{postLikes}</p>
+            <p className="text-xs font-bold mx-1">{postLikes}</p>
           </div>
 
           <CommentDialog post={post} />

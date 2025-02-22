@@ -75,7 +75,7 @@ function CommentDialog({ post }: { post: PostType }) {
   return (
     <Dialog>
       <DialogTrigger>
-        <IoChatbox className="text-neutral-600 text-sm cursor-pointer" />
+        <IoChatbox className="text-neutral-600 text-sm md:text-lg cursor-pointer" />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#0D0D0D] border-none">
         <DialogTitle></DialogTitle>

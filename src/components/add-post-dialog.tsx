@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useActionState, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,10 +23,10 @@ import FileInputComponent from "./file-input-component";
 
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
-
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { addPostToDB, error } = useUserContext();
 
@@ -74,7 +74,7 @@ function AddPostDialog() {
           },
         });
       }
-
+      setLoading(true);
       addPostToDB(postText, mediaUrl, file?.type);
 
       if (error) {
@@ -89,6 +89,7 @@ function AddPostDialog() {
     setFileUrl(undefined);
     setPostText("");
     setDialogOpen(false);
+    setLoading(false);
   }
 
   return (
@@ -140,7 +141,7 @@ function AddPostDialog() {
               className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4"
               disabled={postText.trim().length === 0 && !file}
             >
-              Post
+              {loading ? "..." : "Post"}
             </Button>
           </DialogFooter>
         </form>

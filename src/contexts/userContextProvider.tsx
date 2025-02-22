@@ -167,11 +167,16 @@ export default function UserContextProvider({
 
     /// Add optimistic setting post !!!! ( or some skeleton )
     const newPost = await getPostById(post.postId);
+    setOptimisticNewPost(newPost);
+  }
+
+  function setOptimisticNewPost(newPost) {
     setPostData((prev) => ({
       ...prev,
-      pages: prev.pages.map((page, index) =>
-        index === 0 ? { ...page, posts: [newPost, ...page.posts] } : page
-      ),
+      pages: prev.pages.with(0, {
+        ...prev.pages[0],
+        posts: [newPost, ...prev.pages[0].posts],
+      }),
     }));
   }
 

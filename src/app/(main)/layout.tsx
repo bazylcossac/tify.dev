@@ -4,7 +4,7 @@ import Loading from "@/components/loading";
 import Logo from "@/components/logo";
 import { MobileSidebar } from "@/components/mobile-components/mobile-sidebar";
 import UserContextProvider from "@/contexts/userContextProvider";
-
+import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -44,6 +44,12 @@ function Layout({ children }: { children: React.ReactNode }) {
                 {/* <div className="text-center overflow-x-hidden"></div> */}
 
                 {children}
+                <ProgressBar
+                  height="4px"
+                  color="#fffd00"
+                  options={{ showSpinner: true }}
+                  shallowRouting
+                />
               </div>
             </Suspense>
 

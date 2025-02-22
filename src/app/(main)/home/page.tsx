@@ -57,7 +57,10 @@ function Page() {
       <main className="flex flex-col overflow-y-auto no-scrollbar ">
         <ul>
           {memoizedPosts.map((post) => (
-            <PostComponent post={post} key={post.postId} />
+            <PostComponent
+              post={post}
+              key={`${post.postId}-${post.createdAt}`}
+            />
           ))}
         </ul>
 
