@@ -23,7 +23,7 @@ function CommentsClient({ post }: { post: PostType }) {
   const [commentText, setCommentText] = useState("");
 
   const session = useSession();
-
+  console.log(comments);
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 

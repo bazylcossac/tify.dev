@@ -8,15 +8,13 @@ import {
   getUserById,
   getUserFollowers,
   likePost,
-  getPostById,
   updateUserBackgroundImage,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
   CommentsType,
   DataType,
-  GetCommentsType,
-  GetUniqueUserData,
+  GetUniqueUserDataType,
   PagesType,
   PostType,
   UserFollowerIdsFn,
@@ -49,7 +47,7 @@ type ContextTypes = {
   error: Error | null;
   getUniqueUserData: (
     userId: string | string[] | undefined
-  ) => Promise<GetUniqueUserData | undefined>;
+  ) => Promise<GetUniqueUserDataType | undefined>;
   updateUserBackgroundImg: (
     bgUrl: string,
     bgSize: number,
@@ -83,24 +81,28 @@ export default function UserContextProvider({
     staleTime: 0,
     gcTime: 0,
     refetchOnWindowFocus: true,
-    refetchOnMount: true,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
   useEffect(() => {
+    console.log(data);
     setPostData(data);
   }, [data]);
 
+  /// MAIN POSTS STATE
   const [postData, setPostData] = useState<
-    InfiniteData<PagesType, unknown> | undefined
+    InfiniteData<DataType, unknown> | undefined
   >(data);
 
   /// CURRENT LOGGED IN USER POSTS
-  const userPosts = postData?.pages?.map((posts) => ({
+
+  /// change to its own function
+  const userPosts = postData?.pages?.map((posts: PagesType) => ({
     ...posts,
     posts: posts?.posts.filter(
       (post: PostType) => post.userId === session.data?.userId
     ),
   }));
+  console.log(userPosts);
 
   /// UNIQUE USER POSTS
   async function getUniqueUserData(userId: string | string[] | undefined) {
@@ -126,16 +128,16 @@ export default function UserContextProvider({
       page?.posts.some((p: PostType) => p.postId === currentPost?.postId)
     );
 
-    if (pageIndex === -1) {
+    if (pageIndex === -1 || !pageIndex) {
       return;
     } else {
-      const postIndex = postData?.pages[pageIndex!].posts.findIndex(
+      const postIndex = postData?.pages[pageIndex].posts.findIndex(
         (p: PostType) => p.postId === currentPost?.postId
       );
 
       setPostData((prev) => ({
         ...prev,
-        pages: prev.pages.map((page, index) =>
+        pages: prev?.pages.map((page, index) =>
           index === pageIndex
             ? {
                 ...page,
@@ -161,24 +163,40 @@ export default function UserContextProvider({
     fileType?: string
   ) {
     const text = postText.replace(/\n/g, "\n");
-    console.log(postText);
+    try {
+      const post = await createPost(text, fileType, mediaUrl);
 
-    const post = await createPost(text, fileType, mediaUrl);
+      // queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // refetch();
+      // const newPost = await getPostById(post.postId);
+      const newOptimisticPost = {
+        ...post,
+        User: {
+          userId: session.data?.userId,
+          image: session?.data?.user?.image,
+          name: session?.data?.user?.name,
+        },
+      };
 
-    /// Add optimistic setting post !!!! ( or some skeleton )
-    const newPost = await getPostById(post.postId);
-    setOptimisticNewPost(newPost);
+      setPostData((prev) => ({
+        ...prev,
+        pages: prev.pages.with(0, {
+          ...prev.pages[0],
+          posts: [newOptimisticPost, ...prev.pages[0].posts],
+        }),
+      }));
+    } catch {}
   }
 
-  function setOptimisticNewPost(newPost) {
-    setPostData((prev) => ({
-      ...prev,
-      pages: prev.pages.with(0, {
-        ...prev.pages[0],
-        posts: [newPost, ...prev.pages[0].posts],
-      }),
-    }));
-  }
+  // function setOptimisticNewPost(newPost) {
+  //   setPostData((prev) => ({
+  //     ...prev,
+  //     pages: prev.pages.with(0, {
+  //       ...prev.pages[0],
+  //       posts: [newPost, ...prev.pages[0].posts],
+  //     }),
+  //   }));
+  // }
 
   async function addCommentToPostToDB(
     commentText: string,
@@ -188,7 +206,6 @@ export default function UserContextProvider({
   ) {
     const text = commentText.replace(/\n/g, "\n");
     await createCommentToPost(text, mediaUrl, fileType, postId);
-    refetch();
   }
 
   async function getComments(postId: string) {

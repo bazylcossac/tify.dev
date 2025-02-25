@@ -1,6 +1,6 @@
 "use client";
 import { PostType } from "@/types/types";
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, timeMessage } from "@/lib/utils";
@@ -13,11 +13,7 @@ import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
 
-const PostComponent = memo(function PostComponent({
-  post,
-}: {
-  post: PostType;
-}) {
+const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const { likePostDB, fetchNextHomePage } = useUserContext();
   const { ref, inView } = useInView();
   useEffect(() => {
@@ -27,15 +23,14 @@ const PostComponent = memo(function PostComponent({
   }, [inView, fetchNextHomePage]);
   const session = useSession();
   const [isLiked, setIsLiked] = useState(
-    post.LikeUsers.some((user) => user.likedPostUserId === session.data?.userId)
+    post?.LikeUsers?.some(
+      (user) => user?.likedPostUserId === session.data?.userId
+    )
   );
   const [postLikes, setPostLikes] = useState(post.likes);
-  console.log(post.postText?.split("=")[1]?.split("\n")[0]);
+
   return (
-    <div
-      key={`${post.postId}-${post.createdAt}`}
-      className="flex flex-col mx-4 border-b border-white/30 py-4"
-    >
+    <div className="flex flex-col mx-4 border-b border-white/30 py-4">
       {post ? (
         <div className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2 my-4 ">
@@ -108,28 +103,30 @@ const PostComponent = memo(function PostComponent({
       </div>
       <div className="flex flex-row justify-between items-center mt-4">
         <div className="flex flex-row gap-8 ">
-          <div className="flex items-center gap-1">
-            {/* Likes */}
-            <FaHeart
-              className={cn(
-                "md:text-lg text-sm text-neutral-600 cursor-pointer",
-                {
-                  "text-red-500": isLiked,
-                }
-              )}
-              onClick={() => {
-                if (isLiked) {
-                  setIsLiked(false);
-                  setPostLikes((prev) => prev - 1);
-                } else {
-                  setIsLiked(true);
-                  setPostLikes((prev) => prev + 1);
-                }
-                likePostDB(post);
-              }}
-            />
-            <p className="text-xs font-bold mx-1">{postLikes}</p>
-          </div>
+          {post.LikeUsers && (
+            <div className="flex items-center gap-1">
+              {/* Likes */}
+              <FaHeart
+                className={cn(
+                  "md:text-lg text-sm text-neutral-600 cursor-pointer",
+                  {
+                    "text-red-500": isLiked,
+                  }
+                )}
+                onClick={() => {
+                  if (isLiked) {
+                    setIsLiked(false);
+                    setPostLikes((prev) => prev - 1);
+                  } else {
+                    setIsLiked(true);
+                    setPostLikes((prev) => prev + 1);
+                  }
+                  likePostDB(post);
+                }}
+              />
+              <p className="text-xs font-bold mx-1">{postLikes}</p>
+            </div>
+          )}
 
           <CommentDialog post={post} />
         </div>
@@ -137,6 +134,6 @@ const PostComponent = memo(function PostComponent({
       <div className="h-[1px]" ref={ref}></div>
     </div>
   );
-});
+};
 
 export default PostComponent;

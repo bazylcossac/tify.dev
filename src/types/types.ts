@@ -17,9 +17,9 @@ export type CommentsType = {
   commentMediaType: string;
   commentMediaUrl: string;
   postId: string;
-  media: MediaType[];
-  post: PostType;
-  user: UserType;
+  // media: MediaType[];
+  // post: PostType;
+  // user: UserType;
   userId: string;
   userEmail: string;
   userImage: string;
@@ -46,8 +46,8 @@ export type PagesType = {
   nextCursor: number;
 };
 export type DataType = {
-  pages: PagesType[];
   pageParams: number[];
+  pages: PagesType[];
 };
 
 export type LikeUserType = {
@@ -95,21 +95,21 @@ export type GetUniqueUserDataType = {
   followed: { id: string; followerId: string; followedId: string }[];
   image: string;
   name: string;
-  backgroundImage: string;
+  backgroundImage: string | null;
   email: string;
-  userData:
-    | ({
-        follower: { id: string; followerId: string; followedId: string }[];
-        followed: { id: string; followerId: string; followedId: string }[];
-      } & {
-        name: string;
-        id: string;
-        username: string;
-        backgroundImage: string;
-        email: string;
-        image: string;
-      })
-    | null;
+  // userData:
+  //   | ({
+  //       follower: { id: string; followerId: string; followedId: string }[];
+  //       followed: { id: string; followerId: string; followedId: string }[];
+  //     } & {
+  //       name: string;
+  //       id: string;
+  //       username: string;
+  //       backgroundImage: string;
+  //       email: string;
+  //       image: string;
+  //     })
+  //   | null;
 };
 
 export type GetCommentsType = {

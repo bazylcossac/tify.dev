@@ -10,7 +10,6 @@ import {
   MAX_FILE_SIZE,
 } from "@/lib/constants";
 import crypto from "crypto";
-
 import { prisma } from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { commentSchema, postSchema, userSchema } from "@/lib/zod-schemas";
@@ -112,7 +111,7 @@ export async function createPost(
 export async function createCommentToPost(
   commentText: string,
   postId: string,
-  mediaUrl?: string,
+  mediaUrl?: string | undefined,
   type?: string
 ) {
   const session = await auth();

@@ -13,6 +13,7 @@ async function Page({ params }: { params: { user: string } }) {
     redirect("/");
   }
   const user = await getUserById(userId.user);
+  console.log(user);
 
   if (!user) {
     return (
