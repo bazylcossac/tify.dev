@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 
 import Image from "next/image";
 
@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/sheet";
 import Logo from "../logo";
 import { Skeleton } from "../ui/skeleton";
-import AddPostDialog from "../add-post-dialog";
 
 const routes = [
   {

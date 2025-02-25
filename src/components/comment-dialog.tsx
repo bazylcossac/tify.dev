@@ -74,10 +74,13 @@ function CommentDialog({ post }: { post: PostType }) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <IoChatbox className="text-neutral-600 text-sm md:text-lg cursor-pointer" />
+      <DialogTrigger asChild>
+        <IoChatbox
+          className="text-neutral-600 text-sm md:text-lg cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
+        />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#0D0D0D] border-none">
+      <DialogContent className="w-3/4 md:max-w-[445px] bg-[#0D0D0D] border-none">
         <DialogTitle></DialogTitle>
         <DialogHeader>
           <div>

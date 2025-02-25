@@ -9,6 +9,7 @@ import {
   getUserFollowers,
   likePost,
   updateUserBackgroundImage,
+  getPostById,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
@@ -19,6 +20,7 @@ import {
   PostType,
   UserFollowerIdsFn,
 } from "@/types/types";
+import { Post } from "@prisma/client";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -57,6 +59,7 @@ type ContextTypes = {
   getUserFollowersIds: (
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;
+  getPostByPostId: (postId: string) => Promise<PostType[] | undefined>;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);
@@ -216,6 +219,11 @@ export default function UserContextProvider({
     return posts;
   }
 
+  async function getPostByPostId(postId: string) {
+    if (!postId) return;
+    return getPostById(postId);
+  }
+
   async function updateUserBackgroundImg(
     bgUrl: string,
     bgSize: number,
@@ -238,6 +246,7 @@ export default function UserContextProvider({
         setPostData,
         getComments,
         likePostDB,
+        getPostByPostId,
         data: postData,
         userPosts,
         getUniqueUserData,

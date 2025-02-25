@@ -6,15 +6,17 @@ import Link from "next/link";
 import { cn, timeMessage } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
 import formatText from "@/lib/formatText";
-import PostMainDialog from "./post-main-dialog";
+import PostMedia from "./post-media";
 import { FaHeart } from "react-icons/fa";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
+import { useRouter } from "next-nprogress-bar";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const { likePostDB, fetchNextHomePage } = useUserContext();
+  const router = useRouter();
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -27,23 +29,33 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
       (user) => user?.likedPostUserId === session.data?.userId
     )
   );
+  console.log(post);
   const [postLikes, setPostLikes] = useState(post.likes);
 
   return (
-    <div className="flex flex-col mx-4 border-b border-white/30 py-4">
+    <div
+      className="flex flex-col mx-4 border-b border-white/30 py-4 hover:cursor-pointer"
+      onClick={() => router.push(`/post/${post.postId}`)}
+    >
       {post ? (
         <div className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2 my-4 ">
-            <Image
-              src={post?.User?.image}
-              width={30}
-              height={30}
-              quality={50}
-              alt="user image"
-              className="rounded-full md:w-8 md:h-8 w-6 h-6"
-            />
+            <Link href={`/profile/${post.userId}`}>
+              <Image
+                src={post?.User?.image}
+                width={30}
+                height={30}
+                quality={50}
+                alt="user image"
+                className="rounded-full md:w-8 md:h-8 w-6 h-6 hover:opacity-65 transition"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </Link>
             <div className="flex flex-row items-center">
-              <p className="mt-auto md:text-md text-sm font-semibold ">
+              <p
+                className="mt-auto md:text-md text-sm font-semibold"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Link
                   href={`/profile/${post.userId}`}
                   className="hover:text-white/60 transition"
@@ -83,7 +95,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
       <div className="justify-center flex w-full">
         {post?.media && post.media[0].type.startsWith("image") && (
           <>
-            <PostMainDialog type="image" post={post} />
+            <PostMedia type="image" post={post} />
           </>
         )}
         {post.postText.includes("https://www.youtube.com/watch") && (
@@ -98,7 +110,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
         )}
 
         {post?.media && post.media[0].type.startsWith("video") && (
-          <PostMainDialog type="video" post={post} />
+          <PostMedia type="video" post={post} />
         )}
       </div>
       <div className="flex flex-row justify-between items-center mt-4">
@@ -113,7 +125,8 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
                     "text-red-500": isLiked,
                   }
                 )}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (isLiked) {
                     setIsLiked(false);
                     setPostLikes((prev) => prev - 1);

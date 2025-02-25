@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 import CurrentUserProfilePosts from "@/components/current-user-profile-posts";
 import { getUserById } from "@/actions/actions";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import AddPostDialog from "@/components/add-post-dialog";
 
 async function Page() {
   const session = await auth();
@@ -23,6 +25,11 @@ async function Page() {
 
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
+      <div className="fixed bottom-10 right-10 md:hidden">
+        <Suspense fallback={<div>loading...</div>}>
+          <AddPostDialog />
+        </Suspense>
+      </div>
       <section className="w-full ">
         <div className="relative">
           <div className="flex flex-col">
