@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import Loading from "@/components/loading";
-import { IoIosRefresh } from "react-icons/io";
+
 import PostComponent from "@/components/post-component";
-import { Button } from "@/components/ui/button";
+
+import AddPostDialog from "@/components/add-post-dialog";
+import ScrollRefreshBtn from "@/components/scroll-refresh-btn";
 
 function Page() {
   const session = useSession();
-  const { data, error, refetch } = useUserContext();
+  const { data, error } = useUserContext();
   const [showRefreshBtn, setShowRefreshBtn] = useState(false);
   console.log("button " + showRefreshBtn);
   useEffect(() => {
@@ -39,29 +41,22 @@ function Page() {
 
   return (
     <>
-      <div className=" bg-red-300 w-full justify-center flex md:mt-8 mt-4 ">
-        {showRefreshBtn && (
-          <div className="fixed z-20">
-            <Button
-              className="bg-blue-500 rounded-full  p-[10px] hover:rotate-180 transition hover:bg-blue-500 active:rotate-180 focus:rotate-180"
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                refetch();
-              }}
-            >
-              <IoIosRefresh />
-            </Button>
-          </div>
-        )}
+      <div className=" w-full justify-center flex md:mt-8 mt-4 ">
+        {showRefreshBtn && <ScrollRefreshBtn />}
       </div>
+      {/* MOBILE POST ADD BTN */}
+      <div className="fixed bottom-10 right-10 md:hidden">
+        <Suspense fallback={<div>loading...</div>}>
+          <AddPostDialog />
+        </Suspense>
+      </div>
+
       <main className="flex flex-col overflow-y-auto no-scrollbar ">
         <ul>
           {memoizedPosts.map((post, i) => (
             <PostComponent post={post} key={i + post.postId} />
           ))}
         </ul>
-
-        {/* <div className="h-[1px]" ref={ref}></div> */}
       </main>
     </>
   );

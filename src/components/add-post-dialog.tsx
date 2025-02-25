@@ -20,7 +20,8 @@ import { toast } from "sonner";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { redirect } from "next/navigation";
 import FileInputComponent from "./file-input-component";
-
+import { IoIosAdd } from "react-icons/io";
+import { IoMdAdd } from "react-icons/io";
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
   const [file, setFile] = useState<File | undefined>(undefined);
@@ -96,10 +97,13 @@ function AddPostDialog() {
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button
-          className="font-bold rounded-xl bg-blue-600 text-xs px-10 mb-2 w-3/4"
+          className="font-bold md:rounded-xl bg-blue-600 text-xs md:px-10 md:mb-2 md:w-3/4 rounded-full size-12"
           onClick={() => setDialogOpen(true)}
         >
-          POST
+          <span className="hidden md:block">POST</span>
+          <span className="md:hidden">
+            <IoMdAdd fontSize={80} />
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="w-4/5 md:max-w-[425px] bg-[#0D0D0D] border-none">

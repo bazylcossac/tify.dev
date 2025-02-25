@@ -106,11 +106,6 @@ export function MobileSidebar() {
                 ))}
               </ul>
             </div>
-            <div className="mx-auto w-full flex items-center justify-center mt-8">
-              <Suspense fallback={<div>loading...</div>}>
-                <AddPostDialog />
-              </Suspense>
-            </div>
           </div>
           {user && user?.image ? (
             <div className="flex items-center justify-center gap-2 mt-auto mb-12">
