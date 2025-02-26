@@ -37,7 +37,7 @@ function Page() {
 
   return (
     <div className="flex flex-col my-4 px-4 w-full">
-      <div className="flex flex-row justify-between items-center gap-2 my-4 w-full px-2">
+      <div className="flex flex-row justify-between items-center gap-2 my-4 w-full ">
         <div className="flex flex-row items-center gap-2">
           <Image
             src={data?.User?.image}

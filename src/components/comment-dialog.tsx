@@ -1,3 +1,4 @@
+"use client";
 import { PostType } from "@/types/types";
 
 import React, { useState } from "react";
@@ -26,9 +27,10 @@ import formatText from "@/lib/formatText";
 
 function CommentDialog({ post }: { post: PostType }) {
   const [commentText, setCommentText] = useState("");
-
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileUrl, setFileUrl] = useState<string | undefined>(undefined);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const session = useSession();
 
   if (!session.data?.user) {
@@ -37,7 +39,7 @@ function CommentDialog({ post }: { post: PostType }) {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
+    console.log("COMMENT ADD");
     let checksum;
     let mediaUrl: string | undefined;
     try {
@@ -68,16 +70,19 @@ function CommentDialog({ post }: { post: PostType }) {
 
     setFile(undefined);
     setFileUrl(undefined);
-
     setCommentText("");
+    setDialogOpen(false);
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <IoChatbox
           className="text-neutral-600 text-sm md:text-lg cursor-pointer"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            setDialogOpen(true);
+          }}
         />
       </DialogTrigger>
       <DialogContent className="w-3/4 md:max-w-[445px] bg-[#0D0D0D] border-none">
@@ -145,15 +150,16 @@ function CommentDialog({ post }: { post: PostType }) {
           </div>
           <DialogDescription></DialogDescription>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                type="submit"
-                className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4 md:mt-0"
-                disabled={commentText.trim().length === 0}
-              >
-                Post
-              </Button>
-            </DialogClose>
+            <Button
+              type="submit"
+              className="active:bg-black focus:bg-black font-bold rounded-xl bg-blue-600 text-xs px-6 mt-4 md:mt-0"
+              disabled={commentText.trim().length === 0}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              Post
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

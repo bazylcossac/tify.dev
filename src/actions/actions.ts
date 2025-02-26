@@ -123,6 +123,7 @@ export async function createCommentToPost(
   const { image, name, email } = session?.user;
 
   const userValidation = userSchema.safeParse({ name, email, image, userId });
+
   if (!userValidation.success) {
     return {
       message: "Failed to validate user",
@@ -337,7 +338,7 @@ export async function getPostById(postId: string) {
   if (!postId) return;
   return await prisma.post.findUnique({
     where: { postId: postId },
-    include: { User: true, LikeUsers: true, media: true },
+    include: { User: true, LikeUsers: true, media: true, comments: true },
   });
 }
 

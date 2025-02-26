@@ -15,22 +15,23 @@ import { useInView } from "react-intersection-observer";
 import { useRouter } from "next-nprogress-bar";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
-  const { likePostDB, fetchNextHomePage } = useUserContext();
-  const router = useRouter();
-  const { ref, inView } = useInView();
-  useEffect(() => {
-    if (inView) {
-      fetchNextHomePage();
-    }
-  }, [inView, fetchNextHomePage]);
   const session = useSession();
+  const router = useRouter();
+
+  const { ref, inView } = useInView();
+  const [postLikes, setPostLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(
     post?.LikeUsers?.some(
       (user) => user?.likedPostUserId === session.data?.userId
     )
   );
-  console.log(post);
-  const [postLikes, setPostLikes] = useState(post.likes);
+  const { likePostDB, fetchNextHomePage } = useUserContext();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextHomePage();
+    }
+  }, [inView, fetchNextHomePage]);
 
   return (
     <div

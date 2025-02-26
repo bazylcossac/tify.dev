@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { redirect } from "next/navigation";
 import FileInputComponent from "./file-input-component";
-import { IoIosAdd } from "react-icons/io";
+
 import { IoMdAdd } from "react-icons/io";
 function AddPostDialog() {
   const [postText, setPostText] = useState("");

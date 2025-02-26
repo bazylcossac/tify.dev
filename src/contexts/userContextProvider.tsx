@@ -87,7 +87,6 @@ export default function UserContextProvider({
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
   useEffect(() => {
-    console.log(data);
     setPostData(data);
   }, [data]);
 
@@ -105,7 +104,6 @@ export default function UserContextProvider({
       (post: PostType) => post.userId === session.data?.userId
     ),
   }));
-  console.log(userPosts);
 
   /// UNIQUE USER POSTS
   async function getUniqueUserData(userId: string | string[] | undefined) {
@@ -236,7 +234,6 @@ export default function UserContextProvider({
       bgType,
       userId
     );
-    console.log(message);
   }
   return (
     <UserContext.Provider
