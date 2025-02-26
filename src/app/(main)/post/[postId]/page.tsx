@@ -1,8 +1,8 @@
 "use client";
 
-import { timeMessage } from "@/lib/utils";
+import { cn, timeMessage } from "@/lib/utils";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import PostMedia from "@/components/post-media";
 import formatText from "@/lib/formatText";
@@ -11,21 +11,50 @@ import { useUserContext } from "@/contexts/userContextProvider";
 import Loading from "@/components/loading";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import CommentsClient from "@/components/comments-component";
+import ScrollRefreshBtn from "@/components/scroll-refresh-btn";
+import { useSession } from "next-auth/react";
+import { FaHeart } from "react-icons/fa";
 
 function Page() {
   const params = useParams();
+  const session = useSession();
   const postId = params?.postId;
-  const { getPostByPostId } = useUserContext();
+  const { getPostByPostId, likePostDB } = useUserContext();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [`post-${postId}`],
     queryFn: () => getPostByPostId(postId),
+    staleTime: 0,
+    gcTime: 0,
   });
+
+  const [postData, setPostData] = useState(data);
+  const [showRefreshBtn, setShowRefreshBtn] = useState(false);
+  const [postLikes, setPostLikes] = useState();
+  const [isLiked, setIsLiked] = useState(
+    data?.LikeUsers?.some(
+      (user) => user?.likedPostUserId === session.data?.userId
+    )
+  );
+  console.log("isliked " + isLiked);
+  useEffect(() => {
+    const showButton = () => {
+      setShowRefreshBtn(window.scrollY > 2000);
+    };
+
+    window.addEventListener("scroll", showButton);
+    return () => window.removeEventListener("scroll", showButton);
+  }, []);
+
+  useEffect(() => {
+    setPostLikes(data?.likes);
+  }, [data?.likes]);
 
   if (isLoading) {
     return <Loading />;
   }
-  console.log(data);
+
   if (error) {
     return (
       <div>
@@ -36,7 +65,10 @@ function Page() {
   }
 
   return (
-    <div className="flex flex-col my-4 px-4 w-full">
+    <div className="flex flex-col my-4 px-4 w-full h-full">
+      <div className=" w-full justify-center flex md:mt-8 mt-4 ">
+        {showRefreshBtn && <ScrollRefreshBtn />}
+      </div>
       <div className="flex flex-row justify-between items-center gap-2 my-4 w-full ">
         <div className="flex flex-row items-center gap-2">
           <Image
@@ -96,6 +128,33 @@ function Page() {
           <PostMedia type="video" post={data} />
         )}
       </div>
+      {/* <div className="flex flex-row gap-8 ">
+        <div className="flex items-center gap-1">
+          <FaHeart
+            className={cn(
+              "md:text-lg text-sm text-neutral-600 cursor-pointer",
+              {
+                "text-red-500": isLiked,
+              }
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isLiked) {
+                setIsLiked(false);
+                setPostLikes((prev) => prev - 1);
+              } else {
+                setIsLiked(true);
+                setPostLikes((prev) => prev + 1);
+              }
+              likePostDB(data);
+            }}
+          />
+
+          <p className="text-xs font-bold mx-1">{data.likes}</p>
+        </div>
+      </div> */}
+
+      <CommentsClient postId={postId} />
     </div>
   );
 }

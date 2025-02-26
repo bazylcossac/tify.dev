@@ -14,7 +14,7 @@ function Page() {
   const session = useSession();
   const { data, error } = useUserContext();
   const [showRefreshBtn, setShowRefreshBtn] = useState(false);
-  console.log("button " + showRefreshBtn);
+
   useEffect(() => {
     const showButton = () => {
       setShowRefreshBtn(window.scrollY > 3000);

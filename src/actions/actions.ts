@@ -338,7 +338,7 @@ export async function getPostById(postId: string) {
   if (!postId) return;
   return await prisma.post.findUnique({
     where: { postId: postId },
-    include: { User: true, LikeUsers: true, media: true, comments: true },
+    include: { User: true, LikeUsers: true, media: true },
   });
 }
 

@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { IoChatbox } from "react-icons/io5";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,

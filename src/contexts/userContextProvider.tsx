@@ -20,7 +20,6 @@ import {
   PostType,
   UserFollowerIdsFn,
 } from "@/types/types";
-import { Post } from "@prisma/client";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -245,6 +244,7 @@ export default function UserContextProvider({
         likePostDB,
         getPostByPostId,
         data: postData,
+        
         userPosts,
         getUniqueUserData,
         refetch,
