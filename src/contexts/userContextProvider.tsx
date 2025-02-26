@@ -59,7 +59,7 @@ type ContextTypes = {
   getUserFollowersIds: (
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;
-  getPostByPostId: (postId: string) => Promise<PostType[] | undefined>;
+  getPostByPostId: (postId: string) => Promise<PostType | undefined>;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);

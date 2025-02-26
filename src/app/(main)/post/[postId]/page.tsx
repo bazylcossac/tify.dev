@@ -2,45 +2,45 @@
 
 import { timeMessage } from "@/lib/utils";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import PostMedia from "@/components/post-media";
 import formatText from "@/lib/formatText";
 import { useParams } from "next/navigation";
 import { useUserContext } from "@/contexts/userContextProvider";
+import Loading from "@/components/loading";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
 function Page() {
-  const { postId } = useParams();
-  console.log(postId);
-  const [postData, setPostData] = useState();
-  // const { postId } =  await params;
-  // const post = await getPostById(postId);
-  console.log(postData);
+  const params = useParams();
+  const postId = params?.postId;
   const { getPostByPostId } = useUserContext();
-  const post = getPostByPostId(postId);
 
-  useEffect(() => {
-    const getPostData = async () => {
-      const post = getPostByPostId(postId);
-      setPostData(post);
-    };
-    if (postId) {
-      getPostData();
-    }
-  }, [post, getPostByPostId, postId]);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [`post-${postId}`],
+    queryFn: () => getPostByPostId(postId),
+  });
 
-  // if (!post) {
-  //   return <p>Failed to get a post</p>;
-  // }
-
-  return <p>dsa</p>;
+  if (isLoading) {
+    return <Loading />;
+  }
+  console.log(data);
+  if (error) {
+    return (
+      <div>
+        <p>Failed to fetch</p>
+        <Button onClick={() => refetch()}>Try again</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col my-4 px-4 w-full">
-      <div className="flex flex-row justify-between items-center gap-2 my-4 w-full  px-2">
+      <div className="flex flex-row justify-between items-center gap-2 my-4 w-full px-2">
         <div className="flex flex-row items-center gap-2">
           <Image
-            src={post?.User?.image}
+            src={data?.User?.image}
             width={30}
             height={30}
             quality={50}
@@ -49,43 +49,42 @@ function Page() {
           />
           <p className=" md:text-md text-sm font-semibold">
             <Link
-              href={`/profile/${post.userId}`}
+              href={`/profile/${data?.userId}`}
               className="hover:text-white/60 transition"
             >
-              @{post?.User?.name}
+              @{data?.User?.name}
             </Link>
           </p>
           <div className="flex flex-row items-center">
             <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
-              {new Date(post?.createdAt).toLocaleDateString()}
+              {new Date(data?.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>
         <div>
           <p className="md:text-xs text-[11px] text-white/60 font-semibold">
-            {timeMessage(post?.createdAt)}
+            {timeMessage(data?.createdAt)}
           </p>
         </div>
       </div>
 
-      {post.postText && (
-        <div
-          className="text-sm font-semibold mb-4 whitespace-pre-line "
-          key={`${post.postId}-${post.createdAt}`}
-        >
-          {formatText(post?.postText)}
-        </div>
-      )}
+      <div
+        className="text-sm font-semibold mb-4 whitespace-pre-line "
+        key={`${data?.postId}-${data?.createdAt}`}
+      >
+        {formatText(data.postText)}
+      </div>
+
       <div className="justify-center flex w-full">
-        {post?.media && post.media[0].type.startsWith("image") && (
+        {data?.media && data?.media[0].type.startsWith("image") && (
           <>
-            <PostMedia type="image" post={post} />
+            <PostMedia type="image" post={data} />
           </>
         )}
-        {post.postText.includes("https://www.youtube.com/watch") && (
+        {data?.postText?.includes("https://www.youtube.com/watch") && (
           <iframe
             src={`https://www.youtube.com/embed/${
-              post.postText.split("=")[1].split("\n")[0]
+              data?.postText?.split("=")[1].split("\n")[0]
             }`}
             className="w-full h-[500px] rounded-lg"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -93,8 +92,8 @@ function Page() {
           />
         )}
 
-        {post?.media && post.media[0].type.startsWith("video") && (
-          <PostMedia type="video" post={post} />
+        {data?.media && data?.media[0].type.startsWith("video") && (
+          <PostMedia type="video" post={data} />
         )}
       </div>
     </div>

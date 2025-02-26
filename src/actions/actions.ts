@@ -322,7 +322,7 @@ export async function getUserPosts({ pageParam }: { pageParam: number }) {
       createdAt: "desc",
     },
   });
-  console.log(posts);
+
   const totalPosts = await prisma.post.count();
 
   const hasMore = (pageParam + 1) * pageSize < totalPosts;
