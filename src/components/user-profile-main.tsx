@@ -20,6 +20,8 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
     )
   );
 
+  
+
   console.log(userData);
   console.log(isFollowing);
 

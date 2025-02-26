@@ -374,3 +374,13 @@ export async function updateUserBackgroundImage(
   });
   revalidatePath("/profle", "page");
 }
+
+export async function getUserFollows(userIds: string[]) {
+  return await prisma.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+  });
+}

@@ -7,6 +7,7 @@ import { getUserById } from "@/actions/actions";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import AddPostDialog from "@/components/add-post-dialog";
+import UserStats from "@/components/user-profile-stats";
 
 async function Page() {
   const session = await auth();
@@ -71,14 +72,7 @@ async function Page() {
         <div className="hidden text-blue-500"></div>
       </section>
 
-      <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
-        <span className="flex flex-row items-center gap-1">
-          {user?.follower?.length} Following
-        </span>
-        <span className="flex flex-row items-center gap-1">
-          {user?.followed?.length} Followed
-        </span>
-      </section>
+      <UserStats user={user} />
 
       <section>
         <CurrentUserProfilePosts />

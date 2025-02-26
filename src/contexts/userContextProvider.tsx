@@ -10,6 +10,7 @@ import {
   likePost,
   updateUserBackgroundImage,
   getPostById,
+  getUserFollows,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
@@ -61,6 +62,7 @@ type ContextTypes = {
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;
   getPostByPostId: (postId: string) => Promise<PostType | undefined>;
+  getUserFollowsData: (userIds: string[]) => Promise<[]>;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);
@@ -168,20 +170,8 @@ export default function UserContextProvider({
     try {
       await createPost(text, fileType, mediaUrl);
       refetch();
-    } catch {
-      
-    }
+    } catch {}
   }
-
-  // function setOptimisticNewPost(newPost) {
-  //   setPostData((prev) => ({
-  //     ...prev,
-  //     pages: prev.pages.with(0, {
-  //       ...prev.pages[0],
-  //       posts: [newPost, ...prev.pages[0].posts],
-  //     }),
-  //   }));
-  // }
 
   async function addCommentToPostToDB(
     commentText: string,
@@ -218,6 +208,12 @@ export default function UserContextProvider({
       userId
     );
   }
+
+  async function getUserFollowsData(userIds: string[]) {
+    const ids = userIds.map((id) => id.followedId);
+    return await getUserFollows(ids);
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -234,6 +230,7 @@ export default function UserContextProvider({
         refetch,
         fetchNextHomePage,
         getUserFollowersIds,
+        getUserFollowsData,
         updateUserBackgroundImg,
         error,
       }}
