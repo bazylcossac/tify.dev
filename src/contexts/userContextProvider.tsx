@@ -38,7 +38,9 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
-  getComments: (postId: string) => Promise<CommentsType[]>;
+  getComments: (
+    postId: string | string[] | undefined
+  ) => Promise<CommentsType[]>;
   data: DataType | undefined;
   userPosts: PagesType[] | undefined;
   likePostDB: (post: PostType) => void;
@@ -211,9 +213,8 @@ export default function UserContextProvider({
   async function getComments(postId: string) {
     /// post validation toast etc.
 
-    const posts = await getPostComments(postId);
-
-    return posts;
+    const comments = await getPostComments(postId);
+    return comments;
   }
 
   async function getPostByPostId(postId: string) {
@@ -244,7 +245,7 @@ export default function UserContextProvider({
         likePostDB,
         getPostByPostId,
         data: postData,
-        
+
         userPosts,
         getUniqueUserData,
         refetch,

@@ -285,6 +285,7 @@ export async function getPostComments(postId: string) {
         createdAt: "desc",
       },
     });
+
     return comments;
   } catch {
     throw "Failed to find comments";

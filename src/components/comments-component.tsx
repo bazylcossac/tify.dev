@@ -33,8 +33,6 @@ function CommentsClient({ postId }: { postId: string }) {
     staleTime: 0,
   });
 
-  console.log(data);
-
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -72,6 +70,7 @@ function CommentsClient({ postId }: { postId: string }) {
     setFileUrl("");
 
     setCommentText("");
+    refetch();
   }
 
   if (isLoading) {
@@ -88,7 +87,7 @@ function CommentsClient({ postId }: { postId: string }) {
   }
   return (
     <>
-      <div className="mt-auto pt-2">
+      <div className="mt-4 pt-2">
         <form
           className="flex flex-row items-center justify-between w-full "
           onSubmit={onSubmit}
@@ -104,7 +103,7 @@ function CommentsClient({ postId }: { postId: string }) {
             />
 
             <Textarea
-              className="transition font-semibold resize-none h-[30px] max-w-[300px] placeholder:text-white/50 mb-2 overflow-hidden "
+              className="transition font-semibold resize-none h-[30px] max-w-[400px]  placeholder:text-white/50 mb-2 overflow-hidden "
               placeholder="Post your reply..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
@@ -192,7 +191,6 @@ function CommentsClient({ postId }: { postId: string }) {
                 ""
               )}
             </div>
-            
           </div>
         ))}
       </div>

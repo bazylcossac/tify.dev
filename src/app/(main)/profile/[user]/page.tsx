@@ -6,14 +6,13 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 async function Page({ params }: { params: { user: string } }) {
+  const session = await auth();
   const userId = await params;
 
-  const session = await auth();
   if (!session) {
     redirect("/");
   }
   const user = await getUserById(userId.user);
-  console.log(user);
 
   if (!user) {
     return (
