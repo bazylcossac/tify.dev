@@ -166,28 +166,11 @@ export default function UserContextProvider({
   ) {
     const text = postText.replace(/\n/g, "\n");
     try {
-      const post = await createPost(text, fileType, mediaUrl);
-
-      // queryClient.invalidateQueries({ queryKey: ["posts"] });
-      // refetch();
-      // const newPost = await getPostById(post.postId);
-      const newOptimisticPost = {
-        ...post,
-        User: {
-          userId: session.data?.userId,
-          image: session?.data?.user?.image,
-          name: session?.data?.user?.name,
-        },
-      };
-
-      setPostData((prev) => ({
-        ...prev,
-        pages: prev.pages.with(0, {
-          ...prev.pages[0],
-          posts: [newOptimisticPost, ...prev.pages[0].posts],
-        }),
-      }));
-    } catch {}
+      await createPost(text, fileType, mediaUrl);
+      refetch();
+    } catch {
+      
+    }
   }
 
   // function setOptimisticNewPost(newPost) {

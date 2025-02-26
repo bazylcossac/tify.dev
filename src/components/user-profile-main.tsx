@@ -31,7 +31,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
     );
 
     setIsFollowing(following);
-  }, [userData, session.data?.userId]); // Teraz isFollowing się zaktualizuje
+  }, [userData, session.data?.userId]);
 
   if (!userData) {
     return (
@@ -52,7 +52,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
           width={1000}
           height={200}
           priority={true}
-          className="h-[150px] w-[1100px] rounded-lg object-cover"
+          className="h-[150px] w-full rounded-lg object-cover"
         />
       </div>
       <div className=" flex flex-col ">

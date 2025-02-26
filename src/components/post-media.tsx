@@ -38,7 +38,7 @@ function PostMedia({
             }
           }}
           controls
-          className="rounded-xl border border-white/3 max-h-[500px] object-contain hover:opacity-75 hover:cursor-pointer"
+          className="rounded-xl border border-white/30 max-h-[500px] object-contain hover:opacity-75 hover:cursor-pointer"
         />
       )}
     </>

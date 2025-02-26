@@ -43,7 +43,7 @@ async function Page() {
               height={200}
               quality={50}
               priority
-              className="h-[150px] w-[1100px] rounded-lg object-cover"
+              className="h-[150px] w-full rounded-lg object-cover"
             />
           </div>
           <div className=" flex flex-col ">
