@@ -22,10 +22,14 @@ import {
   UserFollowerIdsFn,
 } from "@/types/types";
 
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useMutation,
+} from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 type ContextTypes = {
   addPostToDB: (
@@ -89,7 +93,8 @@ export default function UserContextProvider({
     initialPageParam: 0,
     staleTime: 0,
     gcTime: 0,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
   useEffect(() => {
@@ -104,12 +109,14 @@ export default function UserContextProvider({
   /// CURRENT LOGGED IN USER POSTS
 
   /// change to its own function
-  const userPosts = postData?.pages?.map((posts: PagesType) => ({
-    ...posts,
-    posts: posts?.posts.filter(
-      (post: PostType) => post.userId === session.data?.userId
-    ),
-  }));
+  const userPosts = useMemo(() => {
+    return postData?.pages?.map((posts: PagesType) => ({
+      ...posts,
+      posts: posts?.posts.filter(
+        (post: PostType) => post.userId === session.data?.userId
+      ),
+    }));
+  }, [postData, session.data?.userId]);
 
   /// UNIQUE USER POSTS
   async function getUniqueUserData(userId: string | string[] | undefined) {
@@ -170,10 +177,10 @@ export default function UserContextProvider({
     fileType?: string
   ) {
     const text = postText.replace(/\n/g, "\n");
-    try {
-      await createPost(text, fileType, mediaUrl);
-      refetch();
-    } catch {}
+
+    const message = await createPost(text, fileType, mediaUrl);
+    refetch();
+    return message;
   }
 
   async function addCommentToPostToDB(
@@ -204,12 +211,7 @@ export default function UserContextProvider({
     bgType: string,
     userId: string
   ) {
-    const message = await updateUserBackgroundImage(
-      bgUrl,
-      bgSize,
-      bgType,
-      userId
-    );
+    await updateUserBackgroundImage(bgUrl, bgSize, bgType, userId);
   }
 
   async function getUserFollowsData(
@@ -240,6 +242,7 @@ export default function UserContextProvider({
         fetchNextHomePage,
         getUserFollowersIds,
         getUserFollowsData,
+
         updateUserBackgroundImg,
         error,
       }}

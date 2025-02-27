@@ -6,7 +6,7 @@ export function useInfinityScrollFetch() {
     useInfiniteQuery({
       queryKey: ["posts"],
       queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
-      // refetchInterval: 1000,
+
       initialPageParam: 0,
       staleTime: 0,
       gcTime: 0,

@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next-nprogress-bar";
+import PostSkeleton from "./post-skeleton";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const session = useSession();
@@ -33,6 +34,10 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
     }
   }, [inView, fetchNextHomePage]);
 
+  if (!post.postText) {
+    return <PostSkeleton />;
+  }
+
   return (
     <div
       className="flex flex-col mx-4 border-b border-white/30 py-4 hover:cursor-pointer"
@@ -43,7 +48,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
           <div className="flex items-center gap-2 my-4 ">
             <Link href={`/profile/${post.userId}`}>
               <Image
-                src={post?.User?.image}
+                src={post?.User?.image || session?.data?.user?.image}
                 width={30}
                 height={30}
                 quality={50}
@@ -58,10 +63,10 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
                 onClick={(e) => e.stopPropagation()}
               >
                 <Link
-                  href={`/profile/${post.userId}`}
+                  href={`/profile/${post.userId || session?.data?.userId}`}
                   className="hover:text-white/60 transition"
                 >
-                  @{post?.User?.name}
+                  @{post?.User?.name || session?.data?.user?.name}
                 </Link>
               </p>
               <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
@@ -85,7 +90,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
         </div>
       )}
 
-      {post.postText && (
+      {post?.postText && (
         <div
           className="text-sm font-semibold mb-2 whitespace-pre-line"
           key={`${post.postId}-${post.createdAt}`}
@@ -99,7 +104,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
             <PostMedia type="image" post={post} />
           </>
         )}
-        {post.postText.includes("https://www.youtube.com/watch") && (
+        {post?.postText?.includes("https://www.youtube.com/watch") && (
           <iframe
             src={`https://www.youtube.com/embed/${
               post.postText.split("=")[1].split("\n")[0]

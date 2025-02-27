@@ -43,7 +43,7 @@ export function FollowersDialog({
       <DialogContent className="w-4/5 md:max-w-[425px] md:max-h-[500px] overflow-y-auto bg-[#0D0D0D] border-none">
         <DialogHeader>
           <DialogTitle>
-            {type === "follower" ? "Followers" : "Followed"}
+            {type === "follower" ? "Following" : "Followed"}
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>

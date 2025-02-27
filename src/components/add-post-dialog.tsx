@@ -22,7 +22,7 @@ import { redirect } from "next/navigation";
 import FileInputComponent from "./file-input-component";
 
 import { IoMdAdd } from "react-icons/io";
-import { useQueryClient } from "@tanstack/react-query";
+
 function AddPostDialog() {
   const [postText, setPostText] = useState("");
   const [file, setFile] = useState<File | undefined>(undefined);
@@ -33,7 +33,7 @@ function AddPostDialog() {
   const { addPostToDB, error } = useUserContext();
 
   const session = useSession();
-  const queryClient = useQueryClient();
+
   if (!session?.data?.user) {
     redirect("/");
   }
@@ -77,8 +77,10 @@ function AddPostDialog() {
         });
       }
       setLoading(true);
-      addPostToDB(postText, mediaUrl, file?.type);
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      const { message } = await addPostToDB(postText, mediaUrl, file?.type);
+      toast(message);
+      // addPostMutation(postText, mediaUrl, file?.type);
+      // queryClient.invalidateQueries({ queryKey: ["posts"] });
 
       if (error) {
         toast(<p className="font-semibold">{error.message}</p>);

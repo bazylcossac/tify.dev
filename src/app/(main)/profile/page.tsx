@@ -72,7 +72,9 @@ async function Page() {
         <div className="hidden text-blue-500"></div>
       </section>
       <Suspense fallback="">
-        <UserStats user={user} />
+        <div className="mt-2">
+          <UserStats user={user} />
+        </div>
       </Suspense>
 
       <section>

@@ -86,26 +86,37 @@ export async function createPost(
   const validatedData = postSchema.safeParse({ mediaUrl, postText, type });
 
   if (!validatedData.success) {
-    throw new Error("Failed to validate post data");
+    return {
+      message: "Failed to validate post data",
+    };
   }
-  const post = await prisma.post.create({
-    data: {
-      userId: session.userId,
-      postText: String(validatedData.data.postText),
-      likes: 0,
-      stars: 0,
-      media: {
-        create: [
-          {
-            type: validatedData.data.type || "",
-            url: validatedData.data.mediaUrl || "",
-          },
-        ],
+  try {
+    await prisma.post.create({
+      data: {
+        userId: session.userId,
+        postText: String(validatedData.data.postText),
+        likes: 0,
+        stars: 0,
+        media: {
+          create: [
+            {
+              type: validatedData.data.type || "",
+              url: validatedData.data.mediaUrl || "",
+            },
+          ],
+        },
       },
-    },
-  });
+    });
+  } catch (err) {
+    const error = err as Error;
+    return {
+      message: `Failed to post ${error.message}`,
+    };
+  }
   revalidatePath("/home", "page");
-  return post;
+  return {
+    message: "Posting!",
+  };
 }
 
 export async function createCommentToPost(
@@ -365,13 +376,18 @@ export async function updateUserBackgroundImage(
       message: "Invalid file type",
     };
   }
-  /// add url validation
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      backgroundImage: bgUrl,
-    },
-  });
+
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        backgroundImage: bgUrl,
+      },
+    });
+  } catch (err) {
+    const error = err as Error;
+    return error.message;
+  }
   revalidatePath("/profle", "page");
 }
 

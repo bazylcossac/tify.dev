@@ -103,7 +103,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
         </div>
       </div>
       <div>
-        <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+        <section className="flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
           <UserStats user={userData} />
         </section>
       </div>

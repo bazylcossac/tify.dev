@@ -28,7 +28,10 @@ function CurrentUserProfilePosts() {
       <ul>
         {userPosts?.map((posts) =>
           posts?.posts?.map((post: PostType) => (
-            <PostComponent post={post} key={`${post.postId}-${post.createdAt}`} />
+            <PostComponent
+              post={post}
+              key={`${post.postId}-${post.createdAt}`}
+            />
           ))
         )}
       </ul>

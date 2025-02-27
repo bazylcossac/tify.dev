@@ -8,7 +8,7 @@ import { FollowersDialog } from "./followers-dialog";
 function UserStats({ user }: { user: any }) {
   console.log(user);
   return (
-    <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
+    <section className="mt-4 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
       {" "}
       <FollowersDialog user={user} type="follower">
         <span className="flex flex-row items-center gap-1 hover:cursor-pointer hover:text-white transition">
