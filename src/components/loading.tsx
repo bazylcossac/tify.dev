@@ -4,7 +4,7 @@ function Loading() {
   return (
     <div
       role="status"
-      className=" w-full h-full flex items-center justify-center"
+      className="w-full h-full flex items-center justify-center "
     >
       <svg
         aria-hidden="true"

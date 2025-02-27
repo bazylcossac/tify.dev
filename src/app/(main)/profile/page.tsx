@@ -71,8 +71,9 @@ async function Page() {
         </div>
         <div className="hidden text-blue-500"></div>
       </section>
-
-      <UserStats user={user} />
+      <Suspense fallback="">
+        <UserStats user={user} />
+      </Suspense>
 
       <section>
         <CurrentUserProfilePosts />
