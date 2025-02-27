@@ -27,7 +27,7 @@ export function FollowersDialog({
 
   const { data, isLoading, error } = useQuery({
     queryKey: [type],
-    queryFn: () => getUserFollowsData(user[type]),
+    queryFn: () => getUserFollowsData(user[type], type),
     retry: 0,
     staleTime: 0,
     gcTime: 0,
@@ -42,7 +42,9 @@ export function FollowersDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="w-4/5 md:max-w-[425px] md:max-h-[500px] overflow-y-auto bg-[#0D0D0D] border-none">
         <DialogHeader>
-          <DialogTitle>Your followers</DialogTitle>
+          <DialogTitle>
+            {type === "follower" ? "Followers" : "Followed"}
+          </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         {/* CONTENT */}

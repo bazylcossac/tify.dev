@@ -20,8 +20,6 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
     )
   );
 
-  
-
   console.log(userData);
   console.log(isFollowing);
 
@@ -106,11 +104,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
       </div>
       <div>
         <section className="mt-6 ml-4 flex flex-row items-center gap-6 text-white/60 font-semibold text-sm">
-          <UserStats
-            userFollowed={userData.followed.length || 0}
-            userFollower={userData.follower.length || 0}
-            email={userData.email}
-          />
+          <UserStats user={userData} />
         </section>
       </div>
     </>

@@ -12,12 +12,12 @@ function UserStats({ user }: { user: any }) {
       {" "}
       <FollowersDialog user={user} type="follower">
         <span className="flex flex-row items-center gap-1 hover:cursor-pointer hover:text-white transition">
-          {user.follower.length} Following
+          {user?.follower?.length} Following
         </span>
       </FollowersDialog>
       <FollowersDialog user={user} type="followed">
         <span className="flex flex-row items-center gap-1 hover:cursor-pointer hover:text-white transition">
-          {user?.followed.length} Followed
+          {user?.followed?.length} Followed
         </span>
       </FollowersDialog>
       <Link href={`mailto::${user?.email}`}>

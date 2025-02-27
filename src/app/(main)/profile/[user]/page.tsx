@@ -16,14 +16,14 @@ async function Page({ params }: { params: { user: string } }) {
 
   if (!user) {
     return (
-      <div className="w-full h-screen flex items-center justifty-center ">
+      <div className="w-full h-screen flex items-center justifty-center">
         <Loading />
       </div>
     );
   }
 
   return (
-    <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col ">
+    <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col">
       <section className="w-full ">
         <div className="relative">
           <UserProfileMain user={user} />

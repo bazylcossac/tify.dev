@@ -62,7 +62,10 @@ type ContextTypes = {
     userId: string
   ) => Promise<UserFollowerIdsFn | undefined>;
   getPostByPostId: (postId: string) => Promise<PostType | undefined>;
-  getUserFollowsData: (userIds: string[]) => Promise<[]>;
+  getUserFollowsData: (
+    userIds: string[],
+    type: "follower" | "followed"
+  ) => Promise<[]>;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);
@@ -209,8 +212,14 @@ export default function UserContextProvider({
     );
   }
 
-  async function getUserFollowsData(userIds: string[]) {
-    const ids = userIds.map((id) => id.followedId);
+  async function getUserFollowsData(
+    userIds: string[],
+    type: "followed" | "follower"
+  ) {
+    const ids = userIds.map((id) =>
+      type === "follower" ? id.followedId : id.followerId
+    );
+
     return await getUserFollows(ids);
   }
 
