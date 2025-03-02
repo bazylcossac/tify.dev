@@ -48,7 +48,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
           <div className="flex items-center gap-2 my-4 ">
             <Link href={`/profile/${post.userId}`}>
               <Image
-                src={post?.User?.image || session?.data?.user?.image}
+                src={post?.User?.image}
                 width={30}
                 height={30}
                 quality={50}

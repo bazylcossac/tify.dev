@@ -85,6 +85,7 @@ export type UserFollowerIdsFn = {
   name: string;
   id: string;
   username: string;
+  backgroundImage: string;
   email: string;
   image: string;
 };
@@ -97,19 +98,6 @@ export type GetUniqueUserDataType = {
   name: string;
   backgroundImage: string | null;
   email: string;
-  // userData:
-  //   | ({
-  //       follower: { id: string; followerId: string; followedId: string }[];
-  //       followed: { id: string; followerId: string; followedId: string }[];
-  //     } & {
-  //       name: string;
-  //       id: string;
-  //       username: string;
-  //       backgroundImage: string;
-  //       email: string;
-  //       image: string;
-  //     })
-  //   | null;
 };
 
 export type GetCommentsType = {

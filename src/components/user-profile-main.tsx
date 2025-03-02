@@ -19,10 +19,6 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
       (follow) => follow.followerId === session.data?.userId
     )
   );
-
-  console.log(userData);
-  console.log(isFollowing);
-
   useEffect(() => {
     if (!userData) return;
 
@@ -82,14 +78,14 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
                   const updatedFollowed = isFollowing
                     ? prev.followed.filter(
                         (follow) => follow.followerId !== session.data?.userId
-                      ) // Usuwa follow po ID
+                      )
                     : [
                         ...prev.followed,
                         {
                           id: "noweId",
                           followerId: session.data?.userId || "",
                           followedId: prev.id,
-                        }, // Dodaje poprawny follow
+                        },
                       ];
 
                   return { ...prev, followed: updatedFollowed };

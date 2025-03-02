@@ -10,7 +10,7 @@ import Image from "next/image";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { IoMdHome, IoIosPeople } from "react-icons/io";
 import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
-
+import { MdOutlineWorkspacePremium } from "react-icons/md";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
 
@@ -26,9 +26,9 @@ const routes = [
     icon: <IoMdHome />,
   },
   {
-    name: "Explore",
+    name: "Premium",
     path: "/explore",
-    icon: <IoSearchSharp />,
+    icon: <MdOutlineWorkspacePremium />,
   },
   {
     name: "Friends",
@@ -121,4 +121,3 @@ function HomeSidebar() {
 }
 
 export default HomeSidebar;
-
