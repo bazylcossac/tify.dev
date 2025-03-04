@@ -4,6 +4,8 @@ const tiers = [
   {
     name: "SUPPORT",
     id: "support-tier",
+    product_id: process.env.STRIPE_PRODUCT_SUPPORT_ID,
+    price_id: process.env.STRIPE_PRODUCT_SUPPORT_PRICE_ID,
     href: "#",
     price: "50 ZŁ",
     description: "The perfect option if you're just want to support our app",
@@ -13,6 +15,8 @@ const tiers = [
   {
     name: "PREMIUM",
     id: "premium-tier",
+    product_id: process.env.STRIPE_PRODUCT_PREMIUM_ID,
+    price_id: process.env.STRIPE_PRODUCT_PREMIUM_PRICE_ID,
     href: "#",
     price: "75 ZŁ",
     description: "Dedicated for those who want to give me extra 25 ZŁ",
@@ -126,18 +130,23 @@ export default function Example() {
                 </li>
               ))}
             </ul>
-            <a
-              href={tier.href}
-              aria-describedby={tier.id}
-              className={classNames(
-                tier.featured
-                  ? "bg-indigo-500 text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-indigo-500"
-                  : "text-indigo-600 ring-1 ring-indigo-200 ring-inset hover:ring-indigo-300 focus-visible:outline-indigo-600",
-                "mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10"
-              )}
+            <form
+              action={`/api/checkout_session?${tier.price_id}`}
+              method="POST"
             >
-              Get started today
-            </a>
+              <button
+                role="link"
+                aria-describedby={tier.id}
+                className={classNames(
+                  tier.featured
+                    ? "bg-indigo-500 text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-indigo-500"
+                    : "text-indigo-600 ring-1 ring-indigo-200 ring-inset hover:ring-indigo-300 focus-visible:outline-indigo-600",
+                  "mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10"
+                )}
+              >
+                Get started today
+              </button>
+            </form>
           </div>
         ))}
       </div>
