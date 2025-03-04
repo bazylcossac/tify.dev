@@ -68,7 +68,7 @@ function ProfileEditDialog({ userId }: { userId: string }) {
         <HiDotsHorizontal />
       </DialogTrigger>
       <DialogContent className="w-4/5 md:max-w-[425px] bg-[#0D0D0D] border-none">
-        <DialogTitle>Edit your profile</DialogTitle>
+        <DialogTitle>Edit your background image</DialogTitle>
         <DialogDescription></DialogDescription>
         <form onSubmit={onSubmit}>
           <FileInputComponent

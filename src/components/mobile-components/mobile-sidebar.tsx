@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/sheet";
 import Logo from "../logo";
 import { Skeleton } from "../ui/skeleton";
+import { MdOutlineWorkspacePremium } from "react-icons/md";
 
 const routes = [
   {
@@ -37,9 +38,9 @@ const routes = [
     icon: <IoMdHome />,
   },
   {
-    name: "Explore",
-    path: "/explore",
-    icon: <IoSearchSharp />,
+    name: "Premium",
+    path: "/premium",
+    icon: <MdOutlineWorkspacePremium />,
   },
   {
     name: "Friends",

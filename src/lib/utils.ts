@@ -2,11 +2,9 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { prisma } from "./db";
 
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
 
 export const computeSHA265 = async (file: File) => {
   const buffer = await file.arrayBuffer();
@@ -51,7 +49,6 @@ export function timeMessage(createdAt: Date) {
   return diffMessage;
 }
 export const fetchPosts = async (pageParam: number) => {
-  console.log("FETCH");
   const response = await fetch(`/api/posts?pageParam=${pageParam}`);
   const data = await response.json();
 

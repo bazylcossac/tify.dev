@@ -9,7 +9,7 @@ import Logo from "./logo";
 import Image from "next/image";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { IoMdHome, IoIosPeople } from "react-icons/io";
-import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
+import { IoPersonSharp } from "react-icons/io5";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
@@ -26,8 +26,8 @@ const routes = [
     icon: <IoMdHome />,
   },
   {
-    name: "Premium",
-    path: "/explore",
+  name: "Premium",
+    path: "/premium",
     icon: <MdOutlineWorkspacePremium />,
   },
   {
