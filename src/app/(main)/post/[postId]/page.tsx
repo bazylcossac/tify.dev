@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import CommentsClient from "@/components/comments-component";
 import ScrollRefreshBtn from "@/components/scroll-refresh-btn";
 import { useSession } from "next-auth/react";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 function Page() {
   const params = useParams();
@@ -23,7 +24,7 @@ function Page() {
     redirect("/");
   }
   const postId = params?.postId as string;
-  
+
   const { getPostByPostId } = useUserContext();
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -72,14 +73,18 @@ function Page() {
               alt="user image"
               className="rounded-full md:w-8 md:h-8 w-6 h-6 hover:opacity-65 transition"
             />
-            <p className=" md:text-md text-sm font-semibold">
+            <div className="flex flex-row items-center gap-1 md:text-md text-sm font-semibold">
               <Link
                 href={`/profile/${data?.userId}`}
                 className="hover:text-white/60 transition"
               >
                 @{data?.User?.name}
               </Link>
-            </p>
+
+              {data?.User?.premium && (
+                <PiCrownSimpleFill className="text-yellow-400" />
+              )}
+            </div>
             <div className="flex flex-row items-center">
               <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
                 {new Date(data.createdAt).toLocaleDateString()}

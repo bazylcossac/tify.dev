@@ -13,7 +13,7 @@ async function Page({ params }: { params: { user: string } }) {
     redirect("/");
   }
   const user = await getUserById(userId.user);
-
+  console.log(user);
   if (!user) {
     return (
       <div className="w-full h-screen flex items-center justifty-center">
@@ -21,8 +21,6 @@ async function Page({ params }: { params: { user: string } }) {
       </div>
     );
   }
-
-  
 
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col">

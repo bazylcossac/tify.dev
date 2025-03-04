@@ -26,7 +26,7 @@ const routes = [
     icon: <IoMdHome />,
   },
   {
-  name: "Premium",
+    name: "Premium",
     path: "/premium",
     icon: <MdOutlineWorkspacePremium />,
   },

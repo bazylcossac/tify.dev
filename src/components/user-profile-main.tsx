@@ -8,13 +8,15 @@ import { useSession } from "next-auth/react";
 import { GetUniqueUserDataType } from "@/types/types";
 import Loading from "./loading";
 import UserStats from "./user-profile-stats";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
   const session = useSession();
-  console.log(user);
+
   const [userData, setUserData] = useState<GetUniqueUserDataType | undefined>(
     user
   );
+
   const [isFollowing, setIsFollowing] = useState<boolean | undefined>(
     !!userData?.followed.find(
       (follow) => follow.followerId === session.data?.userId
@@ -65,12 +67,20 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
           />
         )}
         <div className="flex flex-row justify-between items-center mt-2">
-          <p className="ml-32 font-bold">{userData?.name}</p>
+          <div className="flex items-center gap-1">
+            <p className="ml-32 font-bold">{userData?.name}</p>
+            {userData.premium && (
+              <PiCrownSimpleFill className="text-yellow-400" />
+            )}
+          </div>
           {session.data?.userId !== userData.id && (
             <Button
-              className={cn("px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]", {
-                "bg-neutral-900": isFollowing,
-              })}
+              className={cn(
+                "px-2 text-xs md:px-6 md:text-md rounded-lg bg-blue-600 hover:bg-[#0c0c0c] ",
+                {
+                  "bg-neutral-900": isFollowing,
+                }
+              )}
               onClick={async () => {
                 setIsFollowing((prev) => !prev);
                 setUserData((prev) => {

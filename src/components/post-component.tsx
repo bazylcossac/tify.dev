@@ -14,11 +14,12 @@ import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next-nprogress-bar";
 import PostSkeleton from "./post-skeleton";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const session = useSession();
   const router = useRouter();
-
+  console.log(post);
   const { ref, inView } = useInView();
   const [postLikes, setPostLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(
@@ -69,6 +70,12 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
                   @{post?.User?.name || session?.data?.user?.name}
                 </Link>
               </p>
+              <div>
+                {post?.User?.premium && (
+                  <PiCrownSimpleFill className="text-yellow-400 ml-1" />
+                )}
+              </div>
+
               <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
                 {new Date(post?.createdAt).toLocaleDateString()}
               </p>

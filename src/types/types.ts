@@ -19,7 +19,7 @@ export type CommentsType = {
   postId: string;
   // media: MediaType[];
   // post: PostType;
-  // user: UserType;
+  user: UserType;
   userId: string;
   userEmail: string;
   userImage: string;
@@ -98,6 +98,7 @@ export type GetUniqueUserDataType = {
   name: string;
   backgroundImage: string | null;
   email: string;
+  premium: boolean;
 };
 
 export type GetCommentsType = {

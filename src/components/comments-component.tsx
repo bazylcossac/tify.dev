@@ -14,6 +14,7 @@ import { Textarea } from "./ui/textarea";
 import Loading from "./loading";
 import formatText from "@/lib/formatText";
 import { useQuery } from "@tanstack/react-query";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 function CommentsClient({ postId }: { postId: string }) {
   const session = useSession();
@@ -32,6 +33,7 @@ function CommentsClient({ postId }: { postId: string }) {
     queryFn: () => getComments(postId),
     staleTime: 0,
   });
+  console.log(data);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -150,10 +152,13 @@ function CommentsClient({ postId }: { postId: string }) {
                 className="rounded-full w-6 h-6"
               />
 
-              <div className="flex items-center">
+              <div className="flex items-center gap-1">
                 <p className="mt-auto text-sm font-semibold">
                   @{comment.userName}
                 </p>
+                {comment?.user?.premium && (
+                  <PiCrownSimpleFill className="text-yellow-400 " />
+                )}
               </div>
               <div>
                 <p className="md:text-[11px] text-[9px]">
