@@ -29,6 +29,10 @@ function UsersPosts({ userId }: { userId: string | string[] }) {
     return data?.pages?.flatMap((page) => page.posts) || [];
   }, [data]);
 
+  const isThereAnyPosts = useMemo(() => {
+    return memoizedPosts?.some((post) => Object.entries(post).length !== 0);
+  }, [memoizedPosts]);
+
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
@@ -60,6 +64,10 @@ function UsersPosts({ userId }: { userId: string | string[] }) {
         </Button>
       </div>
     );
+
+  if (!isThereAnyPosts) {
+    return <p className=" text-center text-sm mt-10 text-white/30">No posts</p>;
+  }
   return (
     <div>
       <ul>

@@ -11,6 +11,7 @@ import UserStats from "./user-profile-stats";
 
 function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
   const session = useSession();
+  console.log(user);
   const [userData, setUserData] = useState<GetUniqueUserDataType | undefined>(
     user
   );

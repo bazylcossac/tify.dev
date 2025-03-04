@@ -19,6 +19,7 @@ model User {
   LikeUsers       LikeUsers[]
   follower        Followers[] @relation("follower")
   followed        Followers[] @relation("followed")
+  premium         Boolean     @default(false)
 }
 
 model Followers {

@@ -22,6 +22,8 @@ async function Page({ params }: { params: { user: string } }) {
     );
   }
 
+  
+
   return (
     <main className="w-full h-full mt-4 md:mt-10 px-2 flex flex-col">
       <section className="w-full ">

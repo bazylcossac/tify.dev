@@ -29,6 +29,7 @@ export default async function RootLayout({
     const userValidate = userSchema.safeParse(currentUser);
 
     if (!userValidate.success) {
+      console.log(userValidate);
       throw new Error("Failed to validate user");
     }
     const { name, email, image } = userValidate.data;
