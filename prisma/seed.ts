@@ -9,6 +9,7 @@ const userData: Prisma.UserCreateInput = {
   image:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQHStJewkkY66Yb4j4H4OTaNlzscE2kqwnMA&s",
   email: "example@gmail.com",
+  premium: true,
   posts: {
     create: [
       {
