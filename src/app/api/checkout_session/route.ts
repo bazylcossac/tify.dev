@@ -24,8 +24,8 @@ export async function POST(req: Request) {
         },
       ],
       mode: "payment",
-      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/success`,
+      success_url: `${origin}/premium?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/premium`,
     });
 
     return NextResponse.redirect(session.url!, 303);
