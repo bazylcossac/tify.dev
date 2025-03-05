@@ -10,7 +10,7 @@ import Image from "next/image";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { IoMdHome, IoIosPeople } from "react-icons/io";
 
-import { IoSearchSharp, IoPersonSharp } from "react-icons/io5";
+import { IoPersonSharp } from "react-icons/io5";
 
 import { useSession } from "next-auth/react";
 
@@ -30,6 +30,7 @@ import {
 import Logo from "../logo";
 import { Skeleton } from "../ui/skeleton";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 const routes = [
   {
@@ -43,8 +44,8 @@ const routes = [
     icon: <MdOutlineWorkspacePremium />,
   },
   {
-    name: "Friends",
-    path: "/friends",
+    name: "Chat",
+    path: "/chat",
     icon: <IoIosPeople />,
   },
   {
@@ -117,8 +118,11 @@ export function MobileSidebar() {
                 className="rounded-full w-6 h-6"
                 priority={true}
               />
-              <div>
+              <div className="flex items-center gap-1">
                 <p className="mt-auto text-xs font-bold">@{user?.name}</p>
+                {session.data?.premiumStatus && (
+                  <PiCrownSimpleFill className="text-yellow-400" />
+                )}
               </div>
               <p>
                 {" "}

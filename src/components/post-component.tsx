@@ -14,11 +14,12 @@ import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next-nprogress-bar";
 import PostSkeleton from "./post-skeleton";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const session = useSession();
   const router = useRouter();
-
+  console.log(post);
   const { ref, inView } = useInView();
   const [postLikes, setPostLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(
@@ -58,17 +59,20 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
               />
             </Link>
             <div className="flex flex-row items-center">
-              <p
-                className="mt-auto md:text-md text-sm font-semibold"
+              <div
+                className="mt-auto md:text-md text-sm font-semibold flex items-center gap-1"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Link
                   href={`/profile/${post.userId || session?.data?.userId}`}
                   className="hover:text-white/60 transition"
                 >
-                  @{post?.User?.name || session?.data?.user?.name}
+                  @{post?.User?.name}
                 </Link>
-              </p>
+                {post?.User?.premium && (
+                  <PiCrownSimpleFill className="text-yellow-400" />
+                )}
+              </div>
               <p className="md:text-[11px] text-[11px] text-white/30 mx-2">
                 {new Date(post?.createdAt).toLocaleDateString()}
               </p>

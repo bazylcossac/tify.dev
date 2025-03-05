@@ -13,7 +13,7 @@ import { IoPersonSharp } from "react-icons/io5";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import AddPostDialog from "./add-post-dialog";
 import { useSession } from "next-auth/react";
-
+import { PiCrownSimpleFill } from "react-icons/pi";
 import { Skeleton } from "./ui/skeleton";
 
 import { Button } from "@/components/ui/button";
@@ -26,13 +26,13 @@ const routes = [
     icon: <IoMdHome />,
   },
   {
-  name: "Premium",
+    name: "Premium",
     path: "/premium",
     icon: <MdOutlineWorkspacePremium />,
   },
   {
-    name: "Friends",
-    path: "/friends",
+    name: "Chat",
+    path: "/chat",
     icon: <IoIosPeople />,
   },
   {
@@ -94,8 +94,11 @@ function HomeSidebar() {
             alt="user image"
             className="rounded-full size-6"
           />
-          <div>
+          <div className="flex items-center gap-1">
             <p className="mt-auto text-xs font-bold">@{user?.name}</p>
+            {session.data?.premiumStatus && (
+              <PiCrownSimpleFill className="text-yellow-400" />
+            )}
           </div>
           <p>
             {" "}

@@ -8,8 +8,13 @@ const tiers = [
     price_id: process.env.STRIPE_PRODUCT_SUPPORT_PRICE_ID,
     href: "#",
     price: "50 ZŁ",
-    description: "The perfect option if you're just want to support our app",
-    features: ["You give me money", "I earn 50 ZŁ", "You spend 50 ZŁ"],
+    description: "The perfect option if you just want to support our app",
+    features: [
+      "You earn PREMIUM rank",
+      "You give me money",
+      "I earn 50 ZŁ",
+      "You spend 50 ZŁ",
+    ],
     featured: false,
   },
   {
@@ -32,7 +37,7 @@ const tiers = [
   },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 

@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import AddPostDialog from "@/components/add-post-dialog";
 import UserStats from "@/components/user-profile-stats";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 async function Page() {
   const session = await auth();
@@ -60,7 +61,12 @@ async function Page() {
               />
             )}
             <div className="flex flex-row justify-between items-center mt-2">
-              <p className="ml-32 font-bold">{user?.name}</p>
+              <div className="flex items-center gap-1">
+                <p className="ml-32 font-bold">{user?.name}</p>
+                {user.premium && (
+                  <PiCrownSimpleFill className="text-yellow-400" />
+                )}
+              </div>
               <span className="cursor-pointer ">
                 {session.userId && (
                   <ProfileEditDialog userId={session.userId} />

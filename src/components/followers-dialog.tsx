@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +12,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
 import Link from "next/link";
+import Loading from "./loading";
+import { PiCrownSimpleFill } from "react-icons/pi";
 
 export function FollowersDialog({
   user,
@@ -37,6 +38,7 @@ export function FollowersDialog({
   if (error) {
     return <p>error</p>;
   }
+
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -63,6 +65,9 @@ export function FollowersDialog({
                 className="size-8 rounded-full"
               />
               <p className="text-sm font-bold">{user?.name}</p>
+              {user.premium && (
+                <PiCrownSimpleFill className="text-yellow-400" />
+              )}
             </Link>
           </div>
         ))}

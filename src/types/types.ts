@@ -98,6 +98,7 @@ export type GetUniqueUserDataType = {
   name: string;
   backgroundImage: string | null;
   email: string;
+  premium: boolean;
 };
 
 export type GetCommentsType = {
