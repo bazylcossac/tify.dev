@@ -19,7 +19,7 @@ import { PiCrownSimpleFill } from "react-icons/pi";
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const session = useSession();
   const router = useRouter();
-  console.log(post);
+
   const { ref, inView } = useInView();
   const [postLikes, setPostLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(

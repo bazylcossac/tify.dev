@@ -1,8 +1,7 @@
-"use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 import React, { Suspense } from "react";
 
 import Logo from "./logo";
@@ -12,12 +11,13 @@ import { IoMdHome, IoIosPeople } from "react-icons/io";
 import { IoPersonSharp } from "react-icons/io5";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import AddPostDialog from "./add-post-dialog";
-import { useSession } from "next-auth/react";
+
 import { PiCrownSimpleFill } from "react-icons/pi";
 import { Skeleton } from "./ui/skeleton";
 
 import { Button } from "@/components/ui/button";
 import { logOut } from "@/actions/actions";
+import { auth } from "@/auth";
 
 const routes = [
   {
@@ -42,11 +42,12 @@ const routes = [
   },
 ];
 
-function HomeSidebar() {
-  const activePath = usePathname();
-  const session = useSession();
+async function HomeSidebar() {
+  // const pathname = usePathname();
+  // const session = useSession();
+  const session = await auth();
+  const user = session?.user;
 
-  const user = session?.data?.user;
   if (!user) {
     return "";
   }
@@ -63,12 +64,12 @@ function HomeSidebar() {
               <Link href={route.path} key={route.path}>
                 <li
                   className={cn(
-                    "p-4 text-white/60 text-md rounded-lg font-bold transition flex items-center gap-2",
-                    {
-                      "text-bold text-white":
-                        `/${activePath?.slice(1).split("/")[0]}` ===
-                        `/${route.path?.slice(1).split("/")[0]}`,
-                    }
+                    "p-4 text-white/70 text-md rounded-lg font-bold transition flex items-center gap-2 active:text-white focus:text-white "
+                    // {
+                    //   "text-bold text-white":
+                    //     `/${activePath?.slice(1).split("/")[0]}` ===
+                    //     `/${route.path?.slice(1).split("/")[0]}`,
+                    // }
                   )}
                 >
                   <p className="text-2xl">{route.icon}</p>
@@ -79,9 +80,9 @@ function HomeSidebar() {
           </ul>
         </div>
         <div className="mx-auto w-full flex items-center justify-center">
-          <Suspense fallback={<div>loading...</div>}>
+          {/* <Suspense fallback={<div>loading...</div>}>
             <AddPostDialog />
-          </Suspense>
+          </Suspense> */}
         </div>
       </div>
       {user && user?.image ? (
@@ -96,7 +97,7 @@ function HomeSidebar() {
           />
           <div className="flex items-center gap-1">
             <p className="mt-auto text-xs font-bold">@{user?.name}</p>
-            {session.data?.premiumStatus && (
+            {session.premiumStatus && (
               <PiCrownSimpleFill className="text-yellow-400" />
             )}
           </div>
