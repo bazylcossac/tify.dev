@@ -80,9 +80,9 @@ async function HomeSidebar() {
           </ul>
         </div>
         <div className="mx-auto w-full flex items-center justify-center">
-          {/* <Suspense fallback={<div>loading...</div>}>
+          <Suspense fallback={<div>loading...</div>}>
             <AddPostDialog />
-          </Suspense> */}
+          </Suspense>
         </div>
       </div>
       {user && user?.image ? (
