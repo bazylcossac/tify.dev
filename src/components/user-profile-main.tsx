@@ -87,7 +87,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
                     : [
                         ...prev.followed,
                         {
-                          id: "noweId",
+                          id: session.data?.userId,
                           followerId: session.data?.userId || "",
                           followedId: prev.id,
                         },
@@ -95,7 +95,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
 
                   return { ...prev, followed: updatedFollowed };
                 });
-                followUser(userData.id);
+                await followUser(userData.id);
               }}
             >
               {isFollowing ? "Following" : "Follow"}

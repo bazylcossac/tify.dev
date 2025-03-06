@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
 import Link from "next/link";
-import Loading from "./loading";
+
 import { PiCrownSimpleFill } from "react-icons/pi";
 
 export function FollowersDialog({
@@ -25,13 +25,15 @@ export function FollowersDialog({
   children: React.ReactNode;
 }) {
   const { getUserFollowsData } = useUserContext();
+  console.log("user");
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: [type],
+  const { data, error } = useQuery({
+    queryKey: [user[type]],
     queryFn: () => getUserFollowsData(user[type], type),
     retry: 0,
     staleTime: 0,
     gcTime: 0,
+    refetchOnMount: true,
   });
   console.log(data);
 
@@ -49,7 +51,6 @@ export function FollowersDialog({
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        {/* CONTENT */}
 
         {data?.map((user) => (
           <div key={user?.id}>

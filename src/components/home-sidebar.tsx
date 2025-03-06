@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-// import { usePathname } from "next/navigation";
 import React, { Suspense } from "react";
 
 import Logo from "./logo";
