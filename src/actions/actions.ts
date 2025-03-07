@@ -404,6 +404,26 @@ export async function getUserFollows(userIds: string[]) {
 }
 
 // PUSHER ACTIONS
+export async function getNLastMessagesFromDB(n: number) {
+  return await prisma.message.findMany({
+    take: n,
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+}
+
+export async function sendMessageToDB(data: messageType) {
+  await prisma.message.create({
+    data: {
+      message: data.message,
+      userName: data.userName,
+      userImage: data.userImage,
+      userPremium: data.userPremium,
+      userId: data.userId,
+    },
+  });
+}
 
 export async function sendMessage(data: messageType) {
   /// validation

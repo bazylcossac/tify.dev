@@ -11,22 +11,20 @@ import {
   updateUserBackgroundImage,
   getPostById,
   getUserFollows,
+  getNLastMessagesFromDB,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
 import {
   CommentsType,
   DataType,
   GetUniqueUserDataType,
+  messageType,
   PagesType,
   PostType,
   UserFollowerIdsFn,
 } from "@/types/types";
 
-import {
-  InfiniteData,
-  useInfiniteQuery,
-  useMutation,
-} from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -70,6 +68,7 @@ type ContextTypes = {
     userIds: string[],
     type: "follower" | "followed"
   ) => Promise<[]>;
+  getNMessages: (n: number) => Promise<messageType[]>;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);
@@ -225,6 +224,10 @@ export default function UserContextProvider({
     return await getUserFollows(ids);
   }
 
+  async function getNMessages(n: number) {
+    return await getNLastMessagesFromDB(n);
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -235,7 +238,7 @@ export default function UserContextProvider({
         likePostDB,
         getPostByPostId,
         data: postData,
-
+        getNMessages,
         userPosts,
         getUniqueUserData,
         refetch,

@@ -80,9 +80,20 @@ model Comments {
   createdAt        DateTime @default(now())
 }
 
+// DODAC TE OPCJE ZEBY NIE WYKONUWAC ZAPYRTANIA PO DANE USERA
 model Message {
-  messageId String @id @default(uuid())
-  message   String
-  user      User   @relation(fields: [userId], references: [id])
-  userId    String
+  messageId   String   @id @default(uuid())
+  userId      String
+  userName    String
+  userImage   String
+  userPremium Boolean
+  message     String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
 }
+
+// userId: session.data?.userId,
+// userName: session.data?.user?.name,
+// userImage: session.data?.user?.image,
+// userPremium: session.data?.premiumStatus,
+// message: message,

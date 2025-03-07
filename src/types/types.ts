@@ -115,6 +115,7 @@ export type GetCommentsType = {
 }[];
 
 export type messageType = {
+  userId: string;
   userName: string;
   userImage: string;
   userPremium: boolean;

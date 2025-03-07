@@ -2,56 +2,86 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { pusherClient } from "@/lib/pusher";
-import { sendMessage } from "@/actions/actions";
+import { sendMessage, sendMessageToDB } from "@/actions/actions";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { messageType } from "@/types/types";
 import Message from "@/components/message-component";
+import { useUserContext } from "@/contexts/userContextProvider";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "@/components/loading";
 
 function Page() {
   const session = useSession();
   if (session.status === "unauthenticated") {
     redirect("/");
   }
+  const { getNMessages } = useUserContext();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["messages"],
+    queryFn: () => getNMessages(20),
+    staleTime: 0,
+    gcTime: 0,
+  });
+
   const [userMessage, setUserMessage] = useState<string>("");
   const [allMessages, setAllMessages] = useState<messageType[] | []>([]);
+  const lastElement = useRef(null);
+
+  useEffect(() => {
+    setAllMessages(data);
+  }, [data]);
 
   useEffect(() => {
     pusherClient.subscribe("chat");
 
     pusherClient.bind("message", (data) => {
+      console.log(data);
       setAllMessages((prev) => [...prev, data.data]);
     });
     return () => {
       pusherClient.unsubscribe("chat");
     };
   }, []);
-  console.log(allMessages);
+
+  useEffect(() => {
+    lastElement?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [allMessages]);
+
   const sendMessageAction = async (formData: FormData) => {
-    
     const formatedData = Object.fromEntries(formData);
     /// validation
     const message = formatedData.userMessage as string;
     const messageObject = {
-      userName: session?.data?.user?.name,
-      userImage: session?.data?.user?.image,
+      userId: session.data?.userId,
+      userName: session.data?.user?.name,
+      userImage: session.data?.user?.image,
       userPremium: session.data?.premiumStatus,
       message: message,
     };
     await sendMessage(messageObject);
+    await sendMessageToDB(messageObject);
     setUserMessage("");
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="max-w-[1200px] h-full ">
       <div>
-        <ul>
-          {allMessages.map((message: messageType, i) => {
-            return <Message key={i} message={message} />;
-          })}
+        <ul className="mb-16">
+          {!error &&
+            allMessages?.map((message: messageType, i) => {
+              return <Message key={i} message={message} />;
+            })}
+          <div ref={lastElement} className="h-[5px]"></div>
         </ul>
+        {error && <div>Failed to load messages</div>}
       </div>
       <div className="flex justify-center">
         <form
