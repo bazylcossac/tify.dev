@@ -120,5 +120,6 @@ export type messageType = {
   userImage: string;
   userPremium: boolean;
   message: string;
-  createdAt: Date
+  createdAt: Date;
+  color: string;
 };

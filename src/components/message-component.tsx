@@ -3,8 +3,12 @@ import { messageType } from "@/types/types";
 import Image from "next/image";
 import { PiCrownSimpleFill } from "react-icons/pi";
 import Link from "next/link";
+import formatText from "@/lib/formatText";
+
+import { cn } from "@/lib/utils";
 
 function Message({ message }: { message: messageType }) {
+  console.log(message);
   return (
     <div className="p-2">
       <div className=" ">
@@ -20,7 +24,12 @@ function Message({ message }: { message: messageType }) {
             className="rounded-full h-5 w-5 hover:opacity-50 transition"
           />
           <div className="flex items-center gap-1">
-            <p className="font-bold text-sm hover:text-white/50 transition">
+            <p
+              className={cn(
+                "font-bold text-sm hover:text-white/50 transition ",
+                message?.color || "text-gray-500"
+              )}
+            >
               @{message.userName}
             </p>
 
@@ -33,7 +42,7 @@ function Message({ message }: { message: messageType }) {
           </div>
         </Link>
       </div>
-      <p className="mt-2">{message.message}</p>
+      <div className="mt-2">{formatText(message.message)}</div>
     </div>
   );
 }

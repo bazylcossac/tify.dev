@@ -44,7 +44,7 @@ const routes = [
     icon: <MdOutlineWorkspacePremium />,
   },
   {
-    name: "Chat",
+    name: "Live Chat",
     path: "/chat",
     icon: <IoIosPeople />,
   },
