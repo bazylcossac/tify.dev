@@ -408,7 +408,7 @@ export async function getNLastMessagesFromDB(n: number) {
   return await prisma.message.findMany({
     take: n,
     orderBy: {
-      createdAt: "asc",
+      createdAt: "desc",
     },
   });
 }

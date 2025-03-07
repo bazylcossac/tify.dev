@@ -22,17 +22,19 @@ function Page() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["messages"],
-    queryFn: () => getNMessages(20),
+    queryFn: async () => await getNMessages(20),
     staleTime: 0,
     gcTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const [userMessage, setUserMessage] = useState<string>("");
-  const [allMessages, setAllMessages] = useState<messageType[] | []>([]);
+  const [allMessages, setAllMessages] = useState<messageType[] | undefined>([]);
   const lastElement = useRef(null);
-
+  console.log(allMessages);
   useEffect(() => {
-    setAllMessages(data);
+    setAllMessages(data?.reverse());
   }, [data]);
 
   useEffect(() => {
@@ -61,6 +63,7 @@ function Page() {
       userImage: session.data?.user?.image,
       userPremium: session.data?.premiumStatus,
       message: message,
+      createdAt: Date.now(),
     };
     await sendMessage(messageObject);
     await sendMessageToDB(messageObject);
@@ -74,7 +77,7 @@ function Page() {
   return (
     <div className="max-w-[1200px] h-full ">
       <div>
-        <ul className="mb-16">
+        <ul className="mt-24">
           {!error &&
             allMessages?.map((message: messageType, i) => {
               return <Message key={i} message={message} />;

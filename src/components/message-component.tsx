@@ -7,10 +7,10 @@ import Link from "next/link";
 function Message({ message }: { message: messageType }) {
   return (
     <div className="p-2">
-      <div className="">
+      <div className=" ">
         <Link
           href={`/profile/${message.userId}`}
-          className="flex items-center gap-2"
+          className="inline-flex items-center gap-2 "
         >
           <Image
             src={message.userImage}
@@ -27,6 +27,9 @@ function Message({ message }: { message: messageType }) {
             {message.userPremium && (
               <PiCrownSimpleFill className="text-yellow-400" />
             )}
+            <p className="text-xs">
+              {new Date(message.createdAt).toLocaleTimeString()}
+            </p>
           </div>
         </Link>
       </div>
