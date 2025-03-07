@@ -113,3 +113,10 @@ export type GetCommentsType = {
   userEmail: string;
   userImage: string;
 }[];
+
+export type messageType = {
+  userName: string;
+  userImage: string;
+  userPremium: boolean;
+  message: string;
+};

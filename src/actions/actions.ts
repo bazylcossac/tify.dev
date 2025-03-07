@@ -14,6 +14,7 @@ import { prisma } from "@/lib/db";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { commentSchema, postSchema, userSchema } from "@/lib/zod-schemas";
 import { pusherServer } from "@/lib/pusher";
+import { messageType } from "@/types/types";
 
 const generateFileName = (bytes = 32) => {
   return crypto.randomBytes(bytes).toString("hex");
@@ -404,10 +405,8 @@ export async function getUserFollows(userIds: string[]) {
 
 // PUSHER ACTIONS
 
-export async function sendMessage(formData: FormData) {
-
+export async function sendMessage(data: messageType) {
+  /// validation
   /// add messages to db
-  const formatedData = Object.fromEntries(formData);
-  const message = formatedData.userMessage;
-  pusherServer.trigger("chat", "message", { message });
+  pusherServer.trigger("chat", "message", { data });
 }
