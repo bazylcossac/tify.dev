@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { pusherClient } from "@/lib/pusher";
 import { sendMessage, sendMessageToDB } from "@/actions/actions";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { messageType } from "@/types/types";
@@ -12,8 +12,8 @@ import Message from "@/components/message-component";
 import { useUserContext } from "@/contexts/userContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/loading";
-import { Textarea } from "@/components/ui/textarea";
 import { nicknameColors } from "@/lib/constants";
+import { toast } from "sonner";
 const color = nicknameColors[Math.floor(Math.random() * nicknameColors.length)];
 function Page() {
   const session = useSession();
@@ -22,18 +22,20 @@ function Page() {
   }
   const [userMessage, setUserMessage] = useState<string>("");
   const [allMessages, setAllMessages] = useState<messageType[] | undefined>([]);
-  const lastElement = useRef(null);
+  const lastElement = useRef<HTMLDivElement>(null);
 
   const { getNMessages } = useUserContext();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["messages"],
-    queryFn: async () => await getNMessages(20),
+    queryFn: async () => await getNMessages(30),
     staleTime: 0,
     gcTime: 0,
   });
 
   useEffect(() => {
+    if (data) {
+    }
     setAllMessages(data?.reverse());
   }, [data]);
 
@@ -41,7 +43,11 @@ function Page() {
     pusherClient.subscribe("chat");
 
     pusherClient.bind("message", (data: { data: messageType }) => {
-      setAllMessages((prev) => [...prev, data.data]);
+      if (data) {
+      }
+      setAllMessages((prev) => [
+        ...(prev ? [...prev, data.data] : [data.data]),
+      ]);
     });
     return () => {
       pusherClient.unsubscribe("chat");
@@ -54,13 +60,17 @@ function Page() {
 
   const sendMessageAction = async (formData: FormData) => {
     const formatedData = Object.fromEntries(formData);
-    /// validation
+    if (typeof formatedData.userMessage !== "string") {
+      toast("WHOOPSY! You can only send messages here!");
+      setUserMessage("");
+      return;
+    }
     const message = formatedData.userMessage as string;
     const messageObject = {
-      userId: session.data?.userId,
-      userName: session.data?.user?.name,
-      userImage: session.data?.user?.image,
-      userPremium: session.data?.premiumStatus,
+      userId: session.data?.userId as string,
+      userName: session.data?.user?.name as string,
+      userImage: session.data?.user?.image as string,
+      userPremium: session.data?.premiumStatus as boolean,
       message: message,
       color: color,
       createdAt: Date.now(),
@@ -91,12 +101,12 @@ function Page() {
           className="flex flex-row items-center gap-2 fixed bottom-5 w-full px-4 md:w-7/12"
           action={sendMessageAction}
         >
-          <Textarea
+          <Input
             placeholder="Say something nice!"
             value={userMessage}
             name="userMessage"
             onChange={(e) => setUserMessage(e.target.value)}
-            className="bg-black resize-none border border-white/30 h-10"
+            className="bg-black border border-white/30 h-10"
           />
           <Button
             className="bg-blue-500"

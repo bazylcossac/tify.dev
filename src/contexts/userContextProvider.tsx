@@ -18,10 +18,12 @@ import {
   CommentsType,
   DataType,
   GetUniqueUserDataType,
+  InputUserFollowsData,
   messageType,
   PagesType,
   PostType,
   UserFollowerIdsFn,
+  UserFollowsDataOutput,
 } from "@/types/types";
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
@@ -34,7 +36,7 @@ type ContextTypes = {
     postText: string,
     fileType: string,
     mediaUrl: string | undefined
-  ) => void;
+  ) => Promise<{ message: string }>;
   addCommentToPostToDB: (
     postText: string,
     fileType: string,
@@ -65,9 +67,9 @@ type ContextTypes = {
   ) => Promise<UserFollowerIdsFn | undefined>;
   getPostByPostId: (postId: string) => Promise<PostType | undefined>;
   getUserFollowsData: (
-    userIds: string[],
+    userIds: InputUserFollowsData[],
     type: "follower" | "followed"
-  ) => Promise<[]>;
+  ) => Promise<UserFollowsDataOutput[]>;
   getNMessages: (n: number) => Promise<messageType[]>;
 };
 
@@ -214,7 +216,7 @@ export default function UserContextProvider({
   }
 
   async function getUserFollowsData(
-    userIds: string[],
+    userIds: { id: string; followerId: string; followedId: string },
     type: "followed" | "follower"
   ) {
     const ids = userIds.map((id) =>

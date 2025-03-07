@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useUserContext } from "@/contexts/userContextProvider";
+import { GetUniqueUserDataType } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
@@ -20,12 +21,13 @@ export function FollowersDialog({
   type,
   children,
 }: {
-  user: any;
+  user: GetUniqueUserDataType;
   type: "followed" | "follower";
   children: React.ReactNode;
 }) {
   const { getUserFollowsData } = useUserContext();
   console.log("user");
+  console.log(user[type]);
 
   const { data, error } = useQuery({
     queryKey: [user[type]],

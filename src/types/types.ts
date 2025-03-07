@@ -1,6 +1,5 @@
 import type { User } from "@prisma/client";
 
-/// DATA TYPES
 export type UserType = User;
 
 export type MediaType = {
@@ -17,9 +16,6 @@ export type CommentsType = {
   commentMediaType: string;
   commentMediaUrl: string;
   postId: string;
-  // media: MediaType[];
-  // post: PostType;
-  // user: UserType;
   userId: string;
   userEmail: string;
   userImage: string;
@@ -120,6 +116,21 @@ export type messageType = {
   userImage: string;
   userPremium: boolean;
   message: string;
-  createdAt: Date;
+  createdAt: number;
   color: string;
+};
+
+export type InputUserFollowsData = {
+  id: string;
+  followedId: string;
+  followerId: string;
+};
+
+export type UserFollowsDataOutput = {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  backgroundImage: string;
+  premium: boolean;
 };

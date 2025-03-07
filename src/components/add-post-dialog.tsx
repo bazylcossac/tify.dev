@@ -34,9 +34,6 @@ function AddPostDialog() {
 
   const session = useSession();
 
-  // if (!session?.data?.user) {
-  //   redirect("/");
-  // }
   const user = session?.data?.user;
   if (!user) {
     return (
