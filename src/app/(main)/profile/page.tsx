@@ -83,7 +83,7 @@ async function Page() {
         </div>
       </Suspense>
 
-      <section>
+      <section className="mt-4">
         <CurrentUserProfilePosts />
       </section>
     </main>

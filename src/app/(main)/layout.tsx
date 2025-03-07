@@ -30,7 +30,9 @@ function Layout({ children }: { children: React.ReactNode }) {
 
             {/* MOBILE SIDEBAR */}
             <div className="flex flex-row justify-between md:hidden py-2 sticky top-0 self-start bg-black w-full border-b-[.5px] border-neutral-700 z-10">
-              <div>{/* <MobileSidebar /> */}</div>
+              <div>
+                <MobileSidebar />
+              </div>
               <div className="mr-4">
                 <Logo />
               </div>

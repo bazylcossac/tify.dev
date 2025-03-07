@@ -30,7 +30,7 @@ async function Page({ params }: { params: { user: string } }) {
         </div>
       </section>
 
-      <section>
+      <section className="mt-4">
         <UsersPosts userId={userId.user} />
       </section>
     </main>

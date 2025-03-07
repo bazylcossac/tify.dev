@@ -93,8 +93,8 @@ export default function UserContextProvider({
     initialPageParam: 0,
     staleTime: 0,
     gcTime: 0,
-    refetchOnWindowFocus: false,
-    refetchInterval: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
   useEffect(() => {
