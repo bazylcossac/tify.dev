@@ -108,7 +108,7 @@ function Page() {
             value={userMessage}
             name="userMessage"
             onChange={(e) => setUserMessage(e.target.value)}
-            className="bg-black border border-white/30 h-10"
+            className="bg-black border border-white/30 h-10 placeholder:text-white/50"
           />
           <Button
             className="bg-blue-500"

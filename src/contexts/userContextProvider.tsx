@@ -54,7 +54,6 @@ type ContextTypes = {
   fetchNextPage: () => Promise<
     InfiniteQueryObserverResult<InfiniteData<unknown, unknown>, Error>
   >;
-
   error: Error | null;
   getUniqueUserData: (
     userId: string | string[] | undefined
