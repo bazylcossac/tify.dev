@@ -21,7 +21,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const router = useRouter();
 
   const { ref, inView } = useInView();
-  const [postLikes, setPostLikes] = useState(post.likes);
+  const [postLikes, setPostLikes] = useState(post?.likes);
   const [isLiked, setIsLiked] = useState(
     post?.LikeUsers?.some(
       (user) => user?.likedPostUserId === session.data?.userId

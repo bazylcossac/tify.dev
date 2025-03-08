@@ -161,8 +161,8 @@ export default function UserContextProvider({
                     i === postIndex
                       ? {
                           ...p,
-                          likes: postLikes!.likes,
-                          LikeUsers: postLikes!.LikeUsers.map((user) => ({
+                          likes: postLikes?.likes,
+                          LikeUsers: postLikes?.LikeUsers.map((user) => ({
                             ...user,
                             likedPostId: user.likedPostId || "",
                           })),
