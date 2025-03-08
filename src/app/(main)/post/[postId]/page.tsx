@@ -99,7 +99,6 @@ function Page() {
         >
           {formatText(data.postText)}
         </div>
-
         <div className="justify-center flex w-full">
           {data?.media && data?.media[0].type.startsWith("image") && (
             <>
