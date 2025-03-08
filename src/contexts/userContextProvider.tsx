@@ -114,7 +114,7 @@ export default function UserContextProvider({
   const userPosts = useMemo(() => {
     return postData?.pages?.map((posts: PagesType) => ({
       ...posts,
-      posts: posts?.posts.filter(
+      posts: posts?.posts?.filter(
         (post: PostType) => post.userId === session.data?.userId
       ),
     }));
