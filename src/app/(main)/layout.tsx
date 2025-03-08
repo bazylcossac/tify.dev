@@ -8,14 +8,14 @@ import UserContextProvider from "@/contexts/userContextProvider";
 
 import React, { Suspense } from "react";
 import QueryClientWrapper from "@/components/query-client-wrapper";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-function Layout({ children }: { children: React.ReactNode }) {
-  // const queryClient = new QueryClient();
-  // const session = useSession();
-
-  // if (session.status === "unauthenticated") {
-  //   redirect("/");
-  // }
+async function Layout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (!session) {
+    redirect("/");
+  }
 
   return (
     <>
