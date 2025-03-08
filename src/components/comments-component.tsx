@@ -169,11 +169,11 @@ function CommentsClient({ postId }: { postId: string }) {
               comment.commentMediaType.includes("image") ? (
                 <Image
                   src={comment.commentMediaUrl}
-                  width={400}
                   quality={100}
-                  height={560}
+                  width={1000}
+                  height={1000}
                   alt="user image"
-                  className="rounded-lg "
+                  className="rounded-lg w-full "
                 />
               ) : comment.commentMediaType.includes("video") ? (
                 <video

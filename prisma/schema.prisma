@@ -10,10 +10,10 @@ datasource db {
 model User {
   id              String      @id @default(uuid())
   name            String
-  username        String?
+  username        String      @default("")
   email           String      @unique
   image           String
-  backgroundImage String?
+  backgroundImage String      @default("")
   posts           Post[]
   Comments        Comments[]
   LikeUsers       LikeUsers[]
@@ -91,9 +91,3 @@ model Message {
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
 }
-
-// userId: session.data?.userId,
-// userName: session.data?.user?.name,
-// userImage: session.data?.user?.image,
-// userPremium: session.data?.premiumStatus,
-// message: message,

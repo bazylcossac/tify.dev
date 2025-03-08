@@ -99,13 +99,21 @@ export async function getUserPosts({
   userId,
 }: {
   pageParam: number;
-  userId: string;
+  userId: string | string[] | undefined;
 }) {
-  console.log("fetching");
+  if (!userId) {
+    return;
+  }
+  let user;
+  if (Array.isArray(userId)) {
+    user = userId[0];
+  } else {
+    user = userId;
+  }
 
   const pageSize = 10;
   const posts = await prisma.post.findMany({
-    where: { userId: userId },
+    where: { userId: user },
     take: pageSize,
     skip: pageParam * pageSize,
     include: {

@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next-nprogress-bar";
-import PostSkeleton from "./post-skeleton";
+
 import { PiCrownSimpleFill } from "react-icons/pi";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
@@ -27,17 +27,13 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
       (user) => user?.likedPostUserId === session.data?.userId
     )
   );
-  const { likePostDB, fetchNextHomePage } = useUserContext();
+  const { likePostDB, fetchNextPage } = useUserContext();
 
   useEffect(() => {
     if (inView) {
-      fetchNextHomePage();
+      fetchNextPage();
     }
-  }, [inView, fetchNextHomePage]);
-
-  if (!post.postText) {
-    return <PostSkeleton />;
-  }
+  }, [inView, fetchNextPage]);
 
   return (
     <div

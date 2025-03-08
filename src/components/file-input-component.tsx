@@ -41,7 +41,8 @@ function FileInputComponent({
     setFileUrl(url);
   }
 
-  function openFileInput() {
+  function openFileInput(e: React.MouseEvent<SVGElement, MouseEvent>) {
+    e.stopPropagation();
     inputFileRef?.current?.click();
   }
 
@@ -49,7 +50,7 @@ function FileInputComponent({
     <>
       {!file && (
         <>
-          <Link2Icon onClick={openFileInput} className="cursor-pointer " />
+          <Link2Icon onClick={openFileInput} className="cursor-pointer" />
           <p className="text-[8px] text-white/50 mt-1">MAX 10MB</p>
         </>
       )}

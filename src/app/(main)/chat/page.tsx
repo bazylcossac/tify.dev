@@ -14,7 +14,9 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/loading";
 import { nicknameColors } from "@/lib/constants";
 import { toast } from "sonner";
+
 const color = nicknameColors[Math.floor(Math.random() * nicknameColors.length)];
+
 function Page() {
   const session = useSession();
   if (session.status === "unauthenticated") {
@@ -87,7 +89,7 @@ function Page() {
   return (
     <div className="max-w-[1200px] h-full ">
       <div>
-        <ul className="mt-20">
+        <ul className="mb-20 ">
           {!error &&
             allMessages?.map((message: messageType, i) => {
               return <Message key={i} message={message} />;

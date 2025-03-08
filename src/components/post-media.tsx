@@ -18,8 +18,8 @@ function PostMedia({
       {type === "image" ? (
         <Image
           src={post.media[0].url}
-          width={1200}
-          height={800}
+          width={2000}
+          height={2000}
           quality={100}
           alt="post image"
           className="rounded-xl border border-white/30 max-h-[500px] hover:opacity-75 object-contain transition hover:cursor-pointer"

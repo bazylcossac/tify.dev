@@ -5,7 +5,7 @@ import { getUserById } from "@/actions/actions";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
-async function Page({ params }: { params: { user: string } }) {
+async function Page({ params }: { params: Promise<{ user: string }> }) {
   const session = await auth();
   const userId = await params;
 

@@ -34,7 +34,7 @@ export type PostType = {
   stars: number;
   updatedAt: Date;
   userId: string;
-  comments: CommentsType[];
+  comments?: CommentsType[];
 };
 
 export type PagesType = {
@@ -48,7 +48,7 @@ export type DataType = {
 
 export type LikeUserType = {
   id: string;
-  likedPostId: string;
+  likedPostId: string | null;
   likedPostUserId: string;
 };
 

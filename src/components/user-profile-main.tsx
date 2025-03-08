@@ -87,7 +87,7 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
                     : [
                         ...prev.followed,
                         {
-                          id: session.data?.userId,
+                          id: session.data?.userId || "",
                           followerId: session.data?.userId || "",
                           followedId: prev.id,
                         },

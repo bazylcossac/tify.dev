@@ -202,13 +202,17 @@ export async function getUserById(userId: string | string[]) {
   });
 }
 export async function getUserFollowers(userId: string) {
-  return await prisma.user.findFirst({
+  const userFollowers = prisma.user.findFirst({
     where: { id: userId },
     include: {
       followed: true,
       follower: true,
     },
   });
+  if (!userFollowers) {
+    return null;
+  }
+  return userFollowers;
 }
 
 export async function followUser(userYouWantToFollow: string) {
@@ -349,11 +353,13 @@ export async function getUserPosts({ pageParam }: { pageParam: number }) {
 }
 
 export async function getPostById(postId: string) {
-  if (!postId) return;
-  return await prisma.post.findUnique({
+  if (!postId) return null;
+  const post = await prisma.post.findUnique({
     where: { postId: postId },
     include: { User: true, LikeUsers: true, media: true },
   });
+
+  return post;
 }
 
 export async function updateUserBackgroundImage(

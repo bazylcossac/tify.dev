@@ -11,7 +11,7 @@ function CurrentUserProfilePosts() {
   const session = useSession();
   const user = session.data?.user;
 
-  const { userPosts, fetchNextHomePage } = useUserContext();
+  const { userPosts, fetchNextPage } = useUserContext();
   if (!user) {
     redirect("/");
   }
@@ -19,9 +19,9 @@ function CurrentUserProfilePosts() {
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView) {
-      fetchNextHomePage();
+      fetchNextPage();
     }
-  }, [inView, fetchNextHomePage]);
+  }, [inView, fetchNextPage]);
 
   return (
     <div>

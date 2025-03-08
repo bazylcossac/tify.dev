@@ -7,7 +7,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { pageParam, userId } = req.query;
-
+  if (!userId) {
+    res.status(404).json("Forbidden");
+  }
   try {
     const data = await getUserPosts({
       pageParam: parseInt(pageParam as string, 10) || 0,

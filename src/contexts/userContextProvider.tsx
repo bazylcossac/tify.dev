@@ -16,7 +16,6 @@ import {
 import { fetchPosts } from "@/lib/utils";
 import {
   CommentsType,
-  DataType,
   GetUniqueUserDataType,
   InputUserFollowsData,
   messageType,
@@ -26,7 +25,11 @@ import {
   UserFollowsDataOutput,
 } from "@/types/types";
 
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  InfiniteQueryObserverResult,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -43,19 +46,19 @@ type ContextTypes = {
     mediaUrl: string,
     postId: string
   ) => void;
-  getComments: (
-    postId: string | string[] | undefined
-  ) => Promise<CommentsType[]>;
-  data: DataType | undefined;
+  getComments: (postId: string) => Promise<CommentsType[]>;
+  data: InfiniteData<PagesType, unknown> | undefined;
   userPosts: PagesType[] | undefined;
   likePostDB: (post: PostType) => void;
   refetch: () => void;
-  fetchNextPage: () => void;
-  fetchNextHomePage: () => void;
+  fetchNextPage: () => Promise<
+    InfiniteQueryObserverResult<InfiniteData<unknown, unknown>, Error>
+  >;
+
   error: Error | null;
   getUniqueUserData: (
     userId: string | string[] | undefined
-  ) => Promise<GetUniqueUserDataType | undefined>;
+  ) => Promise<GetUniqueUserDataType | undefined | null>;
   updateUserBackgroundImg: (
     bgUrl: string,
     bgSize: number,
@@ -64,13 +67,16 @@ type ContextTypes = {
   ) => void;
   getUserFollowersIds: (
     userId: string
-  ) => Promise<UserFollowerIdsFn | undefined>;
+  ) => Promise<UserFollowerIdsFn | undefined | null>;
   getPostByPostId: (postId: string) => Promise<PostType | undefined>;
   getUserFollowsData: (
     userIds: InputUserFollowsData[],
     type: "follower" | "followed"
   ) => Promise<UserFollowsDataOutput[]>;
-  getNMessages: (n: number) => Promise<messageType[]>;
+  getNMessages: (n: number) => Promise<Omit<messageType, "color">[]>;
+  setPostData: React.Dispatch<
+    React.SetStateAction<InfiniteData<PagesType, unknown> | undefined>
+  >;
 };
 
 const UserContext = createContext<ContextTypes | null>(null);
@@ -83,12 +89,7 @@ export default function UserContextProvider({
   const session = useSession();
 
   /// /HOME POSTS
-  const {
-    data,
-    error,
-    fetchNextPage: fetchNextHomePage,
-    refetch,
-  } = useInfiniteQuery({
+  const { data, error, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ["posts"],
     queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam),
     initialPageParam: 0,
@@ -104,7 +105,7 @@ export default function UserContextProvider({
 
   /// MAIN POSTS STATE
   const [postData, setPostData] = useState<
-    InfiniteData<DataType, unknown> | undefined
+    InfiniteData<PagesType, unknown> | undefined
   >(data);
 
   /// CURRENT LOGGED IN USER POSTS
@@ -122,9 +123,7 @@ export default function UserContextProvider({
   /// UNIQUE USER POSTS
   async function getUniqueUserData(userId: string | string[] | undefined) {
     if (!userId) {
-      return {
-        message: "No user id provided!",
-      };
+      return null;
     }
     const userData = await getUserById(userId);
 
@@ -150,25 +149,31 @@ export default function UserContextProvider({
         (p: PostType) => p.postId === currentPost?.postId
       );
 
-      setPostData((prev) => ({
-        ...prev,
-        pages: prev?.pages.map((page, index) =>
-          index === pageIndex
-            ? {
-                ...page,
-                posts: page.posts.map((p: PostType, i: number) =>
-                  i === postIndex
-                    ? {
-                        ...p,
-                        likes: postLikes.likes,
-                        LikeUsers: postLikes.LikeUsers,
-                      }
-                    : p
-                ),
-              }
-            : page
-        ),
-      }));
+      setPostData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          pages: prev.pages.map((page, index) =>
+            index === pageIndex
+              ? {
+                  ...page,
+                  posts: page.posts.map((p: PostType, i: number) =>
+                    i === postIndex
+                      ? {
+                          ...p,
+                          likes: postLikes!.likes,
+                          LikeUsers: postLikes!.LikeUsers.map((user) => ({
+                            ...user,
+                            likedPostId: user.likedPostId || "",
+                          })),
+                        }
+                      : p
+                  ),
+                }
+              : page
+          ),
+        } as InfiniteData<PagesType, unknown>;
+      });
     }
   }
 
@@ -191,7 +196,7 @@ export default function UserContextProvider({
     fileType?: string | undefined
   ) {
     const text = commentText.replace(/\n/g, "\n");
-    await createCommentToPost(text, mediaUrl, fileType, postId);
+    await createCommentToPost(text, postId, mediaUrl, fileType);
   }
 
   async function getComments(postId: string) {
@@ -203,7 +208,8 @@ export default function UserContextProvider({
 
   async function getPostByPostId(postId: string) {
     if (!postId) return;
-    return getPostById(postId);
+    const post = await getPostById(postId);
+    return post ?? undefined;
   }
 
   async function updateUserBackgroundImg(
@@ -216,7 +222,7 @@ export default function UserContextProvider({
   }
 
   async function getUserFollowsData(
-    userIds: { id: string; followerId: string; followedId: string },
+    userIds: { id: string; followerId: string; followedId: string }[],
     type: "followed" | "follower"
   ) {
     const ids = userIds.map((id) =>
@@ -227,7 +233,11 @@ export default function UserContextProvider({
   }
 
   async function getNMessages(n: number) {
-    return await getNLastMessagesFromDB(n);
+    const messages = await getNLastMessagesFromDB(n);
+    return messages.map((message) => ({
+      ...message,
+      createdAt: message.createdAt.getTime(),
+    }));
   }
 
   return (
@@ -244,10 +254,9 @@ export default function UserContextProvider({
         userPosts,
         getUniqueUserData,
         refetch,
-        fetchNextHomePage,
+        fetchNextPage,
         getUserFollowersIds,
         getUserFollowsData,
-
         updateUserBackgroundImg,
         error,
       }}
