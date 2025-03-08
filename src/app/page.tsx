@@ -25,7 +25,6 @@ export default async function Page() {
             for development, for tech news, for memes, for whatever you want
           </p>
         </div>
-
         {session?.user ? (
           <Link
             href="/home"
