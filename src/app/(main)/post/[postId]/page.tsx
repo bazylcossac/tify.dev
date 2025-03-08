@@ -23,7 +23,7 @@ function Page() {
     redirect("/");
   }
   const postId = params?.postId as string;
-  
+
   const { getPostByPostId } = useUserContext();
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -106,16 +106,22 @@ function Page() {
               <PostMedia type="image" post={data} />
             </>
           )}
-          {data?.postText?.includes("https://www.youtube.com/watch") && (
-            <iframe
-              src={`https://www.youtube.com/embed/${
-                data?.postText?.split("=")[1].split("\n")[0]
-              }`}
-              className="w-full h-[500px] rounded-lg"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          )}
+          {data?.postText &&
+            (() => {
+              const match = data.postText.match(
+                /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/
+              );
+              const videoId = match ? match[4] : null;
+
+              return videoId ? (
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  className="w-full h-[500px] rounded-lg"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : null;
+            })()}
 
           {data?.media && data?.media[0].type.startsWith("video") && (
             <PostMedia type="video" post={data} />

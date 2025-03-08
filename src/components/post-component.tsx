@@ -104,16 +104,22 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
             <PostMedia type="image" post={post} />
           </>
         )}
-        {post?.postText?.includes("https://www.youtube.com/watch") && (
-          <iframe
-            src={`https://www.youtube.com/embed/${
-              post.postText.split("=")[1].split("\n")[0]
-            }`}
-            className="w-full h-[500px] rounded-lg"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
+        {post?.postText &&
+          (() => {
+            const match = post.postText.match(
+              /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/
+            );
+            const videoId = match ? match[4] : null;
+
+            return videoId ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${videoId}`}
+                className="w-full h-[500px] rounded-lg"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : null;
+          })()}
 
         {post?.media && post?.media[0]?.type.startsWith("video") && (
           <PostMedia type="video" post={post} />
