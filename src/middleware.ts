@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 export const config = {
   matcher: [
     "/home",
+    "/premium",
+    "/chat",
     "/profile",
-    "/notifications",
-    "/explore",
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
