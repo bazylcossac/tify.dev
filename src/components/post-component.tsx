@@ -60,7 +60,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
                 onClick={(e) => e.stopPropagation()}
               >
                 <Link
-                  href={`/profile/${post.userId || session?.data?.userId}`}
+                  href={`/profile/${post.userId}`}
                   className="hover:text-white/60 transition"
                 >
                   @{post?.User?.name}

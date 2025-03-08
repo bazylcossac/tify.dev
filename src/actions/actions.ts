@@ -22,10 +22,10 @@ const generateFileName = (bytes = 32) => {
 
 /// create s3 client
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION!,
+  region: process.env.AWEBSERVICES_BUCKET_REGION!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
+    accessKeyId: process.env.AWEBSERVICES_ACCESS_KEY!,
+    secretAccessKey: process.env.AWEBSERVICES_SECRET_KEY!,
   },
 });
 
@@ -58,7 +58,7 @@ export async function getSignedURL(
   }
 
   const putObjectCommand = new PutObjectCommand({
-    Bucket: process.env.AWS_BUCKET_NAME!,
+    Bucket: process.env.AWEBSERVICES_BUCKET_NAME!,
     Key: generateFileName(),
     ContentType: type,
     ContentLength: size,

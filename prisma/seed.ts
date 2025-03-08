@@ -13,7 +13,7 @@ const userData: Prisma.UserCreateInput = {
   posts: {
     create: [
       {
-        postText: "Test",
+        postText: "First post!",
         likes: 23,
         stars: 3,
         media: {
