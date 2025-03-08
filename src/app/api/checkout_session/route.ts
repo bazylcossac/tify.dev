@@ -18,13 +18,12 @@ export async function POST(req: Request) {
       customer_email: authSession?.user?.email,
       line_items: [
         {
-          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
           price: priceId,
           quantity: 1,
         },
       ],
       mode: "payment",
-      success_url: `${origin}/premium?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/premium`,
       cancel_url: `${origin}/premium`,
     });
 
