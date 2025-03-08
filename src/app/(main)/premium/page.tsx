@@ -1,3 +1,5 @@
+import { auth } from "@/auth";
+import Logo from "@/components/logo";
 import { CheckIcon } from "@radix-ui/react-icons";
 
 const tiers = [
@@ -41,7 +43,20 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default async function Page() {
+  const session = await auth();
+
+  if (session?.premiumStatus) {
+    return (
+      <div className="max-w-[1200px] h-full flex flex-col items-center text-center gap-4 mt-10 md:mt-24">
+        <Logo />
+        <p className="mt-2 text-5xl font-semibold tracking-tight text-balance text-white sm:text-6xl">
+          Thanks for supporting us
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative isolate px-6 py-8 lg:px-8">
       <div

@@ -117,7 +117,7 @@ export type messageType = {
   userPremium: boolean;
   message: string;
   createdAt: number;
-  color: string;
+  color?: string;
 };
 
 export type InputUserFollowsData = {
