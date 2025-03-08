@@ -14,7 +14,6 @@ function Page() {
   const session = useSession();
   const { data, error } = useUserContext();
   const [showRefreshBtn, setShowRefreshBtn] = useState(false);
-  
 
   useEffect(() => {
     const showButton = () => {
@@ -54,8 +53,8 @@ function Page() {
 
       <main className="flex flex-col overflow-y-auto no-scrollbar ">
         <ul>
-          {memoizedPosts.map((post, i) => (
-            <PostComponent post={post} key={i + post.postId} />
+          {memoizedPosts.map((post) => (
+            <PostComponent post={post} key={post?.postId} />
           ))}
         </ul>
       </main>

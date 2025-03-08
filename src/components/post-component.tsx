@@ -38,12 +38,12 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
   return (
     <div
       className="flex flex-col mx-4 border-b border-white/30 py-4 hover:cursor-pointer"
-      onClick={() => router.push(`/post/${post.postId}`)}
+      onClick={() => router.push(`/post/${post?.postId}`)}
     >
       {post ? (
         <div className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2 my-4 ">
-            <Link href={`/profile/${post.userId}`}>
+            <Link href={`/profile/${post?.userId}`}>
               <Image
                 src={post?.User?.image}
                 width={30}
@@ -60,7 +60,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
                 onClick={(e) => e.stopPropagation()}
               >
                 <Link
-                  href={`/profile/${post.userId}`}
+                  href={`/profile/${post?.userId}`}
                   className="hover:text-white/60 transition"
                 >
                   @{post?.User?.name}
@@ -93,13 +93,13 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
       {post?.postText && (
         <div
           className="text-sm font-semibold mb-2 whitespace-pre-line"
-          key={`${post.postId}-${post.createdAt}`}
+          key={`${post?.postId}-${post?.createdAt}`}
         >
           {formatText(post?.postText)}
         </div>
       )}
       <div className="justify-center flex w-full">
-        {post?.media && post.media[0].type.startsWith("image") && (
+        {post?.media && post?.media[0].type.startsWith("image") && (
           <>
             <PostMedia type="image" post={post} />
           </>
@@ -115,13 +115,13 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
           />
         )}
 
-        {post?.media && post.media[0].type.startsWith("video") && (
+        {post?.media && post?.media[0]?.type.startsWith("video") && (
           <PostMedia type="video" post={post} />
         )}
       </div>
       <div className="flex flex-row justify-between items-center mt-4">
         <div className="flex flex-row gap-8 ">
-          {post.LikeUsers && (
+          {post?.LikeUsers && (
             <div className="flex items-center gap-1">
               {/* Likes */}
               <FaHeart
