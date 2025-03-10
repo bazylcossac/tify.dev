@@ -4,17 +4,20 @@ import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useUserContext } from "@/contexts/userContextProvider";
 import Loading from "@/components/loading";
-
 import PostComponent from "@/components/post-component";
-
 import AddPostDialog from "@/components/add-post-dialog";
 import ScrollRefreshBtn from "@/components/scroll-refresh-btn";
+import { redirect } from "next/navigation";
 
 function Page() {
   const session = useSession();
+  if (session.status === "unauthenticated") {
+    redirect("/");
+  }
   const { data, error } = useUserContext();
   const [showRefreshBtn, setShowRefreshBtn] = useState(false);
 
+  // refrehs btn shows after 3001px from top
   useEffect(() => {
     const showButton = () => {
       setShowRefreshBtn(window.scrollY > 3000);
@@ -28,7 +31,7 @@ function Page() {
     return data?.pages?.flatMap((page) => page.posts) || [];
   }, [data]);
 
-  if (!data || !session) {
+  if (!data) {
     return (
       <div className="h-screen flex items-center justify-center">
         <Loading />

@@ -1,4 +1,8 @@
 import type { User } from "@prisma/client";
+import {
+  InfiniteData,
+  InfiniteQueryObserverResult,
+} from "@tanstack/react-query";
 
 export type UserType = User;
 
@@ -133,4 +137,50 @@ export type UserFollowsDataOutput = {
   image: string;
   backgroundImage: string;
   premium: boolean;
+};
+
+// USERCONTEXT TYPES
+
+export type ContextTypes = {
+  addPostToDB: (
+    postText: string,
+    fileType: string,
+    mediaUrl: string | undefined
+  ) => Promise<{ message: string }>;
+  addCommentToPostToDB: (
+    postText: string,
+    fileType: string,
+    mediaUrl: string,
+    postId: string
+  ) => void;
+  getComments: (postId: string) => Promise<CommentsType[]>;
+  data: InfiniteData<PagesType, unknown> | undefined;
+  userPosts: PagesType[] | undefined;
+  likePostDB: (post: PostType) => void;
+  refetch: () => void;
+  fetchNextPage: () => Promise<
+    InfiniteQueryObserverResult<InfiniteData<unknown, unknown>, Error>
+  >;
+  error: Error | null;
+  getUniqueUserData: (
+    userId: string | string[] | undefined
+  ) => Promise<GetUniqueUserDataType | undefined | null>;
+  updateUserBackgroundImg: (
+    bgUrl: string,
+    bgSize: number,
+    bgType: string,
+    userId: string
+  ) => void;
+  getUserFollowersIds: (
+    userId: string
+  ) => Promise<UserFollowerIdsFn | undefined | null>;
+  getPostByPostId: (postId: string) => Promise<PostType | undefined>;
+  getUserFollowsData: (
+    userIds: InputUserFollowsData[],
+    type: "follower" | "followed"
+  ) => Promise<UserFollowsDataOutput[]>;
+  getNMessages: (n: number) => Promise<Omit<messageType, "color">[]>;
+  setPostData: React.Dispatch<
+    React.SetStateAction<InfiniteData<PagesType, unknown> | undefined>
+  >;
 };

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { pusherClient } from "@/lib/pusher";
 import { sendMessage, sendMessageToDB } from "@/actions/actions";
-
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -15,6 +14,7 @@ import Loading from "@/components/loading";
 import { nicknameColors } from "@/lib/constants";
 import { toast } from "sonner";
 
+// create nickname color for LiveChat usage
 const color = nicknameColors[Math.floor(Math.random() * nicknameColors.length)];
 
 function Page() {
@@ -36,14 +36,13 @@ function Page() {
   });
 
   useEffect(() => {
-    if (data) {
-    }
     setAllMessages(data?.reverse());
   }, [data]);
 
+  // LiveChat websocket client
   useEffect(() => {
-    pusherClient.subscribe("chat");
 
+    pusherClient.subscribe("chat");
     pusherClient.bind("message", (data: { data: messageType }) => {
       if (data) {
       }
@@ -56,6 +55,7 @@ function Page() {
     };
   }, []);
 
+// LiveChat scroll to bottom while new message functionality
   useEffect(() => {
     lastElement?.current?.scrollIntoView({ behavior: "smooth" });
   }, [allMessages]);
@@ -89,6 +89,7 @@ function Page() {
   return (
     <div className="max-w-[1200px] h-full ">
       <div>
+
         <ul className="mb-20 ">
           {!error &&
             allMessages?.map((message: messageType, i) => {
@@ -96,8 +97,11 @@ function Page() {
             })}
           <div ref={lastElement} className="h-[5px]"></div>
         </ul>
+
         {error && <div>Failed to load messages</div>}
+
       </div>
+      
       <div className="flex justify-center">
         <form
           className="flex flex-row items-center gap-2 fixed bottom-5 w-full px-4 md:w-7/12"

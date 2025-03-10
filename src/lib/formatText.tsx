@@ -5,7 +5,7 @@ import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 export default function formatText(text: string) {
   return text
     ?.split(
-      /(```[\s\S]*?```|#\S+|https?:\/\/(?:www\.youtube\.com\/watch\S+|youtu\.be\/\S+))/g
+      /(```[\s\S]*?```|#\S+|https?:\/\/(?:www\.youtube\.com\/watch\S+|youtu\.be\/\S+|\S*))/g
     )
     ?.map((part, index) => {
       if (part.startsWith("#")) {

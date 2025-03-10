@@ -13,14 +13,17 @@ import { useSession } from "next-auth/react";
 import CommentDialog from "./comment-dialog";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next-nprogress-bar";
-
 import { PiCrownSimpleFill } from "react-icons/pi";
+import { redirect } from "next/navigation";
 
 const PostComponent = function PostComponent({ post }: { post: PostType }) {
   const session = useSession();
+  if (session.status === "unauthenticated") {
+    redirect("/");
+  }
   const router = useRouter();
-
   const { ref, inView } = useInView();
+
   const [postLikes, setPostLikes] = useState(post?.likes);
   const [isLiked, setIsLiked] = useState(
     post?.LikeUsers?.some(
@@ -29,6 +32,7 @@ const PostComponent = function PostComponent({ post }: { post: PostType }) {
   );
   const { likePostDB, fetchNextPage } = useUserContext();
 
+  // loads new posts to page
   useEffect(() => {
     if (inView) {
       fetchNextPage();

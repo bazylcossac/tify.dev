@@ -4,8 +4,6 @@ import Logo from "@/components/logo";
 import { MobileSidebar } from "@/components/mobile-components/mobile-sidebar";
 import UserContextProvider from "@/contexts/userContextProvider";
 
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
 import React, { Suspense } from "react";
 import QueryClientWrapper from "@/components/query-client-wrapper";
 import { auth } from "@/auth";
@@ -20,7 +18,6 @@ async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex flex-col md:flex-row md:justify-between">
-        {/* <QueryClientProvider client={queryClient}> */}
         <QueryClientWrapper>
           <UserContextProvider>
             {/* DESKOP SIDEBAR */}
@@ -40,8 +37,6 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
             <Suspense fallback={<Loading />}>
               <div className="min-h-screen rounded-xl overflow-y-auto no-scrollbar w-full ">
-                {/* <div className="text-center overflow-x-hidden"></div> */}
-
                 {children}
               </div>
             </Suspense>
@@ -49,7 +44,6 @@ async function Layout({ children }: { children: React.ReactNode }) {
             <div className="w-1/4"></div>
           </UserContextProvider>
         </QueryClientWrapper>
-        {/* </QueryClientProvider> */}
       </div>
     </>
   );

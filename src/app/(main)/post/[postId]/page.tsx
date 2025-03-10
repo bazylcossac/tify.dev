@@ -16,15 +16,16 @@ import ScrollRefreshBtn from "@/components/scroll-refresh-btn";
 import { useSession } from "next-auth/react";
 
 function Page() {
-  const params = useParams();
   const session = useSession();
-
   if (session.status === "unauthenticated") {
     redirect("/");
   }
-  const postId = params?.postId as string;
+  const [showRefreshBtn, setShowRefreshBtn] = useState(false);
 
   const { getPostByPostId } = useUserContext();
+
+  const params = useParams();
+  const postId = params?.postId as string;
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [`post-${postId}`],
@@ -33,8 +34,7 @@ function Page() {
     gcTime: 0,
   });
 
-  const [showRefreshBtn, setShowRefreshBtn] = useState(false);
-
+  /// refresh btn shows after 2001px from top
   useEffect(() => {
     const showButton = () => {
       setShowRefreshBtn(window.scrollY > 2000);
@@ -56,6 +56,7 @@ function Page() {
       </div>
     );
   }
+
   if (data)
     return (
       <div className="flex flex-col my-4 px-4 w-full h-full">

@@ -14,69 +14,12 @@ import {
   getNLastMessagesFromDB,
 } from "@/actions/actions";
 import { fetchPosts } from "@/lib/utils";
-import {
-  CommentsType,
-  GetUniqueUserDataType,
-  InputUserFollowsData,
-  messageType,
-  PagesType,
-  PostType,
-  UserFollowerIdsFn,
-  UserFollowsDataOutput,
-} from "@/types/types";
+import { ContextTypes, PagesType, PostType } from "@/types/types";
 
-import {
-  InfiniteData,
-  InfiniteQueryObserverResult,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-
-type ContextTypes = {
-  addPostToDB: (
-    postText: string,
-    fileType: string,
-    mediaUrl: string | undefined
-  ) => Promise<{ message: string }>;
-  addCommentToPostToDB: (
-    postText: string,
-    fileType: string,
-    mediaUrl: string,
-    postId: string
-  ) => void;
-  getComments: (postId: string) => Promise<CommentsType[]>;
-  data: InfiniteData<PagesType, unknown> | undefined;
-  userPosts: PagesType[] | undefined;
-  likePostDB: (post: PostType) => void;
-  refetch: () => void;
-  fetchNextPage: () => Promise<
-    InfiniteQueryObserverResult<InfiniteData<unknown, unknown>, Error>
-  >;
-  error: Error | null;
-  getUniqueUserData: (
-    userId: string | string[] | undefined
-  ) => Promise<GetUniqueUserDataType | undefined | null>;
-  updateUserBackgroundImg: (
-    bgUrl: string,
-    bgSize: number,
-    bgType: string,
-    userId: string
-  ) => void;
-  getUserFollowersIds: (
-    userId: string
-  ) => Promise<UserFollowerIdsFn | undefined | null>;
-  getPostByPostId: (postId: string) => Promise<PostType | undefined>;
-  getUserFollowsData: (
-    userIds: InputUserFollowsData[],
-    type: "follower" | "followed"
-  ) => Promise<UserFollowsDataOutput[]>;
-  getNMessages: (n: number) => Promise<Omit<messageType, "color">[]>;
-  setPostData: React.Dispatch<
-    React.SetStateAction<InfiniteData<PagesType, unknown> | undefined>
-  >;
-};
 
 const UserContext = createContext<ContextTypes | null>(null);
 
@@ -98,6 +41,7 @@ export default function UserContextProvider({
     refetchOnMount: true,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
   });
+
   useEffect(() => {
     setPostData(data);
   }, [data]);
@@ -109,7 +53,6 @@ export default function UserContextProvider({
 
   /// CURRENT LOGGED IN USER POSTS
 
-  /// change to its own function
   const userPosts = useMemo(() => {
     return postData?.pages?.map((posts: PagesType) => ({
       ...posts,
@@ -199,8 +142,6 @@ export default function UserContextProvider({
   }
 
   async function getComments(postId: string) {
-    /// post validation toast etc.
-
     const comments = await getPostComments(postId);
     return comments;
   }
@@ -265,6 +206,7 @@ export default function UserContextProvider({
   );
 }
 
+// custom hook to use userContext
 export function useUserContext() {
   const context = useContext(UserContext);
 
