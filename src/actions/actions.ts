@@ -432,7 +432,5 @@ export async function sendMessageToDB(data: messageType) {
 }
 
 export async function sendMessage(data: messageType) {
-  /// validation
-  /// add messages to db
   pusherServer.trigger("chat", "message", { data });
 }
