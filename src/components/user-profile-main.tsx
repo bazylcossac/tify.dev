@@ -61,18 +61,18 @@ function UserProfileMain({ user }: { user: GetUniqueUserDataType }) {
             height={100}
             quality={100}
             priority={true}
-            className="max-size-28 rounded-lg absolute top-24 left-4 border-4 border-black"
+            className="md:size-28 size-20 rounded-lg absolute top-[110px] md:top-24 left-1 md:left-4 border-4 border-black"
           />
         )}
         <div className="flex flex-row justify-between items-center mt-2">
           <div className="flex items-center gap-1">
-            <p className="ml-32 font-bold">{userData?.name}</p>
+             <p className="md:ml-36 ml-24 font-bold truncate max-w-34">{userData?.name}</p>
             {user.premium && <PiCrownSimpleFill className="text-yellow-400" />}
           </div>
 
           {session.data?.userId !== userData.id && (
             <Button
-              className={cn("px-6 rounded-lg bg-blue-600 hover:bg-[#0c0c0c]", {
+              className={cn("text-xs md:text-md rounded-lg bg-blue-600 hover:bg-[#0c0c0c]", {
                 "bg-neutral-900": isFollowing,
               })}
               onClick={async () => {
