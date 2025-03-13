@@ -57,7 +57,9 @@ function Page() {
 
 // LiveChat scroll to bottom while new message functionality
   useEffect(() => {
-    lastElement?.current?.scrollIntoView({ behavior: "smooth" });
+    lastElement?.current?.scrollIntoView({  behavior: "smooth",
+      block: "end",
+      inline: "nearest", });
   }, [allMessages]);
 
   const sendMessageAction = async (formData: FormData) => {
@@ -95,7 +97,7 @@ function Page() {
             allMessages?.map((message: messageType, i) => {
               return <Message key={i} message={message} />;
             })}
-          <div ref={lastElement} className="h-[5px]"></div>
+          <div ref={lastElement} className="h-[5px] mt-24"></div>
         </ul>
 
         {error && <div>Failed to load messages</div>}
