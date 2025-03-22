@@ -7,9 +7,9 @@ function LandingBackground() {
       src="/images/landingbg.png"
       alt="landing page background"
       width={1920}
-      height={1920}
+      height={1080}
       quality={100}
-      priority={true}
+      priority
     />
   );
 }

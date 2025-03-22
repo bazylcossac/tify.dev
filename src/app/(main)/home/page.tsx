@@ -10,6 +10,7 @@ import ScrollRefreshBtn from "@/components/scroll-refresh-btn";
 import { redirect } from "next/navigation";
 
 function Page() {
+  
   const session = useSession();
   if (session.status === "unauthenticated") {
     redirect("/");
