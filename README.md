@@ -37,7 +37,7 @@ Simple. I wanted to build application using Next.JS. It was fun, sometimes not. 
 
 Clone project to your folder in your editor
 ```bash
-git clone https://github.com/bazylcossac/react-spotistats.git .
+git clone https://github.com/bazylcossac/tify.dev.git .
 ```
 Install dependecies
 ```bash
