@@ -1,4 +1,4 @@
-"use state";
+"use client";
 import React from "react";
 import { Button } from "./ui/button";
 import { useUserContext } from "@/contexts/userContextProvider";
