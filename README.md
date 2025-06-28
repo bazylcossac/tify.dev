@@ -9,7 +9,6 @@
 # TIFY.dev 
 ---
 **TIFY.dev** is a social media platform designed for developers, offering features like infinite scrolling, code snippets and live chat. It provides a space for developers to connect, collaborate, and stay updated with the latest trends or just post memes.
- 
 ---
 ## Features 🚀
 - **Google & Github**: Log in with your Google or Github account .
